@@ -11,6 +11,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
@@ -19,6 +20,7 @@ import javax.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.system.bibliotec.model.embeddeds.Contato;
 import com.system.bibliotec.model.enums.Genero;
 import com.system.bibliotec.model.enums.StatusCliente;
@@ -50,6 +52,7 @@ public class Cliente {
 	@NotNull
 	@Enumerated(EnumType.STRING)
 	@Column(name = "StatusCliente")
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	private StatusCliente statusCliente;
 	
 	@NotNull
@@ -65,10 +68,6 @@ public class Cliente {
 	@Size(min = 3, max = 50)
 	@Column(name = "sobreNome")
 	private String sobreNome;
-
-	@NotNull
-	@Column(name = "idade")
-	private int idade;
 
 	@NotNull
 	@Enumerated(EnumType.STRING)
@@ -88,7 +87,8 @@ public class Cliente {
 	@Embedded
 	private Contato contato;
 	
-	@OneToOne(cascade = CascadeType.ALL, optional = false, orphanRemoval = true, mappedBy = "idCliente")
-	private Endereco endereco;
+	
+	@OneToOne(cascade = CascadeType.ALL)
+	private Endereco idEndereco;
 
 }

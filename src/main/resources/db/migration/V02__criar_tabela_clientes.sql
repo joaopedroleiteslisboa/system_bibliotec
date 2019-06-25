@@ -4,7 +4,6 @@ CREATE TABLE clientes(
                          StatusCliente VARCHAR(13) NOT NULL,
                          nome VARCHAR(200) NOT NULL,
                          sobreNome VARCHAR(50),
-                         idade INT NOT NULL,
                          genero VARCHAR(10) NOT NULL,
                          cpf varchar(11) UNIQUE NOT NULL,
                          dataNascimento DATE NOT NULL,

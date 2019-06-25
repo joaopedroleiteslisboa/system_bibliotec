@@ -1,8 +1,5 @@
 package com.system.bibliotec.model.enums;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
-@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum Genero {
 
 	MASCULINO("MASCULINO"), FEMININO("FEMININO");
@@ -18,9 +15,7 @@ public enum Genero {
 		return genero;
 	}
 
-	public void setGenero(String genero) {
-		this.genero = genero;
-	}
+	
 
 	/*
 	 * @JsonCreator public static Genero fromValueString(String genero) { if (genero

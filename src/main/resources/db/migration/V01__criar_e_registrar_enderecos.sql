@@ -8,9 +8,8 @@ CREATE TABLE enderecos(
                          bairro varchar(60) NOT NULL,
                          cidade varchar(40) NOT NULL,
                          uf varchar(4) NOT NULL,
-                         ibge varchar(100),
-                         idCliente BIGINT NOT NULL,
-                         FOREIGN KEY (idCliente) REFERENCES clientes(id)
+                         ibge varchar(100)
+                        
                          
                          
                         

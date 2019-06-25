@@ -1,6 +1,5 @@
 package com.system.bibliotec.model.enums;
 
-//@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum StatusCliente {
 
 	INADIMPLENTE("Inadiplente"), ATIVO("Ativo"), INATIVO("Inativo");

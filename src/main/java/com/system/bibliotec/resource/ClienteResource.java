@@ -1,7 +1,5 @@
 package com.system.bibliotec.resource;
 
-import static org.springframework.http.HttpStatus.OK;
-
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletResponse;
@@ -12,6 +10,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,8 +26,6 @@ import com.system.bibliotec.model.Endereco;
 import com.system.bibliotec.repository.ClienteRepository;
 import com.system.bibliotec.service.ClienteService;
 
-
-
 @RestController
 @RequestMapping("/clientes")
 public class ClienteResource {
@@ -42,9 +39,7 @@ public class ClienteResource {
 	@Autowired
 	private ApplicationEventPublisher publisher;
 
-		
-	
-	@RequestMapping(method = RequestMethod.GET, value = "/all")
+	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public Page<Cliente> pesquisar(Pageable page) {
 		return clienteRepository.findAll(page);
 	}
@@ -56,20 +51,12 @@ public class ClienteResource {
 		Optional<Cliente> cliente = clienteRepository.findByCpfStartingWithIgnoreCase(cpf);
 		return cliente.isPresent() ? ResponseEntity.ok(cliente.get()) : ResponseEntity.notFound().build();
 	}
-
-	@RequestMapping(method = { RequestMethod.GET, RequestMethod.PUT }, headers = { "cpf=cpf" }, value = {
-			"/all/{idCliente}", "/up/{idCliente}" })
-	public ResponseEntity<?> findById(@PathVariable(name = "id", required = false) Long id,
-
-			@RequestHeader(name = "cpf", required = false) String cpf) {
-
-		if (cpf.isEmpty() && id == Long.MIN_VALUE) {
-			Optional<Cliente> cliente = clienteService.findByIdCliente(id);
-			return cliente.isPresent() ? ResponseEntity.ok(cliente.get()) : ResponseEntity.notFound().build();
-		}
-
-		return ResponseEntity.status(OK).body(clienteService.updatePropertyCpf(id, cpf));
-
+	
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	@RequestMapping(method = RequestMethod.GET, value = "/cod/{id}")
+	public ResponseEntity<Cliente> findById(@PathVariable(required = true) Long id){
+		
+		return ResponseEntity.ok(clienteService.findByIdCliente(id).get());
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
@@ -85,18 +72,25 @@ public class ClienteResource {
 		clienteService.excluirCliente(cpf);
 	}
 
-	@RequestMapping(method = RequestMethod.PUT, headers = "cpf=cpf")
+	@RequestMapping(method = RequestMethod.PUT, headers = "cpf")
 	public ResponseEntity<Cliente> update(@RequestHeader(required = true) String cpf,
 			@Valid @RequestBody Cliente cliente) {
 		Cliente clienteAtualizado = clienteService.updateCliente(cpf, cliente);
 		return ResponseEntity.ok(clienteAtualizado);
 	}
 
-	@RequestMapping(method = RequestMethod.PUT, headers = "cpf=cpf", value = "/up/end")
+	@RequestMapping(method = RequestMethod.PUT, headers = "cpf", value = "/up/end")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void updateEndereco(@RequestHeader(required = true) String cpf, @Valid @RequestBody Endereco endereco) {
+	public void updatePropertyEndereco(@RequestHeader(required = true) String cpf,
+			@Valid @RequestBody Endereco endereco) {
 		clienteService.updatePropertyEndereco(cpf, endereco);
 	}
-		
+
+	@RequestMapping(method = RequestMethod.PUT, headers = "cpf", value = "/up/doc/{idCliente}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void updatePropertyCpf(@PathVariable(required = true) Long idCliente,
+			@RequestHeader(required = true) String cpf) {
+		clienteService.updatePropertyCpf(idCliente, cpf);
+	}
 
 }

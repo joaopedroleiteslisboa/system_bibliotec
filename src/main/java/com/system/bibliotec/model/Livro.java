@@ -24,6 +24,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.system.bibliotec.model.enums.Idioma;
 import com.system.bibliotec.model.enums.StatusLivro;
@@ -59,12 +61,14 @@ public class Livro {
 	@Column(name = "nome")
 	private String nome;
 
+	@JsonIgnoreProperties("livros")
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "livro_has_autores", joinColumns = { @JoinColumn(name = "id_livro") }, inverseJoinColumns = {
 			@JoinColumn(name = "id_autor") })
 	private Set<Autor> autores =  new HashSet<Autor>();
 	
 	@ManyToOne
+	@JoinColumn(name = "idEditora")
 	private Editora idEditora;
 
 	@NotNull(message = "Este campo é obrigatorio")
@@ -112,6 +116,5 @@ public class Livro {
 	@Column(name = "quantidade")
 	@Size(min = 1, message = "Informe pelo menos {min} livro para Salvar no Estoque")
 	private int quantidade;
-	
-	
+		
 }

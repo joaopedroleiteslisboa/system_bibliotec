@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.system.bibliotec.exception.ClienteExistenteException;
 import com.system.bibliotec.exception.ClienteInadimplenteException;
 import com.system.bibliotec.exception.ClienteInativoException;
 import com.system.bibliotec.exception.ClienteInexistenteException;
@@ -30,7 +31,6 @@ public class ClienteService {
 
 	@Transactional
 	public Cliente criarNovoCliente(Cliente cliente) {
-
 		
 		validaClienteNova(cliente);
 		
@@ -47,7 +47,6 @@ public class ClienteService {
 		validaClienteExistente(cpf);
 		
 		Optional<Cliente> clienteSalvo = findByCpfCliente(cpf);
-
 
 		BeanUtils.copyProperties(cliente, clienteSalvo, "id");
 		log.info("Cliente Atualizado: " + cliente.toString());
@@ -79,7 +78,7 @@ public class ClienteService {
 		Optional<Cliente> clienteSalvo = findByCpfCliente(cpf);
 
 		log.info("Atualizando Propriedade Endereço do Cliente: " + clienteSalvo.toString());
-		clienteSalvo.get().setEndereco(endereco);
+		clienteSalvo.get().setIdEndereco(endereco);
 		
 		log.info("Endereço Atualizado");
 		return clienteRepository.save(clienteSalvo.get());
@@ -97,6 +96,13 @@ public class ClienteService {
 		if (!validaCpf(cliente.getCpf())) {
 
 			throw new DocumentoInvalidoException("Documentação Invalida. Verifique os campos exigentes");
+		}
+		
+		Optional<Cliente> cpfVerificado = findByCpfCliente(cliente.getCpf());
+		
+		if(cpfVerificado.isPresent()) {
+			
+			throw new ClienteExistenteException("O Cliente informado Já possui registro na base de dados. Informe outro cliente para prosseguir.");
 		}
 		
 
@@ -145,8 +151,7 @@ public class ClienteService {
 	private Boolean validaCpf(String cpf) {
 		return CpfUtilsValidator.isCPF(cpf);
 	}
-	
-	
+		
 	/**
 	 * Verifica se um Determinado Cliente é inativo Por meio do  CPF
 	 *
@@ -197,12 +202,13 @@ public class ClienteService {
 	@Transactional
 	public void excluirCliente(String cpf) {
 		
+		log.info("Deletando um Cliente, CPF Nº: " + cpf);
+
 		validaClienteExistente(cpf);
 		
 		log.info("Deletando um Cliente, CPF Nº: " + cpf);
 		clienteRepository.deleteByCpf(cpf);
 		log.info("Cliente: "+cpf+" Deletado");
-
 		
 	}
 

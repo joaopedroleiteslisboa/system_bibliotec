@@ -4,7 +4,8 @@ Simplista exemplo de um sistema para Gerenciamento de uma livraria.
 
 ### Sobre o Projeto 
 
-O supracitado Projeto, tem como objetivo geral realizar cadastro de clientes e de livros. Dispondo de funcionabilidades de Solicitação de Reserva de Livro, Emprestimo de Livro
+O supracitado Projeto tem como objetivo geral, realizar CRUD de clientes e de livros 
+e Dispor de funcionabilidades de Solicitação de Reserva de Livro, Emprestimo de Livro
 e entre outras funcionabilidades.
 
 ### Apresentação Técnica.
@@ -38,7 +39,7 @@ Escrito seguindo implementações Java, SpringBoot e Angular.
 ### Instruções para funcionamento
 
 
-	Em desenvolvimento...
+	    Em desenvolvimento...
 
 ### Autor
 
@@ -49,7 +50,7 @@ Linkedin: http://bit.ly/linkedinjoaopedroleiteslisboa
 
 ### STATUS DE ANDAMENTO DO PROJETO.
 
-	Em desenvolvimento...
+	   Em desenvolvimento...
 
 
 

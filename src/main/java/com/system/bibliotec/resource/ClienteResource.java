@@ -24,6 +24,7 @@ import com.system.bibliotec.event.RecursoCriadorEvent;
 import com.system.bibliotec.model.Cliente;
 import com.system.bibliotec.model.Endereco;
 import com.system.bibliotec.repository.ClienteRepository;
+import com.system.bibliotec.repository.filter.ClienteFilter;
 import com.system.bibliotec.service.ClienteService;
 
 @RestController
@@ -40,8 +41,8 @@ public class ClienteResource {
 	private ApplicationEventPublisher publisher;
 
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public Page<Cliente> pesquisar(Pageable page) {
-		return clienteRepository.findAll(page);
+	public Page<Cliente> pesquisar(ClienteFilter clienteFilter,Pageable page) {
+		return clienteRepository.filtrar(clienteFilter, page);
 	}
 
 	@ResponseStatus(code = HttpStatus.OK)

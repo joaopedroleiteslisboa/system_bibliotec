@@ -9,9 +9,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import com.system.bibliotec.model.Cliente;
+import com.system.bibliotec.repository.cliente.ClienteRepositoryQuery;
 
 
-public interface ClienteRepository extends PagingAndSortingRepository<Cliente, Long>{
+public interface ClienteRepository extends PagingAndSortingRepository<Cliente, Long>, ClienteRepositoryQuery{
 
 	public Optional<Cliente> findByCpfStartingWithIgnoreCase(String cpf);
 

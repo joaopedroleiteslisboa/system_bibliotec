@@ -88,6 +88,7 @@ public class Cliente {
 	private Contato contato;
 	
 	
+	@JoinColumn(name = "id")
 	@OneToOne(cascade = CascadeType.ALL)
 	private Endereco idEndereco;
 

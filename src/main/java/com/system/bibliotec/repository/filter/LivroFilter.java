@@ -2,29 +2,48 @@ package com.system.bibliotec.repository.filter;
 
 import java.time.LocalDate;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-
-@Getter
-@Setter
-@ToString
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-@Data
 public class LivroFilter {
 
 	private String nome;
 
-	private String isbn13;
+	private String isbn;
 
-	private LocalDate dataPublicacao;
+	private LocalDate dataPublicacaoDe;
 
-	
+	private LocalDate dataPublicacaoAte;
+
+
+
+	public LocalDate getDataPublicacaoDe() {
+		return dataPublicacaoDe;
+	}
+
+	public void setDataPublicacaoDe(LocalDate dataPublicacaoDe) {
+		this.dataPublicacaoDe = dataPublicacaoDe;
+	}
+
+	public LocalDate getDataPublicacaoAte() {
+		return dataPublicacaoAte;
+	}
+
+	public void setDataPublicacaoAte(LocalDate dataPublicacaoAte) {
+		this.dataPublicacaoAte = dataPublicacaoAte;
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public String getIsbn() {
+		return isbn;
+	}
+
+	public void setIsbn(String isbn) {
+		this.isbn = isbn;
+	}
 
 }

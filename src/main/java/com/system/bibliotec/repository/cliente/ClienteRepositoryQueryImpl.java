@@ -53,15 +53,10 @@ public class ClienteRepositoryQueryImpl implements ClienteRepositoryQuery{
 			predicates.add(
 					builder.lessThanOrEqualTo(root.get(Cliente_.dataNascimento), clienteFilter.getDataNascimento()));
 		}
-
-		if (clienteFilter.getCpf() != null) {
-
-			predicates.add(builder.like(builder.lower(root.get(Cliente_.cpf)), "%" + clienteFilter.getCpf() + "%"));
-		}
+		
 
 		return predicates.toArray(new Predicate[predicates.size()]);
 	}
-
 	
 	  private void adicionarRestricoesDePaginacao(TypedQuery<?> query, Pageable pageable) { 
 	  int paginaAtual = pageable.getPageNumber(); 

@@ -33,7 +33,7 @@ public class ClienteFilter {
 	@Enumerated(EnumType.STRING)
 	private StatusCliente statusCliente;
 
-	private String cpf;
+	
 
 	
 }

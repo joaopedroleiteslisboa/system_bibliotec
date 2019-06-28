@@ -8,10 +8,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.system.bibliotec.model.Livro;
+import com.system.bibliotec.repository.livro.LivroRepositoryQuery;
 
 
 @Repository
-public interface LivroRepository extends JpaRepository<Livro, Long>{
+public interface LivroRepository extends JpaRepository<Livro, Long>, LivroRepositoryQuery{
 
 	public Optional<Livro> findByIsbn13(String cpf);
 

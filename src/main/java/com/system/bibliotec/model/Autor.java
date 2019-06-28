@@ -48,6 +48,7 @@ public class Autor {
 	@Column(name = "descricao")
 	private String descricao;
 
+	@JsonIgnoreProperties("autores")
 	@ManyToMany(mappedBy = "autores", fetch = FetchType.EAGER)
 	private List<Livro> livros;
 

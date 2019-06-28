@@ -12,6 +12,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -37,6 +39,7 @@ public class Categoria {
 	@Column(name = "nome", unique = true, length = 40)
 	private String nome;
 	
+	@JsonIgnoreProperties("categorias")
 	@ManyToMany(mappedBy = "categorias", fetch = FetchType.EAGER)
 	private List<Livro> livros;
 }

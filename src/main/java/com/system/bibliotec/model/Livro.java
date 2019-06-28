@@ -24,7 +24,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.system.bibliotec.model.enums.Idioma;
@@ -84,6 +83,7 @@ public class Livro {
 	@Column(name = "idioma")
 	private Idioma idioma;
 
+	@JsonIgnoreProperties("livros")
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "livro_has_categorias", joinColumns = { @JoinColumn(name = "id_livro") }, inverseJoinColumns = {
 			@JoinColumn(name = "id_categoria") })

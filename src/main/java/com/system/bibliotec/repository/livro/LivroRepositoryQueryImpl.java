@@ -19,6 +19,7 @@ import org.springframework.util.StringUtils;
 import com.system.bibliotec.model.Livro;
 import com.system.bibliotec.model.Livro_;
 import com.system.bibliotec.repository.filter.LivroFilter;
+import com.system.bibliotec.repository.projection.ResumoLivro;
 
 public class LivroRepositoryQueryImpl implements LivroRepositoryQuery {
 
@@ -88,6 +89,27 @@ public class LivroRepositoryQueryImpl implements LivroRepositoryQuery {
 		criteria.select(builder.count(root));
 		return manager.createQuery(criteria).getSingleResult();
 	}
+
+	@Override
+	public Page<ResumoLivro> resumo(LivroFilter livroFilter, Pageable pageable) {
+		// TODO Auto-generated method stub
+		CriteriaBuilder builder = manager.getCriteriaBuilder();
+		CriteriaQuery<ResumoLivro> criteria = builder.createQuery(ResumoLivro.class);
+		Root<Livro> root = criteria.from(Livro.class);
+		
+		criteria.select(builder.construct(ResumoLivro.class
+				,root.get(Livro_.id), root.get(Livro_.nome)
+				,root.get(Livro_.edicao), root.get(Livro_.descricao)
+				,root.get(Livro_.isbn13), root.get(Livro_.numeroPaginas)
+				,root.get(Livro_.dataPublicacao), root.get(Livro_.preco)));
+		
+		Predicate[] predicates = criarRestricoes(livroFilter, builder, root);
+		criteria.where(predicates);
+		
+		TypedQuery<ResumoLivro> query = manager.createQuery(criteria);
+		adicionarRestricoesDePaginacao(query, pageable);
+		
+		return new PageImpl<>(query.getResultList(), pageable, total(livroFilter));
+	}
 	
-//filtro de livro
 }

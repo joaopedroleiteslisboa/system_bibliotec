@@ -62,9 +62,9 @@ public class ClienteResource {
 
 	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<Cliente> create(@Valid @RequestBody Cliente cliente, HttpServletResponse response) {
-		Cliente clienteSalved = clienteService.criarNovoCliente(cliente);
-		publisher.publishEvent(new RecursoCriadorEvent(this, response, clienteSalved.getId()));
-		return ResponseEntity.status(HttpStatus.CREATED).body(clienteSalved);
+		Cliente clienteSalvo = clienteService.criarNovoCliente(cliente);
+		publisher.publishEvent(new RecursoCriadorEvent(this, response, clienteSalvo.getId()));
+		return ResponseEntity.status(HttpStatus.CREATED).body(clienteSalvo);
 	}
 
 	@ResponseStatus(HttpStatus.NO_CONTENT)

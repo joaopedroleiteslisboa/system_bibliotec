@@ -2,7 +2,7 @@ package com.system.bibliotec.model.enums;
 
 public enum StatusCliente {
 
-	INADIMPLENTE("Inadiplente"), ATIVO("Ativo"), INATIVO("Inativo");
+	INADIMPLENTE("Inadiplente"), ADIMPLENTE("Adimplente");
 
 	private String statusCliente;
 

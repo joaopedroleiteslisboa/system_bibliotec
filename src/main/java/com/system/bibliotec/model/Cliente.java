@@ -55,6 +55,10 @@ public class Cliente {
 	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	private StatusCliente statusCliente;
 	
+	@Column(name = "ativo")
+	@NotNull
+	private boolean ativo;
+	
 	@NotNull
 	@Enumerated(EnumType.STRING)
 	@Column(name = "tipoCliente")

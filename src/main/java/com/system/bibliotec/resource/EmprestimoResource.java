@@ -46,9 +46,9 @@ public class EmprestimoResource {
 	  
 	  @PostMapping
 	  public ResponseEntity<Locacao> create(@Valid @RequestBody Locacao locacao, HttpServletResponse response) {
-		  Locacao emprestimoSalved = emprestimoService.realizarLocacao(locacao);
-		  publisher.publishEvent(new RecursoCriadorEvent(this, response, emprestimoSalved.getId())); 
-		  return ResponseEntity.status(HttpStatus.CREATED).body(emprestimoSalved); 
+		  Locacao emprestimoSalvo = emprestimoService.realizarLocacao(locacao);
+		  publisher.publishEvent(new RecursoCriadorEvent(this, response, emprestimoSalvo.getId())); 
+		  return ResponseEntity.status(HttpStatus.CREATED).body(emprestimoSalvo); 
 		  
 	  }
 	  

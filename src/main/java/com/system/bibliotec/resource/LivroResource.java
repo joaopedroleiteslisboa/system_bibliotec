@@ -79,7 +79,7 @@ public class LivroResource {
 	
 	@RequestMapping(method = RequestMethod.PUT, value = "/{id}/isbn13")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void updatePropertyCpfLivro(@PathVariable Long id, @RequestBody String isbn13) {
+	public void updatePropertyIsbn13Livro(@PathVariable Long id, @RequestBody String isbn13) {
 		livroService.updatePropertyIsbn13Livro(id, isbn13);
 	}
 

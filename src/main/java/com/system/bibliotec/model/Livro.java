@@ -24,7 +24,11 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.system.bibliotec.model.enums.Idioma;
 import com.system.bibliotec.model.enums.StatusLivro;
@@ -51,23 +55,28 @@ public class Livro {
 	@Column(name = "id")
 	@EqualsAndHashCode.Include
 	private Long id;
-	
+
 	@Column(name = "codBarras", length = 13)
 	private String codBarras;
+
+	@Size(max = 256)
+	@Column(name = "imagenUrl", length = 256)
+	private String imagenUrl;
 
 	@NotBlank(message = "Digite um nome de livro")
 	@Size(max = 200, message = "Nome de livro muito grande")
 	@Column(name = "nome")
 	private String nome;
 
-	@JsonIgnoreProperties("livros")
+	@JsonManagedReference
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "livro_has_autores", joinColumns = { @JoinColumn(name = "id_livro") }, inverseJoinColumns = {
 			@JoinColumn(name = "id_autor") })
-	private Set<Autor> autores =  new HashSet<Autor>();
-	
+	private Set<Autor> autores = new HashSet<Autor>();
+
 	@ManyToOne
-	@JoinColumn(name = "idEditora")
+	@JoinColumn(name = "id_editora")
+	@JsonBackReference
 	private Editora idEditora;
 
 	@NotNull(message = "Este campo é obrigatorio")
@@ -83,13 +92,13 @@ public class Livro {
 	@Column(name = "idioma")
 	private Idioma idioma;
 
-	@JsonIgnoreProperties("livros")
+	@JsonManagedReference
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "livro_has_categorias", joinColumns = { @JoinColumn(name = "id_livro") }, inverseJoinColumns = {
 			@JoinColumn(name = "id_categoria") })
-	private Set<Categoria> categorias =  new HashSet<Categoria>();
-	
-	@Size(max = 8388607, min= 3, message = "Descrição de livro muito grande")
+	private Set<Categoria> categorias = new HashSet<Categoria>();
+
+	@Size(max = 8388607, min = 3, message = "Descrição de livro muito grande")
 	@Column(name = "descricao")
 	private String descricao;
 
@@ -105,6 +114,8 @@ public class Livro {
 	@NotNull(message = "Insira uma data de publicação")
 	@Past(message = "A data deve ser inferior a atual")
 	@Column(name = "dataPublicacao")
+	@JsonFormat(pattern = "dd-MM-yyyy")
+	@DateTimeFormat(pattern = "dd-MM-yyyy") 
 	private LocalDate dataPublicacao;
 
 	@DecimalMin(value = "1.00", message = "O livro deve ter um preço valido")
@@ -116,5 +127,5 @@ public class Livro {
 	@Column(name = "quantidade")
 	@Size(min = 1, message = "Informe pelo menos {min} livro para Salvar no Estoque")
 	private int quantidade;
-		
+
 }

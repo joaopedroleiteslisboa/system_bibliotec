@@ -12,6 +12,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.AllArgsConstructor;
@@ -39,7 +40,7 @@ public class Categoria {
 	@Column(name = "nome", unique = true, length = 40)
 	private String nome;
 	
-	@JsonIgnoreProperties("categorias")
+	@JsonBackReference
 	@ManyToMany(mappedBy = "categorias", fetch = FetchType.EAGER)
 	private List<Livro> livros;
 }

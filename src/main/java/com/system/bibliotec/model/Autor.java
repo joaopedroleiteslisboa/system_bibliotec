@@ -13,6 +13,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.AllArgsConstructor;
@@ -48,7 +49,7 @@ public class Autor {
 	@Column(name = "descricao")
 	private String descricao;
 
-	@JsonIgnoreProperties("autores")
+	@JsonBackReference
 	@ManyToMany(mappedBy = "autores", fetch = FetchType.EAGER)
 	private List<Livro> livros;
 

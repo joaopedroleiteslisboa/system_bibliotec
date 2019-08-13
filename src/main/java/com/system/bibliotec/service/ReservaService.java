@@ -52,7 +52,7 @@ public class ReservaService {
 
 		livroService.validaLivroExistente(reserva.getIdLivro().getId());
 
-		clienteService.validaClienteExistente(reserva.getIdCliente().getCpf());
+		clienteService.validandoClienteExistente(reserva.getIdCliente().getCpf());
 
 		
 		reserva.setHoraReserva(HoraDiasDataLocalService.horaLocal());
@@ -100,7 +100,7 @@ public class ReservaService {
 	@Transactional
 	public void updatePropertyCliente(Long idReserva, Cliente cliente) {
 
-		clienteService.validaClienteExistente(cliente.getCpf());
+		clienteService.validandoClienteExistente(cliente.getCpf());
 		
 		Optional<Reserva> reservaSalva = repository.findById(idReserva);
 

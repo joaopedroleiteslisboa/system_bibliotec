@@ -14,12 +14,14 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.system.bibliotec.model.embeddeds.Contato;
 import com.system.bibliotec.model.enums.Genero;
@@ -96,4 +98,9 @@ public class Cliente {
 	@OneToOne(cascade = CascadeType.ALL)
 	private Endereco idEndereco;
 
+	@JsonIgnore
+	@Transient
+	public boolean isInativo() {
+		return !this.ativo;
+	}
 }

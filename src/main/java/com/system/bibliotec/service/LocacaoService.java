@@ -111,9 +111,9 @@ public class LocacaoService {
 
 		Optional<Locacao> locacaoSalva = findByIdLocacao(idLocacao);
 
-		clienteService.validaClienteExistente(locacaoSalva.get().getIdCliente().getCpf());
+		clienteService.validandoClienteExistente(locacaoSalva.get().getIdCliente().getCpf());
 
-		clienteService.validaClienteExistente(clienteSalvo.get().getCpf());
+		clienteService.validandoClienteExistente(clienteSalvo.get().getCpf());
 
 		locacaoSalva.get().setIdCliente(clienteSalvo.get());
 

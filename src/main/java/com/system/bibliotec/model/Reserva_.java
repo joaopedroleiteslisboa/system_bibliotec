@@ -13,8 +13,8 @@ public abstract class Reserva_ {
 
 	public static volatile SingularAttribute<Reserva, StatusReserva> statusReserva;
 	public static volatile SingularAttribute<Reserva, LocalDate> dataReserva;
-	public static volatile SingularAttribute<Reserva, Cliente> idCliente;
-	public static volatile SingularAttribute<Reserva, Livro> idLivro;
+	public static volatile SingularAttribute<Reserva, Cliente> cliente;
+	public static volatile SingularAttribute<Reserva, Livro> livro;
 	public static volatile SingularAttribute<Reserva, LocalTime> horaReserva;
 	public static volatile SingularAttribute<Reserva, LocalDate> dataLimite;
 	public static volatile SingularAttribute<Reserva, Long> id;

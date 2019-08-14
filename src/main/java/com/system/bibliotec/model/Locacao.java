@@ -86,12 +86,12 @@ public class Locacao {
 	@OneToOne
 	@Size(min = 1, message = "O Locacao precisar ter no minimo um Cliente")
 	@JoinColumn(name = "idCliente")
-	private Cliente idCliente;
+	private Cliente cliente;
 
 	@OneToOne
 	@Size(min = 1, max = 1, message = "O maximo de livros permitidos é 1 Exemplar")
 	@JoinColumn(name = "idLivro")
-	private Livro idLivro;
+	private Livro livro;
 
 	@Column(name = "observacoesDeEntrega")
 	@Size(max = 100)

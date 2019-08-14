@@ -60,8 +60,8 @@ public class LocacaoService {
 
 		locacao.setDataTerminoLocacao(HoraDiasDataLocalService.dataLocacaoDevolucao());
 
-		livroService.updateStatusLivro(locacao.getIdLivro().getId(), StatusLivro.LOCADO);
-		livroService.baixarEstoque(DEFAULT_COUNT, locacao.getIdLivro().getId());
+		livroService.updateStatusLivro(locacao.getLivro().getId(), StatusLivro.LOCADO);
+		livroService.baixarEstoque(DEFAULT_COUNT, locacao.getLivro().getId());
 		log.info("Locação realizada:" + locacao);
 		return locacaoRepository.save(locacao);
 
@@ -92,11 +92,11 @@ public class LocacaoService {
 
 		livroService.validaLivroExistente(livroSalvo.get());
 
-		livroService.updateStatusLivro(locacaoSalva.get().getIdLivro().getId(), StatusLivro.LIVRE);
+		livroService.updateStatusLivro(locacaoSalva.get().getLivro().getId(), StatusLivro.LIVRE);
 
 		livroService.updateStatusLivro(livroSalvo.get().getId(), StatusLivro.LOCADO);
 
-		locacaoSalva.get().setIdLivro(livroSalvo.get());
+		locacaoSalva.get().setLivro(livroSalvo.get());
 
 		locacaoRepository.save(locacaoSalva.get());
 		log.info("Processo de Atualização de Locação de livro realizada:" + locacaoSalva.get());
@@ -109,11 +109,11 @@ public class LocacaoService {
 		
 		log.info("Iniciando Processo de Atualização de Locação: Atualizando propriedade Cliente:" + locacaoSalva.get());
 
-		clienteService.validandoClienteExistente(locacaoSalva.get().getIdCliente());
+		clienteService.validandoClienteExistente(locacaoSalva.get().getCliente());
 
 		clienteService.validandoClienteExistente(clienteSalvo.get());
 
-		locacaoSalva.get().setIdCliente(clienteSalvo.get());
+		locacaoSalva.get().setCliente(clienteSalvo.get());
 
 		locacaoRepository.save(locacaoSalva.get());
 		log.info("Processo de Atualização de Locação de livro realizada:" + locacaoSalva.get());
@@ -128,7 +128,7 @@ public class LocacaoService {
 		Optional<Locacao> locacaoSalva = findByIdLocacao(id);
 		log.info("Iniciando Processo de Cancelamento de Locação:" + locacaoSalva.get());
 		
-		clienteService.validandoClienteExistente(locacaoSalva.get().getIdCliente());
+		clienteService.validandoClienteExistente(locacaoSalva.get().getCliente());
 
 		locacaoSalva.get().setHoraCancelamentoLocacao(HoraDiasDataLocalService.horaLocal());
 		
@@ -136,7 +136,7 @@ public class LocacaoService {
 		
 		locacaoSalva.get().setStatusLocacao(StatusLocacao.CANCELADA);
 		
-		livroService.updateStatusLivro(locacaoSalva.get().getIdLivro().getId(), StatusLivro.LIVRE);
+		livroService.updateStatusLivro(locacaoSalva.get().getLivro().getId(), StatusLivro.LIVRE);
 		
 		locacaoRepository.save(locacaoSalva.get());
 		log.info("Locação cancelada:" + locacaoSalva.get());
@@ -178,21 +178,21 @@ public class LocacaoService {
 			throw new LocacaoInvalidaOuInexistenteException("Operação não realizada. Livro Invalido ou Inexistente");
 		}
 
-		if (locacao.getIdCliente() == null) {
+		if (locacao.getCliente() == null) {
 
 			throw new ClienteInexistenteException("Operação não realizada. Cliente Inexistente");
 		}
-		if (locacao.getIdCliente().getStatusCliente() == StatusCliente.INADIMPLENTE) {
+		if (locacao.getCliente().getStatusCliente() == StatusCliente.INADIMPLENTE) {
 
 			throw new ClienteInadimplenteException("Operação não realizada devido Inadimplencia.");
 		}
 
-		if (locacao.getIdLivro().getStatusLivro() == StatusLivro.RESERVADO) {
+		if (locacao.getLivro().getStatusLivro() == StatusLivro.RESERVADO) {
 
 			throw new LivroReservadoException(
 					"Operação não realizada. Livro selecionado estar Reservado. Selecione outro Exemplar");
 		}
-		if (locacao.getIdLivro().getStatusLivro() == StatusLivro.LOCADO) {
+		if (locacao.getLivro().getStatusLivro() == StatusLivro.LOCADO) {
 
 			throw new LivroLocadoException(
 					"Operação não realizada. Livro selecionado estar Locado. Selecione outro Exemplar");
@@ -204,7 +204,7 @@ public class LocacaoService {
 
 
 
-		if (locacao.getIdCliente().getStatusCliente() == StatusCliente.INADIMPLENTE) {
+		if (locacao.getCliente().getStatusCliente() == StatusCliente.INADIMPLENTE) {
 
 			throw new ClienteInadimplenteException("Operação não realizada. Cliente Inadinplente.");
 		}

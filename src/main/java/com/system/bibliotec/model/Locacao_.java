@@ -15,9 +15,9 @@ public abstract class Locacao_ {
 	public static volatile SingularAttribute<Locacao, LocalTime> horaCancelamentoLocacao;
 	public static volatile SingularAttribute<Locacao, Integer> quantidadeDeRenovacao;
 	public static volatile SingularAttribute<Locacao, LocalDate> dataLocacao;
-	public static volatile SingularAttribute<Locacao, Cliente> idCliente;
+	public static volatile SingularAttribute<Locacao, Cliente> cliente;
 	public static volatile SingularAttribute<Locacao, StatusLocacao> statusLocacao;
-	public static volatile SingularAttribute<Locacao, Livro> idLivro;
+	public static volatile SingularAttribute<Locacao, Livro> livro;
 	public static volatile SingularAttribute<Locacao, String> observacoesDeEntrega;
 	public static volatile SingularAttribute<Locacao, LocalTime> horaLocacao;
 	public static volatile SingularAttribute<Locacao, LocalDate> dataTerminoLocacao;

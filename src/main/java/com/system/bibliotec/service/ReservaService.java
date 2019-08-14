@@ -48,9 +48,9 @@ public class ReservaService {
 	@Transactional
 	public Reserva save(Reserva reserva) {
 		log.info("Iniciando Processo de reserva de livro");
-		livroService.validaLivroExistente(reserva.getIdLivro());
+		livroService.validaLivroExistente(reserva.getLivro());
 
-		clienteService.validandoClienteExistente(reserva.getIdCliente());
+		clienteService.validandoClienteExistente(reserva.getCliente());
 
 		reserva.setHoraReserva(HoraDiasDataLocalService.horaLocal());
 
@@ -58,8 +58,8 @@ public class ReservaService {
 
 		reserva.setDataLimite(HoraDiasDataLocalService.dataReservaLimite());
 
-		livroService.updateStatusLivro(reserva.getIdLivro().getId(), StatusLivro.RESERVADO);
-		log.info("Livro Reservado:" + reserva.getIdLivro());
+		livroService.updateStatusLivro(reserva.getLivro().getId(), StatusLivro.RESERVADO);
+		log.info("Livro Reservado:" + reserva.getLivro());
 		return repository.save(reserva);
 
 	}
@@ -72,11 +72,11 @@ public class ReservaService {
 
 		livroService.validaLivroExistente(livro);
 
-		livroService.updateStatusLivro(reservaSalva.get().getIdLivro().getId(), StatusLivro.LIVRE);
+		livroService.updateStatusLivro(reservaSalva.get().getLivro().getId(), StatusLivro.LIVRE);
 
 		livroService.updateStatusLivro(livro.getId(), StatusLivro.RESERVADO);
 
-		reservaSalva.get().setIdLivro(livro);
+		reservaSalva.get().setLivro(livro);
 
 		repository.save(reservaSalva.get());
 		log.info("Reserva Atualizada: " + reservaSalva.get());
@@ -89,7 +89,7 @@ public class ReservaService {
 		log.info("Iniciando processo de Atualização de atributo Cliente da Reserva:" + reservaSalva.get());
 		clienteService.validandoClienteExistente(cliente);
 
-		reservaSalva.get().setIdCliente(cliente);
+		reservaSalva.get().setCliente(cliente);
 
 		repository.save(reservaSalva.get());
 		log.info("Reserva Atualizada: " + reservaSalva.get());
@@ -101,7 +101,7 @@ public class ReservaService {
 		Optional<Reserva> reservaSalva = findByIdReserva(id);
 		log.info("Iniciando processo de remoção de uma Reserva: " + reservaSalva.get());
 		// ATUALIZANDO O STATUS DO LIVRO RESERVADO...
-		livroService.updateStatusLivro(reservaSalva.get().getIdLivro().getId(), StatusLivro.LIVRE);
+		livroService.updateStatusLivro(reservaSalva.get().getLivro().getId(), StatusLivro.LIVRE);
 		repository.deleteById(id);
 		log.info("Reserva Deletada: " + reservaSalva.get());
 	}
@@ -143,10 +143,10 @@ public class ReservaService {
 			throw new ReservaInexistenteException("Reserva Selecionada Invalida ou Inexistente");
 		}
 
-		if (reserva.getIdLivro() == null) {
+		if (reserva.getLivro() == null) {
 			throw new LivroInvalidoOuInexistenteException("Operação não Realizada. Livro Selecionado Invalido");
 		}
-		if (!CpfUtilsValidator.isCPF(reserva.getIdCliente().getCpf())) {
+		if (!CpfUtilsValidator.isCPF(reserva.getCliente().getCpf())) {
 			throw new DocumentoInvalidoException("Operação não Realizada.  Documentação do Cliente Invalida");
 		}
 		if (reserva.getStatusReserva() == StatusReserva.CANCELADA) {

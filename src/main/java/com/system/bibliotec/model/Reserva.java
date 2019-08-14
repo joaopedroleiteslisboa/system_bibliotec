@@ -68,11 +68,11 @@ public class Reserva {
 
 	@OneToOne(optional = false)
 	@JoinColumn(name = "idCliente")
-	private Cliente idCliente;
+	private Cliente cliente;
 
 	@OneToOne(optional = false)
 	@JoinColumn(name = "idLivro")
-	private Livro idLivro;
+	private Livro livro;
 
 
 }

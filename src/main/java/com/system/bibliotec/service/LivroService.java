@@ -62,7 +62,7 @@ public class LivroService {
 
 		return livroRepository.save(livroSalvo.get());
 	}
-
+	@Transactional
 	public void updateStatusLivro(Long id, StatusLivro statusLivro) {
 
 		Optional<Livro> livroSalvo = findByIdLivro(id);
@@ -76,7 +76,8 @@ public class LivroService {
 
 		livroRepository.save(livroSalvo.get());
 	}
-
+	
+	@Transactional
 	public void updatePropertyIsbn13Livro(Long id, String isbn13) {
 
 		validaLivroExistente(id);
@@ -90,7 +91,7 @@ public class LivroService {
 		}
 
 	}
-
+	@Transactional
 	public void deleteLivro(Long id) {
 
 		validaLivroExistente(id);
@@ -136,11 +137,11 @@ public class LivroService {
 	 * @throws LivroAvariadoException              Para um {@link Livro} Avariado ou
 	 *                                             com marcas
 	 */
-	@Transactional
+	
 	public void validaLivroExistente(Long id) {
 
 		Optional<Livro> livroSalvo = livroRepository.findById(id);
-
+		
 		if (!livroSalvo.isPresent()) {
 			throw new LivroInvalidoOuInexistenteException(
 					"Livro selecionado invalido ou Inexistente. Selecione um Livro Valido");

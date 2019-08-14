@@ -38,6 +38,7 @@ public class RandomUtils {
         return RandomStringUtils.randomNumeric(DEF_COUNT);
     }
     
+    
     //TODO: Remover ester metodo quando implementar o front-end desta aplicação....
     /**
      * 
@@ -48,6 +49,17 @@ public class RandomUtils {
 	 public static String randomIntForUrlPic() {
 	
 		 	Random random = new Random();
-		 	return String.valueOf(random.nextInt(10));
+		 	return String.valueOf(random.nextInt(999));
 	 }
+	 
+	 	//TODO: Remover ester metodo quando implementar o gerador oficial e leitor de codigo de barras desta aplicação....
+	    /**
+	     * 
+	     * Gerando numero aleatorio para o codigo de barras do Livro
+	     *
+	     * @return Numero aleatorio.
+	     */	
+		  public static String randomCodBarras() {
+		        return RandomStringUtils.randomNumeric(DEF_COUNT);
+		    }
 }

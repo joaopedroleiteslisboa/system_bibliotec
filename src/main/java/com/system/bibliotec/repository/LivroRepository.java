@@ -15,7 +15,7 @@ import com.system.bibliotec.repository.livro.LivroRepositoryQuery;
 public interface LivroRepository extends JpaRepository<Livro, Long>, LivroRepositoryQuery{
 
 	public Optional<Livro> findByIsbn13(String cpf);
-
+	
 	public Page<Livro> findByNomeContaining(String nome, Pageable pageable);
 
 	public Optional<Livro> findById(Long id);
@@ -23,5 +23,7 @@ public interface LivroRepository extends JpaRepository<Livro, Long>, LivroReposi
 	public void deleteById(Long id);
 
 	public boolean existsById(Long id);
+
+	public Optional<Livro> findOneByCodBarrasIgnoreCase(String codBarras);
 
 }

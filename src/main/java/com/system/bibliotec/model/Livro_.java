@@ -21,7 +21,7 @@ public abstract class Livro_ {
 	public static volatile SingularAttribute<Livro, String> edicao;
 	public static volatile SingularAttribute<Livro, Editora> idEditora;
 	public static volatile SingularAttribute<Livro, String> descricao;
-	public static volatile SingularAttribute<Livro, BigDecimal> preco;
+	public static volatile SingularAttribute<Livro, BigDecimal> valorUnitario;
 	public static volatile SingularAttribute<Livro, StatusLivro> statusLivro;
 	public static volatile SingularAttribute<Livro, String> isbn13;
 	public static volatile SingularAttribute<Livro, Integer> numeroPaginas;

@@ -17,6 +17,7 @@ import com.system.bibliotec.exception.LivroReservadoException;
 import com.system.bibliotec.model.Livro;
 import com.system.bibliotec.model.enums.StatusLivro;
 import com.system.bibliotec.repository.LivroRepository;
+import com.system.bibliotec.service.ultis.RandomUtils;
 
 import lombok.RequiredArgsConstructor;
 
@@ -38,6 +39,7 @@ public class LivroService {
 	public Livro save(Livro livro) {
 
 		validaLivroNovo(livro);
+		livro.setCodBarras(RandomUtils.randomCodBarras());
 
 		return livroRepository.save(livro);
 
@@ -46,8 +48,8 @@ public class LivroService {
 	/**
 	 * Metodo para Atualizar um Livro.
 	 *
-	 * @param id    {@link Long} id do Livro Existente para ser buscada e analisada
-	 *              pelo metodo {@link #validaLivroExistente()}
+	 * @param id {@link Long} id do Livro Existente para ser buscada e analisada
+	 *           pelo metodo {@link #validaLivroExistente()}
 	 */
 	@Transactional
 	public Livro updateLivro(Long id, Livro livro) {
@@ -67,8 +69,7 @@ public class LivroService {
 
 		if (!livroSalvo.isPresent()) {
 
-			throw new LivroInvalidoOuInexistenteException(
-					"Operação não realizada.  Livro selecionado Inexistente");
+			throw new LivroInvalidoOuInexistenteException("Operação não realizada.  Livro selecionado Inexistente");
 
 		}
 		livroSalvo.get().setStatusLivro(statusLivro);
@@ -84,12 +85,10 @@ public class LivroService {
 
 		if (!livroSalvo.isPresent()) {
 
-			throw new LivroInvalidoOuInexistenteException(
-					"Operação não realizada.  Livro selecionado Inexistente");
+			throw new LivroInvalidoOuInexistenteException("Operação não realizada.  Livro selecionado Inexistente");
 
 		}
 
-		
 	}
 
 	public void deleteLivro(Long id) {
@@ -126,19 +125,16 @@ public class LivroService {
 
 	}
 
-	public boolean existsByIdLivro(Long id) {
-
-		return livroRepository.existsById(id);
-	}
-
 	/**
 	 * Metodo para avaliar um Livro existente.
 	 * 
 	 * @param id {@link Long} do Livro a ser analisado
-	 * @throws  LivroInvalidoOuInexistenteException Para um {@link Livro} Invalido ou Inexistente                                             
-	 * @throws  LivroReservadoException Para um {@link Livro} Reservado
-	 * @throws  LivroLocadoException Para um {@link Livro} Locado
-	 * @throws  LivroAvariadoException Para um {@link Livro} Avariado ou com marcas
+	 * @throws LivroInvalidoOuInexistenteException Para um {@link Livro} Invalido ou
+	 *                                             Inexistente
+	 * @throws LivroReservadoException             Para um {@link Livro} Reservado
+	 * @throws LivroLocadoException                Para um {@link Livro} Locado
+	 * @throws LivroAvariadoException              Para um {@link Livro} Avariado ou
+	 *                                             com marcas
 	 */
 	@Transactional
 	public void validaLivroExistente(Long id) {
@@ -167,19 +163,24 @@ public class LivroService {
 
 	}
 
-
 	/**
 	 * Metodo para avaliar a criação de um Livro
 	 * 
 	 * @param livro {@link Livro} Objeto a ser analisado
-	 * @throws  LivroExistenteException Para um {@link Livro} Existente/Registrado no Banco de dados                                             
-	 * @throws  IsbnInvalidoException Para um {@link Livro} com o Registro geral de ISBN Invalido
+	 * @throws LivroExistenteException Para um {@link Livro} Existente/Registrado no
+	 *                                 Banco de dados
+	 * @throws IsbnInvalidoException   Para um {@link Livro} com o Registro geral de
+	 *                                 ISBN Invalido
 	 */
 	public void validaLivroNovo(Livro livro) {
 
 		if (existsByIdLivro(livro.getId())) {
 
 			throw new LivroExistenteException("Este livro já possui cadastro no sistema. Informe outro livro.");
+		}
+		if (existsCodBarrasLivro(livro.getCodBarras())) {
+
+			throw new CodBarrasExistenteException("Codigo de barras existente! Gere outro codigo de barras!");
 		}
 
 		if (!isbnValidator.isValid(livro.getIsbn13(), null)) {
@@ -188,6 +189,15 @@ public class LivroService {
 		}
 
 	}
-	
-	
+
+	public boolean existsByIdLivro(Long id) {
+
+		return livroRepository.existsById(id);
+	}
+
+	public boolean existsCodBarrasLivro(String codBarras) {
+
+		return livroRepository.findOneByCodBarrasIgnoreCase(codBarras).isPresent();
+	}
+
 }

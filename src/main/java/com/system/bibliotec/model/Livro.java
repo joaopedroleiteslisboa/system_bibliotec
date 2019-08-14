@@ -121,8 +121,8 @@ public class Livro {
 
 	@DecimalMin(value = "1.00", message = "O livro deve ter um preço valido")
 	@NotNull(message = "Insira um preço")
-	@Column(name = "preco")
-	private BigDecimal preco;
+	@Column(name = "valorUnitario",precision = 10, scale = 2)
+	private BigDecimal valorUnitario = BigDecimal.ZERO; //TODO: Modificar esse default value em implementação para produção...
 
 	@NotNull(message = "Informe uma quantidade adicionada em seu Estoque de Livros")
 	@Column(name = "quantidade")

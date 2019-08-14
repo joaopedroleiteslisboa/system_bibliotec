@@ -2,7 +2,13 @@ package com.system.bibliotec.model.enums;
 
 public enum TipoPagamento {
 
-	DINHEIRO("Dinheiro"), CARTAO_CREDITO("Carta de Credito"), CARTAO_DEBITO("Carta de Debito");
+
+	DINHEIRO("Dinheiro"),
+	CARTAO_CREDITO("Cartão de Crédito"),
+	CARTAO_DEBITO("Cartão de Débito"), 
+	CHEQUE("Cheque"),
+	BOLETO_BANCARIO("Boleto Bancário"),
+	DEPOSITO_BANCARIO("Depósito Bancário");
 
 	private String tipoPagamento;
 

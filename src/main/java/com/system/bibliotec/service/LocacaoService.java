@@ -134,14 +134,17 @@ public class LocacaoService {
 	public void cancelarLocacao(Long id) {
 		Optional<Locacao> locacaoSalva = findByIdLocacao(id);
 		log.info("Iniciando Processo de Cancelamento de Locação:" + locacaoSalva.get());
+		
 		validaLocacaoExistente(locacaoSalva.get());
 
-		livroService.updateStatusLivro(locacaoSalva.get().getIdLivro().getId(), StatusLivro.LIVRE);
-
 		locacaoSalva.get().setHoraCancelamentoLocacao(HoraDiasDataLocalService.horaLocal());
+		
 		locacaoSalva.get().setDataCancelamentoLocacao(HoraDiasDataLocalService.dataLocal());
+		
 		locacaoSalva.get().setStatusLocacao(StatusLocacao.CANCELADA);
-
+		
+		livroService.updateStatusLivro(locacaoSalva.get().getIdLivro().getId(), StatusLivro.LIVRE);
+		
 		locacaoRepository.save(locacaoSalva.get());
 		log.info("Locação cancelada:" + locacaoSalva.get());
 	}

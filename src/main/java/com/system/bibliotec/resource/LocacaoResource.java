@@ -65,12 +65,12 @@ public class LocacaoResource {
 	  public void cancelarLocacao(@PathVariable Long id) { locacaoService.cancelarLocacao(id); }
 	  
 	  
-	  @PutMapping("/{id}/idLivro")	  
+	  @PutMapping("/{id}/livro")	  
 	  @ResponseStatus(HttpStatus.NO_CONTENT) 
 	  public void updatePropertyLivro(@PathVariable Long id, @RequestBody Long idLivro) {
 	  locacaoService.updatePropertyLivro(id, idLivro); }
 	  
-	  @PutMapping("/{id}/idCliente")	  
+	  @PutMapping("/{id}/cliente")	  
 	  @ResponseStatus(HttpStatus.NO_CONTENT) public void
 	  updatePropertyCliente(@PathVariable Long id, @RequestBody Long idCliente) {
 	  locacaoService.updatePropertyCliente(id, idCliente); }

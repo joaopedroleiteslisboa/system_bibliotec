@@ -30,23 +30,21 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ReservaService {
 
-	
 	private final ReservaRepository repository;
 
-	
 	private final ClienteService clienteService;
 
-	
 	private final LivroService livroService;
 
 	// RESERVANDO UM LIVRO.....
 
 	/**
-	 * Metodo para criar uma Reserva caso prosseguir com todos os requisitos requeridos pelo {@link #validaReserva(Long)}
+	 * Metodo para criar uma Reserva caso prosseguir com todos os requisitos
+	 * requeridos pelo {@link #validaReserva(Long)}
 	 *
-	 * @param reserva {@link Reserva} para ser  analisado e persistido
+	 * @param reserva {@link Reserva} para ser analisado e persistido
 	 *
-	 */	
+	 */
 	@Transactional
 	public Reserva save(Reserva reserva) {
 
@@ -54,7 +52,6 @@ public class ReservaService {
 
 		clienteService.validandoClienteExistente(reserva.getIdCliente().getCpf());
 
-		
 		reserva.setHoraReserva(HoraDiasDataLocalService.horaLocal());
 
 		reserva.setDataReserva(HoraDiasDataLocalService.dataLocal());
@@ -76,18 +73,16 @@ public class ReservaService {
 
 	}
 
-	
 	@Transactional
 	public void updatePropertyLivro(Long idReserva, Livro livro) {
 
 		validaReservaExistente(idReserva);
 
 		livroService.validaLivroExistente(livro);
-		
+
 		Optional<Reserva> reservaSalvo = findByIdReserva(idReserva);
 
 		livroService.updateStatusLivro(reservaSalvo.get().getIdLivro().getId(), StatusLivro.LIVRE);
-
 
 		livroService.updateStatusLivro(livro.getId(), StatusLivro.RESERVADO);
 
@@ -101,7 +96,7 @@ public class ReservaService {
 	public void updatePropertyCliente(Long idReserva, Cliente cliente) {
 
 		clienteService.validandoClienteExistente(cliente.getCpf());
-		
+
 		Optional<Reserva> reservaSalva = repository.findById(idReserva);
 
 		if (!reservaSalva.isPresent()) {
@@ -115,9 +110,9 @@ public class ReservaService {
 
 	@Transactional
 	public void deleteReserva(Long id) {
-  		
+
 		Optional<Reserva> reservaSalva = findByIdReserva(id);
-	
+
 		// ATUALIZANDO O STATUS DO LIVRO RESERVADO...
 		livroService.updateStatusLivro(reservaSalva.get().getIdLivro().getId(), StatusLivro.LIVRE);
 		repository.deleteById(id);
@@ -131,42 +126,56 @@ public class ReservaService {
 		}
 		return reservaSalvo;
 	}
-	
+
 	/**
-	 * Metodo para validar uma Solicitação e Atualização de Reserva de Exemplar/Livro
+	 * Metodo para validar uma Solicitação e Atualização de Reserva de
+	 * Exemplar/Livro
 	 *
-	 * @param id LONG para ser  buscado e analisado
-	 * @throws ReservaInexistenteException Se a Reserva selecionada não for encontrada para tal prodecimento
-	 * @throws LivroInvalidoOuInexistenteException Se o Livro informado na Reserva não possuir cadastro valido na Base de dados
-	 * @throws DocumentoInvalidoException Se Cliente Possuir Pendencias ou Documentação sem valía
-	 * @throws ReservaCanceladaException Se a Reserva selecionada Possuir registro de cancelamento em seu status junto a Base de dados
-	 * @throws ReservaLocadaException Se a Reserva selecionada Possuir registro de Locação em seu status junto a Base de dados
-	 * @throws ReservaUpdateException Se a Reserva selecionada Possuir pendencias ou quaisquer outra exceção supracitada registrada, registrada junto a base de dados
+	 * @param id LONG para ser buscado e analisado
+	 * @throws ReservaInexistenteException         Se a Reserva selecionada não for
+	 *                                             encontrada para tal prodecimento
+	 * @throws LivroInvalidoOuInexistenteException Se o Livro informado na Reserva
+	 *                                             não possuir cadastro valido na
+	 *                                             Base de dados
+	 * @throws DocumentoInvalidoException          Se Cliente Possuir Pendencias ou
+	 *                                             Documentação sem valía
+	 * @throws ReservaCanceladaException           Se a Reserva selecionada Possuir
+	 *                                             registro de cancelamento em seu
+	 *                                             status junto a Base de dados
+	 * @throws ReservaLocadaException              Se a Reserva selecionada Possuir
+	 *                                             registro de Locação em seu status
+	 *                                             junto a Base de dados
+	 * @throws ReservaUpdateException              Se a Reserva selecionada Possuir
+	 *                                             pendencias ou quaisquer outra
+	 *                                             exceção supracitada registrada,
+	 *                                             registrada junto a base de dados
 	 */
 	public void validaReservaExistente(Long id) {
-		
+
 		Optional<Reserva> reservaSalva = findByIdReserva(id);
-		
+
 		if (!reservaSalva.isPresent()) {
 			throw new ReservaInexistenteException("Reserva Selecionada Invalida ou Inexistente");
 		}
 
-		if (reservaSalva.get().getIdLivro() == null || !livroService.existsByIdLivro(reservaSalva.get().getIdLivro().getId())) {
+		if (reservaSalva.get().getIdLivro() == null
+				|| !livroService.existsByIdLivro(reservaSalva.get().getIdLivro().getId())) {
 			throw new LivroInvalidoOuInexistenteException("Operação não Realizada. Livro Selecionado Invalido");
 		}
 		if (!CpfUtilsValidator.isCPF(reservaSalva.get().getIdCliente().getCpf())) {
-			throw new DocumentoInvalidoException( "Operação não Realizada.  Documentação do Cliente Invalida");
+			throw new DocumentoInvalidoException("Operação não Realizada.  Documentação do Cliente Invalida");
 		}
 		if (reservaSalva.get().getStatusReserva() == StatusReserva.CANCELADA) {
-			throw new ReservaCanceladaException( "Operação não Realizada.  Reserva Cancelada ou Encerrada");
+			throw new ReservaCanceladaException("Operação não Realizada.  Reserva Cancelada ou Encerrada");
 		}
 		if (reservaSalva.get().getStatusReserva() == StatusReserva.ALUGADA) {
-			throw new ReservaLocadaException( "Operação não Realizada.  O Intem reservado já estar sob processo de Locação");
+			throw new ReservaLocadaException(
+					"Operação não Realizada.  O Intem reservado já estar sob processo de Locação");
 		}
 		if (reservaSalva.get().getDataLimite().isBefore(LocalDate.now())) {
 			throw new ReservaUpdateException("Operação não Realizada. Data limite de Reserva Ultrapassada");
 		}
-		
+
 	}
 
 }

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.system.bibliotec.exception.EstoqueInsuficienteException;
 import com.system.bibliotec.exception.IsbnInvalidoException;
 import com.system.bibliotec.exception.LivroAvariadoException;
 import com.system.bibliotec.exception.LivroExistenteException;
@@ -80,20 +81,38 @@ public class LivroService {
 
 	@Transactional
 	public void updatePropertyIsbn13Livro(Long id, String isbn13) {
-		Optional<Livro> livroSalvo = livroRepository.findById(id);
+		if(!isbnValidator.isValid(isbn13, null)) {throw new IsbnInvalidoException("ISBN 13 Invalido. Informe outro valido");}
+		Optional<Livro> livroSalvo = findByIdLivro(id);
+		if (!livroSalvo.isPresent()) {throw new LivroInvalidoOuInexistenteException("Operação não realizada.  Livro selecionado Inexistente");}
+
 		validaLivroExistente(livroSalvo.get());
+		
+		livroSalvo.get().setIsbn13(isbn13);
+	}
+	
+	@Transactional
+	public void baixarEstoque(Integer quantidade, Long idLivro) {
+		Optional<Livro> livroSalvo = findByIdLivro(idLivro);
+		
+		int novaQuantidade = livroSalvo.get().getQuantidade() - quantidade;
 
-		if (!livroSalvo.isPresent()) {
-
-			throw new LivroInvalidoOuInexistenteException("Operação não realizada.  Livro selecionado Inexistente");
-
+		if (novaQuantidade < 0) {
+			throw new EstoqueInsuficienteException();
 		}
+		livroSalvo.get().setQuantidade(novaQuantidade);
+		livroRepository.save(livroSalvo.get());
+	}
 
+	@Transactional
+	public void adicionarEstoque(Integer quantidade,Long idLivro) {
+		Optional<Livro> livroSalvo = findByIdLivro(idLivro);
+		
+		livroSalvo.get().setQuantidade(livroSalvo.get().getQuantidade() + quantidade);
 	}
 
 	@Transactional
 	public void deleteLivro(Long id) {
-		Optional<Livro> livroSalvo = livroRepository.findById(id);
+		Optional<Livro> livroSalvo = findByIdLivro(id);
 		validaLivroExistente(livroSalvo.get());
 		livroRepository.deleteById(id);
 
@@ -159,6 +178,9 @@ public class LivroService {
 
 			throw new LivroAvariadoException("O livro selecionado estar Avariado. Operação não Realizada");
 		}
+		if(livro.getQuantidade() == 0) {
+			throw new EstoqueInsuficienteException();
+		}
 
 	}
 
@@ -198,5 +220,6 @@ public class LivroService {
 
 		return livroRepository.findOneByCodBarrasIgnoreCase(codBarras).isPresent();
 	}
+
 
 }

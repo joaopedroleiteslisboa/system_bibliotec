@@ -65,15 +65,3 @@ CREATE TABLE editoras(
         descricao MEDIUMTEXT NOT NULL
 
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1000;
-
-
-CREATE TABLE editoras_has_livros (
-
-	id_editora BIGINT NOT NULL,
-	id_livro BIGINT NOT NULL,
-	PRIMARY KEY (id_editora, id_livro),
-	FOREIGN KEY (id_editora) REFERENCES editoras(id),
-	FOREIGN KEY (id_livro) REFERENCES livros(id)
-
-)ENGINE=InnoDB DEFAULT CHARSET=utf8;
-

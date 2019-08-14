@@ -32,7 +32,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class LocacaoService {
-
+	
+	private static final int DEFAULT_COUNT = 1;
+	
 	private final ClienteService clienteService;
 
 	private final LivroService livroService;
@@ -59,6 +61,7 @@ public class LocacaoService {
 		locacao.setDataTerminoLocacao(HoraDiasDataLocalService.dataLocacaoDevolucao());
 
 		livroService.updateStatusLivro(locacao.getIdLivro().getId(), StatusLivro.LOCADO);
+		livroService.baixarEstoque(DEFAULT_COUNT, locacao.getIdLivro().getId());
 		log.info("Locação realizada:" + locacao);
 		return locacaoRepository.save(locacao);
 
@@ -76,16 +79,6 @@ public class LocacaoService {
 		locacaoSalva.get().setDataTerminoLocacao(
 				HoraDiasDataLocalService.dataRenovacaoLocacao(locacaoSalva.get().getDataTerminoLocacao()));
 		log.info("Processo de Renovação de Locação de livro realizada:" + locacaoSalva.get());
-	}
-
-	public Iterable<Locacao> findAll() {
-
-		return locacaoRepository.findAll();
-	}
-
-	public boolean existsByIdLocacao(Long id) {
-
-		return locacaoRepository.existsById(id);
 	}
 
 	@Transactional
@@ -130,7 +123,7 @@ public class LocacaoService {
 	public void checarDataLimiteAtingida(Long idEmprestimo, StatusLocacao statusLocacao) {
 
 	}
-
+	//TODO: Implementar serviço de disparo de email notificando o cliente...
 	public void cancelarLocacao(Long id) {
 		Optional<Locacao> locacaoSalva = findByIdLocacao(id);
 		log.info("Iniciando Processo de Cancelamento de Locação:" + locacaoSalva.get());
@@ -147,6 +140,13 @@ public class LocacaoService {
 		
 		locacaoRepository.save(locacaoSalva.get());
 		log.info("Locação cancelada:" + locacaoSalva.get());
+	}
+	//TODO: Implementar serviço de disparo de email notificando o cliente...
+	public void devolucaoLivro(Long id) {
+		Optional<Locacao> locacaoSalva = findByIdLocacao(id);
+		log.info("Iniciando Processo de Devolução de Livros:" + locacaoSalva.get());
+		
+		
 	}
 
 	@Transactional
@@ -225,7 +225,15 @@ public class LocacaoService {
 		}
 
 	}
-	
+	public Iterable<Locacao> findAll() {
+
+		return locacaoRepository.findAll();
+	}
+
+	public boolean existsByIdLocacao(Long id) {
+
+		return locacaoRepository.existsById(id);
+	}
 	
 
 }

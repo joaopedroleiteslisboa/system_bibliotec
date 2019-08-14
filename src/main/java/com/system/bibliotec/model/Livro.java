@@ -28,6 +28,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -75,9 +76,8 @@ public class Livro {
 			@JoinColumn(name = "id_autor") })
 	private Set<Autor> autores = new HashSet<Autor>();
 
-	@ManyToOne
-	@JoinColumn(name = "id_editora")
-	@JsonBackReference
+	@JsonManagedReference
+	@ManyToOne(optional = false, fetch = FetchType.EAGER)
 	private Editora idEditora;
 
 	@NotNull(message = "Este campo é obrigatorio")
@@ -127,6 +127,7 @@ public class Livro {
 	@NotNull(message = "Informe uma quantidade adicionada em seu Estoque de Livros")
 	@Column(name = "quantidade")
 	@Size(min = 1, message = "Informe pelo menos {min} livro para Salvar no Estoque")
-	private int quantidade;
+	private Integer quantidade;
 
+	
 }

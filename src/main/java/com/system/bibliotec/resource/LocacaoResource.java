@@ -26,7 +26,7 @@ import com.system.bibliotec.repository.LocacaoRepository;
 import com.system.bibliotec.service.LocacaoService;
 
 @RestController
-@RequestMapping(value = "/locacoes", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+@RequestMapping(value = "/locacoes")
 public class LocacaoResource {
 
 	
@@ -45,7 +45,7 @@ public class LocacaoResource {
 	  
 	  }
 	  
-	  @PostMapping
+	  @PostMapping(consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	  public ResponseEntity<Locacao> create(@Valid @RequestBody Locacao locacao, HttpServletResponse response) {
 		  Locacao locacaoSalva = locacaoService.realizarLocacao(locacao);
 		  publisher.publishEvent(new RecursoCriadorEvent(this, response, locacaoSalva.getId())); 
@@ -63,6 +63,8 @@ public class LocacaoResource {
 	  @PutMapping("/cancelar")	  
 	  @ResponseStatus(HttpStatus.NO_CONTENT)
 	  public void cancelarLocacao(@PathVariable Long id) { locacaoService.cancelarLocacao(id); }
+	  
+	  
 	  
 	  
 	  @PutMapping("/{id}/livro")	  

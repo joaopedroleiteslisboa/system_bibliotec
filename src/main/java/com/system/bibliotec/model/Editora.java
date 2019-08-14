@@ -16,7 +16,9 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -51,7 +53,8 @@ public class Editora {
 	@Column(name = "descricao")
 	private String descricao;
 
-	@JsonIgnoreProperties("idEditora")
+
+	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "idEditora", orphanRemoval = false)
 	private List<Livro> livros;
 }

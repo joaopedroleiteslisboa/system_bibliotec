@@ -116,9 +116,9 @@ public class LocacaoService {
 		
 		log.info("Iniciando Processo de Atualização de Locação: Atualizando propriedade Cliente:" + locacaoSalva.get());
 
-		clienteService.validandoClienteExistente(locacaoSalva.get().getIdCliente().getCpf());
+		clienteService.validandoClienteExistente(locacaoSalva.get().getIdCliente());
 
-		clienteService.validandoClienteExistente(clienteSalvo.get().getCpf());
+		clienteService.validandoClienteExistente(clienteSalvo.get());
 
 		locacaoSalva.get().setIdCliente(clienteSalvo.get());
 
@@ -135,7 +135,7 @@ public class LocacaoService {
 		Optional<Locacao> locacaoSalva = findByIdLocacao(id);
 		log.info("Iniciando Processo de Cancelamento de Locação:" + locacaoSalva.get());
 		
-		validaLocacaoExistente(locacaoSalva.get());
+		clienteService.validandoClienteExistente(locacaoSalva.get().getIdCliente());
 
 		locacaoSalva.get().setHoraCancelamentoLocacao(HoraDiasDataLocalService.horaLocal());
 		
@@ -202,7 +202,7 @@ public class LocacaoService {
 
 	private void validaLocacaoExistente(Locacao locacao) {
 
-		// Optional<Locacao> locacaoSalva = findByIdLocacao(id);
+
 
 		if (locacao.getIdCliente().getStatusCliente() == StatusCliente.INADIMPLENTE) {
 
@@ -225,5 +225,7 @@ public class LocacaoService {
 		}
 
 	}
+	
+	
 
 }

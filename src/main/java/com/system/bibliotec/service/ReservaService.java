@@ -50,7 +50,7 @@ public class ReservaService {
 		log.info("Iniciando Processo de reserva de livro");
 		livroService.validaLivroExistente(reserva.getIdLivro());
 
-		clienteService.validandoClienteExistente(reserva.getIdCliente().getCpf());
+		clienteService.validandoClienteExistente(reserva.getIdCliente());
 
 		reserva.setHoraReserva(HoraDiasDataLocalService.horaLocal());
 
@@ -77,7 +77,7 @@ public class ReservaService {
 	public void updatePropertyLivro(Long idReserva, Livro livro) {
 		Optional<Reserva> reservaSalva = findByIdReserva(idReserva);
 		log.info("Iniciando processo de Atualização de atributo livro da Reserva:" +reservaSalva.get());
-		validaReservaExistente(idReserva);
+		validaReservaExistente(reservaSalva.get());
 
 		livroService.validaLivroExistente(livro);
 
@@ -94,11 +94,9 @@ public class ReservaService {
 	@Transactional
 	public void updatePropertyCliente(Long idReserva, Cliente cliente) {
 		Optional<Reserva> reservaSalva = repository.findById(idReserva);
-		if (!reservaSalva.isPresent()) {
-			throw new ReservaInexistenteException("Operação não realizada. Reserva Inexistente");
-		}
+			validaReservaExistente(reservaSalva.get());
 		log.info("Iniciando processo de Atualização de atributo Cliente da Reserva:" +reservaSalva.get());
-		clienteService.validandoClienteExistente(cliente.getCpf());
+		clienteService.validandoClienteExistente(cliente);
 
 		reservaSalva.get().setIdCliente(cliente);
 
@@ -148,29 +146,27 @@ public class ReservaService {
 	 *                                             exceção supracitada registrada,
 	 *                                             registrada junto a base de dados
 	 */
-	public void validaReservaExistente(Long id) {
+	public void validaReservaExistente(Reserva reserva) {
 
-		Optional<Reserva> reservaSalva = findByIdReserva(id);
-
-		if (!reservaSalva.isPresent()) {
+		
+		if (reserva.getId() == null) {
 			throw new ReservaInexistenteException("Reserva Selecionada Invalida ou Inexistente");
 		}
 
-		if (reservaSalva.get().getIdLivro() == null
-				|| !livroService.existsByIdLivro(reservaSalva.get().getIdLivro().getId())) {
+		if (reserva.getIdLivro() == null) {
 			throw new LivroInvalidoOuInexistenteException("Operação não Realizada. Livro Selecionado Invalido");
 		}
-		if (!CpfUtilsValidator.isCPF(reservaSalva.get().getIdCliente().getCpf())) {
+		if (!CpfUtilsValidator.isCPF(reserva.getIdCliente().getCpf())) {
 			throw new DocumentoInvalidoException("Operação não Realizada.  Documentação do Cliente Invalida");
 		}
-		if (reservaSalva.get().getStatusReserva() == StatusReserva.CANCELADA) {
+		if (reserva.getStatusReserva() == StatusReserva.CANCELADA) {
 			throw new ReservaCanceladaException("Operação não Realizada.  Reserva Cancelada ou Encerrada");
 		}
-		if (reservaSalva.get().getStatusReserva() == StatusReserva.ALUGADA) {
+		if (reserva.getStatusReserva() == StatusReserva.ALUGADA) {
 			throw new ReservaLocadaException(
 					"Operação não Realizada.  O Intem reservado já estar sob processo de Locação");
 		}
-		if (reservaSalva.get().getDataLimite().isBefore(LocalDate.now())) {
+		if (reserva.getDataLimite().isBefore(LocalDate.now())) {
 			throw new ReservaUpdateException("Operação não Realizada. Data limite de Reserva Ultrapassada");
 		}
 

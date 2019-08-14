@@ -42,11 +42,12 @@ public class ClienteService {
 
 	@Transactional
 	public Cliente updateCliente(String cpf, Cliente cliente) {
-
-		log.info("Atualizando um Cliente: " + cliente.toString());
-		validandoClienteExistente(cpf);
-
+		
 		Optional<Cliente> clienteSalvo = findByCpfCliente(cpf);
+		
+		log.info("Atualizando um Cliente: " + cliente.toString());
+		
+		validandoClienteExistente(clienteSalvo.get());
 
 		BeanUtils.copyProperties(cliente, clienteSalvo, "id");
 		log.info("Cliente Atualizado: " + cliente.toString());
@@ -59,7 +60,7 @@ public class ClienteService {
 
 		Optional<Cliente> clienteSalvo = findByIdCliente(idCliente);
 
-		validandoClienteExistente(clienteSalvo.get().getCpf());
+		validandoClienteExistente(clienteSalvo.get());
 
 		log.info("Atualizando Propriedade CPF do Cliente " + clienteSalvo.toString());
 		clienteSalvo.get().setCpf(cpf);
@@ -71,10 +72,10 @@ public class ClienteService {
 
 	@Transactional
 	public Cliente updatePropertyEndereco(String cpf, Endereco endereco) {
-
-		validandoClienteExistente(cpf);
-
 		Optional<Cliente> clienteSalvo = findByCpfCliente(cpf);
+		validandoClienteExistente(clienteSalvo.get());
+
+		
 
 		log.info("Atualizando Propriedade Endereço do Cliente: " + clienteSalvo.toString());
 		clienteSalvo.get().setIdEndereco(endereco);
@@ -117,26 +118,24 @@ public class ClienteService {
 	 * @throws ClienteInadimplenteException      Se Cliente Possuir Pendencias na
 	 *                                           Empresa
 	 */
-	public void validandoClienteExistente(String cpf) {
+	public void validandoClienteExistente(Cliente cliente) {
 
-		if (!CpfUtilsValidator.isCPF(cpf)) {
+		if (!CpfUtilsValidator.isCPF(cliente.getCpf())) {
 
 			throw new CpfInvalidoOuInexistenteException("Cpf do Cliente Invalido. Informe um Cpf Valido.");
 		}
 
-		Optional<Cliente> clienteSalvo = findByCpfCliente(cpf);
-
-		if (!clienteSalvo.isPresent()) {
+		if (cliente.getId() == null) {
 
 			throw new ClienteInexistenteException("Cliente Inexistente Ou Invalido. Informe um cliente Valido");
 		}
 
-		if (clienteSalvo.get().getStatusCliente() == StatusCliente.INADIMPLENTE) {
+		if (cliente.getStatusCliente() == StatusCliente.INADIMPLENTE) {
 
 			throw new ClienteInadimplenteException("Cliente Inadinplente. Operação não realizada");
 		}
 
-		if (clienteSalvo.get().isInativo()) {
+		if (cliente.isInativo()) {
 
 			throw new ClienteInativoException(
 					"Cliente Inativo. Operação não realizada. Informe um administrador para Avaliação");
@@ -193,10 +192,9 @@ public class ClienteService {
 	 */
 	@Transactional
 	public void excluirCliente(String cpf) {
-
+		Optional<Cliente> cliente = clienteRepository.findByCpf(cpf);
 		log.info("Deletando um Cliente, CPF Nº: " + cpf);
-
-		validandoClienteExistente(cpf);
+		validandoClienteExistente(cliente.get());		
 
 		log.info("Deletando um Cliente, CPF Nº: " + cpf);
 		clienteRepository.deleteByCpf(cpf);

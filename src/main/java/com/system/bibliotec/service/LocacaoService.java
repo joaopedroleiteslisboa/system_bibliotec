@@ -170,7 +170,7 @@ public class LocacaoService {
 	
 		if (locacao.getId() == null) {
 
-			throw new LivroInvalidoOuInexistenteException("Operação não realizada. Livro Invalido ou Inexistente");
+			throw new LocacaoInvalidaOuInexistenteException("Operação não realizada. Livro Invalido ou Inexistente");
 		}
 
 		if (locacao.getIdCliente() == null) {
@@ -181,10 +181,7 @@ public class LocacaoService {
 
 			throw new ClienteInadimplenteException("Operação não realizada devido Inadimplencia.");
 		}
-		if (locacao.getIdCliente().getStatusCliente() == StatusCliente.INADIMPLENTE) {
 
-			throw new ClienteInadimplenteException("Operação não realizada devido Inadimplencia.");
-		}
 		if (locacao.getIdLivro().getStatusLivro() == StatusLivro.RESERVADO) {
 
 			throw new LivroReservadoException(

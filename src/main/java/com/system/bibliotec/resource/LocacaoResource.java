@@ -9,6 +9,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,14 +26,14 @@ import com.system.bibliotec.repository.LocacaoRepository;
 import com.system.bibliotec.service.LocacaoService;
 
 @RestController
-@RequestMapping("/emprestimos")
-public class EmprestimoResource {
+@RequestMapping(value = "/locacoes", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+public class LocacaoResource {
 
 	
 	  @Autowired private LocacaoRepository locacaoRepository;
 	  
 	  @Autowired
-	  private LocacaoService emprestimoService;
+	  private LocacaoService locacaoService;
 	  
 	  @Autowired
 	  private ApplicationEventPublisher publisher;
@@ -46,34 +47,33 @@ public class EmprestimoResource {
 	  
 	  @PostMapping
 	  public ResponseEntity<Locacao> create(@Valid @RequestBody Locacao locacao, HttpServletResponse response) {
-		  Locacao emprestimoSalvo = emprestimoService.realizarLocacao(locacao);
-		  publisher.publishEvent(new RecursoCriadorEvent(this, response, emprestimoSalvo.getId())); 
-		  return ResponseEntity.status(HttpStatus.CREATED).body(emprestimoSalvo); 
+		  Locacao locacaoSalva = locacaoService.realizarLocacao(locacao);
+		  publisher.publishEvent(new RecursoCriadorEvent(this, response, locacaoSalva.getId())); 
+		  return ResponseEntity.status(HttpStatus.CREATED).body(locacaoSalva); 
 		  
 	  }
 	  
 	  @GetMapping("/{id}")
 	  public ResponseEntity<Locacao> findById(@PathVariable Long id) {
-		    Optional<Locacao> locacao = emprestimoService.findByIdLocacao(id);
+		    Optional<Locacao> locacao = locacaoService.findByIdLocacao(id);
 	  return locacao.isPresent() ? ResponseEntity.ok(locacao.get()) : ResponseEntity.notFound().build();
 	  
 	  }
 	  
 	  @PutMapping("/cancelar")	  
 	  @ResponseStatus(HttpStatus.NO_CONTENT)
-	  public void cancelarLocacao(@PathVariable Long id) { emprestimoService.cancelarEmprestimo(id); }
+	  public void cancelarLocacao(@PathVariable Long id) { locacaoService.cancelarLocacao(id); }
 	  
 	  
 	  @PutMapping("/{id}/idLivro")	  
 	  @ResponseStatus(HttpStatus.NO_CONTENT) 
 	  public void updatePropertyLivro(@PathVariable Long id, @RequestBody Long idLivro) {
-	  emprestimoService.updatePropertyLivro(id, idLivro); }
+	  locacaoService.updatePropertyLivro(id, idLivro); }
 	  
-	  @PutMapping("/{id}/idCliente")
-	  
+	  @PutMapping("/{id}/idCliente")	  
 	  @ResponseStatus(HttpStatus.NO_CONTENT) public void
 	  updatePropertyCliente(@PathVariable Long id, @RequestBody Long idCliente) {
-	  emprestimoService.updatePropertyCliente(id, idCliente); }
+	  locacaoService.updatePropertyCliente(id, idCliente); }
 	 
 
 }

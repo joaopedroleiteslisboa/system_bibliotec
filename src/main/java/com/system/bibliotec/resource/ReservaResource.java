@@ -10,6 +10,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,7 +29,7 @@ import com.system.bibliotec.repository.ReservaRepository;
 import com.system.bibliotec.service.ReservaService;
 
 @RestController
-@RequestMapping("/reservas")
+@RequestMapping(value = "/reservas",  produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class ReservaResource {
 
 	@Autowired

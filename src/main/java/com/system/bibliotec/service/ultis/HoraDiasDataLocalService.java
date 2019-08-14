@@ -22,7 +22,7 @@ public class HoraDiasDataLocalService {
 
 	public static LocalDate dataLocal() {
 
-		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		CharSequence localDate = LocalDate.now().toString();
 		LocalDate dataFormatada = LocalDate.parse(localDate, dateTimeFormatter);
 
@@ -52,7 +52,7 @@ public class HoraDiasDataLocalService {
 
 	public static LocalDate dataRenovacaoLocacao(LocalDate dataTerminoEmprestimo) {
 
-		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
 		LocalDate localDateAnalyzed = null;
 
@@ -75,7 +75,7 @@ public class HoraDiasDataLocalService {
 
 		boolean isDataValida = false;
 
-		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
 		LocalDate dataTerminoEmprestimoFormatada = LocalDate.parse(dataTerminoEmprestimo.format(dateTimeFormatter));
 

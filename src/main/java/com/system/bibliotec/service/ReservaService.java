@@ -50,7 +50,7 @@ public class ReservaService {
 	@Transactional
 	public Reserva save(Reserva reserva) {
 
-		livroService.validaLivroExistente(reserva.getIdLivro().getId());
+		livroService.validaLivroExistente(reserva.getIdLivro());
 
 		clienteService.validandoClienteExistente(reserva.getIdCliente().getCpf());
 
@@ -82,7 +82,7 @@ public class ReservaService {
 
 		validaReservaExistente(idReserva);
 
-		livroService.validaLivroExistente(livro.getId());
+		livroService.validaLivroExistente(livro);
 		
 		Optional<Reserva> reservaSalvo = findByIdReserva(idReserva);
 
@@ -113,6 +113,7 @@ public class ReservaService {
 		repository.save(reservaSalva.get());
 	}
 
+	@Transactional
 	public void deleteReserva(Long id) {
   		
 		Optional<Reserva> reservaSalva = findByIdReserva(id);

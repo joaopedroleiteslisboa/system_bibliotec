@@ -48,7 +48,7 @@ public class LocacaoService {
 	@Transactional
 	public Locacao realizarLocacao(Locacao locacao) {
 
-		livroService.validaLivroExistente(locacao.getIdLivro().getId());
+		livroService.validaLivroExistente(locacao.getIdLivro());
 
 		locacao.setHoraLocacao(HoraDiasDataLocalService.horaLocal());
 
@@ -64,10 +64,8 @@ public class LocacaoService {
 
 	@Transactional
 	public void renovarLocacao(Long id) {
-
-		validaLocacaoExistente(id);
-
 		Optional<Locacao> locacaoSalva = findByIdLocacao(id);
+		validaLocacaoExistente(locacaoSalva.get());
 
 		int quantidadeRenovada = locacaoSalva.get().getQuantidadeDeRenovacao();
 		locacaoSalva.get().setQuantidadeDeRenovacao(quantidadeRenovada + 1);
@@ -89,12 +87,12 @@ public class LocacaoService {
 	@Transactional
 	public void updatePropertyLivro(Long idLocacao, Long idLivro) {
 
-		validaLocacaoExistente(idLocacao);
-		
-		livroService.validaLivroExistente(idLivro);
-
 		Optional<Locacao> locacaoSalva = findByIdLocacao(idLocacao);
 		Optional<Livro> livroSalvo = livroService.findByIdLivro(idLivro);
+		
+		validaLocacaoExistente(locacaoSalva.get());
+
+		livroService.validaLivroExistente(livroSalvo.get());
 
 		livroService.updateStatusLivro(locacaoSalva.get().getIdLivro().getId(), StatusLivro.LIVRE);
 
@@ -126,10 +124,11 @@ public class LocacaoService {
 	}
 
 	public void cancelarEmprestimo(Long id) {
-
-		validaLocacaoExistente(id);
-
 		Optional<Locacao> locacaoSalva = findByIdLocacao(id);
+		
+		validaLocacaoExistente(locacaoSalva.get());
+
+		
 
 		livroService.updateStatusLivro(locacaoSalva.get().getIdLivro().getId(), StatusLivro.LIVRE);
 
@@ -142,10 +141,10 @@ public class LocacaoService {
 
 	@Transactional
 	public void updatePropertyStatusLocacao(Long id, StatusLocacao statusLocacao) {
-
-		validaLocacaoExistente(id);
-
 		Optional<Locacao> locacaoSalva = findByIdLocacao(id);
+		validaLocacaoExistente(locacaoSalva.get());
+
+		
 
 		locacaoSalva.get().setStatusLocacao(statusLocacao);
 
@@ -198,26 +197,26 @@ public class LocacaoService {
 
 	}
 
-	public void validaLocacaoExistente(Long id) {
+	public void validaLocacaoExistente(Locacao locacao) {
 
-		Optional<Locacao> locacaoSalva = findByIdLocacao(id);
+		// Optional<Locacao> locacaoSalva = findByIdLocacao(id);
 
-		if (locacaoSalva.get().getIdCliente().getStatusCliente() == StatusCliente.INADIMPLENTE) {
+		if (locacao.getIdCliente().getStatusCliente() == StatusCliente.INADIMPLENTE) {
 
 			throw new ClienteInadimplenteException("Operação não realizada. Cliente Inadinplente.");
 		}
-		if (locacaoSalva.get().getStatusLocacao() == StatusLocacao.CANCELADA) {
+		if (locacao.getStatusLocacao() == StatusLocacao.CANCELADA) {
 
 			throw new LocacaoUpdateException(
 					"Operação não realizada. Locacao Cancelada ou Encerrada. Selecione outra Locação para Atualizar");
 		}
-		if (locacaoSalva.get().getQuantidadeDeRenovacao() == 3) {
+		if (locacao.getQuantidadeDeRenovacao() == 3) {
 
 			throw new LocacaoLimiteException(
 					"Operação não realizada. Quantidade de Renovação Excedida. Selecione outro exemplar para prosseguir com tal Operação");
 		}
 
-		if (locacaoSalva.get().getDataTerminoLocacao().isBefore(LocalDate.now())) {
+		if (locacao.getDataTerminoLocacao().isBefore(LocalDate.now())) {
 
 			throw new LocacaoLimiteDataException("Operação não realizada. Data de Termino da Locação ultrapassada.");
 		}

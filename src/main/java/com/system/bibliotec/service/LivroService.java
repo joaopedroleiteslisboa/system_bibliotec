@@ -39,7 +39,8 @@ public class LivroService {
 	public Livro save(Livro livro) {
 
 		validaLivroNovo(livro);
-		livro.setCodBarras(RandomUtils.randomCodBarras()); //TODO: Modificar essa implementação em um ambiente de produção...
+		livro.setCodBarras(RandomUtils.randomCodBarras()); // TODO: Modificar essa implementação em um ambiente de
+															// produção...
 
 		return livroRepository.save(livro);
 
@@ -54,9 +55,8 @@ public class LivroService {
 	@Transactional
 	public Livro updateLivro(Long id, Livro livro) {
 
-		validaLivroExistente(id);
-
 		Optional<Livro> livroSalvo = findByIdLivro(id);
+		validaLivroExistente(livroSalvo.get());
 
 		BeanUtils.copyProperties(livro, livroSalvo.get(), "id");
 
@@ -80,10 +80,8 @@ public class LivroService {
 
 	@Transactional
 	public void updatePropertyIsbn13Livro(Long id, String isbn13) {
-
-		validaLivroExistente(id);
-
 		Optional<Livro> livroSalvo = livroRepository.findById(id);
+		validaLivroExistente(livroSalvo.get());
 
 		if (!livroSalvo.isPresent()) {
 
@@ -95,8 +93,8 @@ public class LivroService {
 
 	@Transactional
 	public void deleteLivro(Long id) {
-
-		validaLivroExistente(id);
+		Optional<Livro> livroSalvo = livroRepository.findById(id);
+		validaLivroExistente(livroSalvo.get());
 		livroRepository.deleteById(id);
 
 	}
@@ -140,26 +138,24 @@ public class LivroService {
 	 *                                             com marcas
 	 */
 
-	public void validaLivroExistente(Long id) {
+	public void validaLivroExistente(Livro livro) {
 
-		Optional<Livro> livroSalvo = livroRepository.findById(id);
-
-		if (!livroSalvo.isPresent()) {
+		if (livro.getId() == null) {
 			throw new LivroInvalidoOuInexistenteException(
 					"Livro selecionado invalido ou Inexistente. Selecione um Livro Valido");
 		}
 
-		if (livroSalvo.get().getStatusLivro() == StatusLivro.RESERVADO) {
+		if (livro.getStatusLivro() == StatusLivro.RESERVADO) {
 
 			throw new LivroReservadoException("O Livro Selecionado estar Reservado. Operação não Realizada");
 		}
 
-		if (livroSalvo.get().getStatusLivro() == StatusLivro.LOCADO) {
+		if (livro.getStatusLivro() == StatusLivro.LOCADO) {
 
 			throw new LivroLocadoException("O livro selecionado estar Locado. Operação não Realizada");
 		}
 
-		if (livroSalvo.get().getStatusLivro() == StatusLivro.AVARIADO) {
+		if (livro.getStatusLivro() == StatusLivro.AVARIADO) {
 
 			throw new LivroAvariadoException("O livro selecionado estar Avariado. Operação não Realizada");
 		}

@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.system.bibliotec.exception.ClienteInadimplenteException;
 import com.system.bibliotec.exception.ClienteInexistenteException;
 import com.system.bibliotec.exception.LivroInvalidoOuInexistenteException;
+import com.system.bibliotec.exception.LivroLocadoException;
 import com.system.bibliotec.exception.LivroReservadoException;
 import com.system.bibliotec.exception.LocacaoInvalidaOuInexistenteException;
 import com.system.bibliotec.exception.LocacaoLimiteDataException;
@@ -189,7 +190,7 @@ public class LocacaoService {
 		}
 		if (locacao.getIdLivro().getStatusLivro() == StatusLivro.LOCADO) {
 
-			throw new LivroReservadoException(
+			throw new LivroLocadoException(
 					"Operação não realizada. Livro selecionado estar Locado. Selecione outro Exemplar");
 		}
 

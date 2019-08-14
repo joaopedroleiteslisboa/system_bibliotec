@@ -50,7 +50,7 @@ public class HoraDiasDataLocalService {
 
 	}
 
-	public static LocalDate dataRenovacaoLocacao(LocalDate dataTerminoEmprestimo) {
+	public static LocalDate dataRenovacaoLocacao(LocalDate dataTerminoLocacao) {
 
 		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
@@ -58,11 +58,11 @@ public class HoraDiasDataLocalService {
 
 		LocalDate localDateCurrent = LocalDate.now();
 
-		if (localDateCurrent.isBefore(dataTerminoEmprestimo) || dataTerminoEmprestimo.isEqual(localDateCurrent)) {
+		if (localDateCurrent.isBefore(dataTerminoLocacao) || dataTerminoLocacao.isEqual(localDateCurrent)) {
 
-			LocalDate localDate_Plus10_Plus_dataTerminoEmprestimo = dataTerminoEmprestimo.plusDays(10);
+			LocalDate localDate_Plus10_Plus_dataTerminoLocacao = dataTerminoLocacao.plusDays(10);
 
-			localDateAnalyzed = oBterProximoDiaUtil(localDate_Plus10_Plus_dataTerminoEmprestimo);
+			localDateAnalyzed = oBterProximoDiaUtil(localDate_Plus10_Plus_dataTerminoLocacao);
 
 		}
 
@@ -71,18 +71,18 @@ public class HoraDiasDataLocalService {
 
 	}
 
-	public static boolean isDataRenovacaoLocacaoValida(LocalDate dataTerminoEmprestimo) {
+	public static boolean isDataRenovacaoLocacaoValida(LocalDate dataTerminoLocacao) {
 
 		boolean isDataValida = false;
 
 		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-		LocalDate dataTerminoEmprestimoFormatada = LocalDate.parse(dataTerminoEmprestimo.format(dateTimeFormatter));
+		LocalDate dataTerminoLocacaoFormatada = LocalDate.parse(dataTerminoLocacao.format(dateTimeFormatter));
 
 		LocalDate localDateCurrent = LocalDate.parse(LocalDate.now().format(dateTimeFormatter));
 
-		if (localDateCurrent.isBefore(dataTerminoEmprestimoFormatada)
-				|| dataTerminoEmprestimoFormatada.isEqual(localDateCurrent)) {
+		if (localDateCurrent.isBefore(dataTerminoLocacaoFormatada)
+				|| dataTerminoLocacaoFormatada.isEqual(localDateCurrent)) {
 
 			isDataValida = true;
 

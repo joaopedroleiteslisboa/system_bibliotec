@@ -47,7 +47,7 @@ public class LocacaoService {
 	 */
 	@Transactional
 	public Locacao realizarLocacao(Locacao locacao) {
-
+		log.info("Iniciando Processo de Locação de livro:" + locacao);
 		livroService.validaLivroExistente(locacao.getIdLivro());
 
 		locacao.setHoraLocacao(HoraDiasDataLocalService.horaLocal());
@@ -57,7 +57,7 @@ public class LocacaoService {
 		locacao.setDataTerminoLocacao(HoraDiasDataLocalService.dataLocacaoDevolucao());
 
 		livroService.updateStatusLivro(locacao.getIdLivro().getId(), StatusLivro.LOCADO);
-
+		log.info("Locação realizada:" + locacao);
 		return locacaoRepository.save(locacao);
 
 	}
@@ -65,13 +65,15 @@ public class LocacaoService {
 	@Transactional
 	public void renovarLocacao(Long id) {
 		Optional<Locacao> locacaoSalva = findByIdLocacao(id);
+		log.info("Iniciando Processo de Renovação de Locação de livro:" + locacaoSalva.get());
+
 		validaLocacaoExistente(locacaoSalva.get());
 
 		int quantidadeRenovada = locacaoSalva.get().getQuantidadeDeRenovacao();
 		locacaoSalva.get().setQuantidadeDeRenovacao(quantidadeRenovada + 1);
 		locacaoSalva.get().setDataTerminoLocacao(
 				HoraDiasDataLocalService.dataRenovacaoLocacao(locacaoSalva.get().getDataTerminoLocacao()));
-
+		log.info("Processo de Renovação de Locação de livro realizada:" + locacaoSalva.get());
 	}
 
 	public Iterable<Locacao> findAll() {
@@ -86,10 +88,11 @@ public class LocacaoService {
 
 	@Transactional
 	public void updatePropertyLivro(Long idLocacao, Long idLivro) {
-
 		Optional<Locacao> locacaoSalva = findByIdLocacao(idLocacao);
 		Optional<Livro> livroSalvo = livroService.findByIdLivro(idLivro);
-		
+
+		log.info("Iniciando Processo de Atualização de Locação: Atualizando propriedade livro:" + locacaoSalva.get());
+
 		validaLocacaoExistente(locacaoSalva.get());
 
 		livroService.validaLivroExistente(livroSalvo.get());
@@ -101,13 +104,15 @@ public class LocacaoService {
 		locacaoSalva.get().setIdLivro(livroSalvo.get());
 
 		locacaoRepository.save(locacaoSalva.get());
+		log.info("Processo de Atualização de Locação de livro realizada:" + locacaoSalva.get());
 	}
 
 	public void updatePropertyCliente(Long idLocacao, Long idCliente) {
-
 		Optional<Cliente> clienteSalvo = clienteService.findByIdCliente(idCliente);
 
 		Optional<Locacao> locacaoSalva = findByIdLocacao(idLocacao);
+		
+		log.info("Iniciando Processo de Atualização de Locação: Atualizando propriedade Cliente:" + locacaoSalva.get());
 
 		clienteService.validandoClienteExistente(locacaoSalva.get().getIdCliente().getCpf());
 
@@ -116,6 +121,7 @@ public class LocacaoService {
 		locacaoSalva.get().setIdCliente(clienteSalvo.get());
 
 		locacaoRepository.save(locacaoSalva.get());
+		log.info("Processo de Atualização de Locação de livro realizada:" + locacaoSalva.get());
 	}
 
 //ADICIONAR @Scheduled para alterar o status do emprestimo caso o prazo de entrega seja atingido ou ultrapassado 
@@ -123,12 +129,10 @@ public class LocacaoService {
 
 	}
 
-	public void cancelarEmprestimo(Long id) {
+	public void cancelarLocacao(Long id) {
 		Optional<Locacao> locacaoSalva = findByIdLocacao(id);
-		
+		log.info("Iniciando Processo de Cancelamento de Locação:" + locacaoSalva.get());
 		validaLocacaoExistente(locacaoSalva.get());
-
-		
 
 		livroService.updateStatusLivro(locacaoSalva.get().getIdLivro().getId(), StatusLivro.LIVRE);
 
@@ -137,19 +141,19 @@ public class LocacaoService {
 		locacaoSalva.get().setStatusLocacao(StatusLocacao.CANCELADA);
 
 		locacaoRepository.save(locacaoSalva.get());
+		log.info("Locação cancelada:" + locacaoSalva.get());
 	}
 
 	@Transactional
-	public void updatePropertyStatusLocacao(Long id, StatusLocacao statusLocacao) {
+	private void updatePropertyStatusLocacao(Long id, StatusLocacao statusLocacao) {
 		Optional<Locacao> locacaoSalva = findByIdLocacao(id);
+		log.info("Iniciando Processo de Atualização de Locação: Atualizando propriedade Status:" + locacaoSalva.get());
 		validaLocacaoExistente(locacaoSalva.get());
-
-		
 
 		locacaoSalva.get().setStatusLocacao(statusLocacao);
 
 		locacaoRepository.save(locacaoSalva.get());
-
+		log.info("Processo de Atualização de Locação de livro realizada:" + locacaoSalva.get());
 	}
 
 	public Optional<Locacao> findByIdLocacao(Long id) {
@@ -162,34 +166,31 @@ public class LocacaoService {
 		return locacaoSalva;
 	}
 
-	public void validarLocacao(Locacao locacao) {
-		Optional<Cliente> clienteSalvo = clienteService.findByIdCliente(locacao.getIdCliente().getId());
-
-		Optional<Livro> livroSalvo = livroService.findByIdLivro(locacao.getIdLivro().getId());
-
-		if (!livroSalvo.isPresent()) {
+	private void validarLocacao(Locacao locacao) {
+	
+		if (locacao.getId() == null) {
 
 			throw new LivroInvalidoOuInexistenteException("Operação não realizada. Livro Invalido ou Inexistente");
 		}
 
-		if (!clienteSalvo.isPresent()) {
+		if (locacao.getIdCliente() == null) {
 
 			throw new ClienteInexistenteException("Operação não realizada. Cliente Inexistente");
 		}
-		if (clienteSalvo.get().getStatusCliente() == StatusCliente.INADIMPLENTE) {
+		if (locacao.getIdCliente().getStatusCliente() == StatusCliente.INADIMPLENTE) {
 
 			throw new ClienteInadimplenteException("Operação não realizada devido Inadimplencia.");
 		}
-		if (clienteSalvo.get().getStatusCliente() == StatusCliente.INADIMPLENTE) {
+		if (locacao.getIdCliente().getStatusCliente() == StatusCliente.INADIMPLENTE) {
 
 			throw new ClienteInadimplenteException("Operação não realizada devido Inadimplencia.");
 		}
-		if (livroSalvo.get().getStatusLivro() == StatusLivro.RESERVADO) {
+		if (locacao.getIdLivro().getStatusLivro() == StatusLivro.RESERVADO) {
 
 			throw new LivroReservadoException(
 					"Operação não realizada. Livro selecionado estar Reservado. Selecione outro Exemplar");
 		}
-		if (livroSalvo.get().getStatusLivro() == StatusLivro.LOCADO) {
+		if (locacao.getIdLivro().getStatusLivro() == StatusLivro.LOCADO) {
 
 			throw new LivroReservadoException(
 					"Operação não realizada. Livro selecionado estar Locado. Selecione outro Exemplar");
@@ -197,7 +198,7 @@ public class LocacaoService {
 
 	}
 
-	public void validaLocacaoExistente(Locacao locacao) {
+	private void validaLocacaoExistente(Locacao locacao) {
 
 		// Optional<Locacao> locacaoSalva = findByIdLocacao(id);
 

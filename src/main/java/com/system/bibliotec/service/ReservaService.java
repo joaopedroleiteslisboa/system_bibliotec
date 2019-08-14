@@ -47,7 +47,7 @@ public class ReservaService {
 	 */
 	@Transactional
 	public Reserva save(Reserva reserva) {
-
+		log.info("Iniciando Processo de reserva de livro");
 		livroService.validaLivroExistente(reserva.getIdLivro());
 
 		clienteService.validandoClienteExistente(reserva.getIdCliente().getCpf());
@@ -59,7 +59,7 @@ public class ReservaService {
 		reserva.setDataLimite(HoraDiasDataLocalService.dataReservaLimite());
 
 		livroService.updateStatusLivro(reserva.getIdLivro().getId(), StatusLivro.RESERVADO);
-
+		log.info("Livro Reservado:" +reserva.getIdLivro());
 		return repository.save(reserva);
 
 	}
@@ -75,56 +75,54 @@ public class ReservaService {
 
 	@Transactional
 	public void updatePropertyLivro(Long idReserva, Livro livro) {
-
+		Optional<Reserva> reservaSalva = findByIdReserva(idReserva);
+		log.info("Iniciando processo de Atualização de atributo livro da Reserva:" +reservaSalva.get());
 		validaReservaExistente(idReserva);
 
 		livroService.validaLivroExistente(livro);
 
-		Optional<Reserva> reservaSalvo = findByIdReserva(idReserva);
-
-		livroService.updateStatusLivro(reservaSalvo.get().getIdLivro().getId(), StatusLivro.LIVRE);
+		livroService.updateStatusLivro(reservaSalva.get().getIdLivro().getId(), StatusLivro.LIVRE);
 
 		livroService.updateStatusLivro(livro.getId(), StatusLivro.RESERVADO);
 
-		reservaSalvo.get().setIdLivro(livro);
+		reservaSalva.get().setIdLivro(livro);
 
-		repository.save(reservaSalvo.get());
-
+		repository.save(reservaSalva.get());
+		log.info("Reserva Atualizada: "+ reservaSalva.get());
 	}
 
 	@Transactional
 	public void updatePropertyCliente(Long idReserva, Cliente cliente) {
-
-		clienteService.validandoClienteExistente(cliente.getCpf());
-
 		Optional<Reserva> reservaSalva = repository.findById(idReserva);
-
 		if (!reservaSalva.isPresent()) {
 			throw new ReservaInexistenteException("Operação não realizada. Reserva Inexistente");
 		}
+		log.info("Iniciando processo de Atualização de atributo Cliente da Reserva:" +reservaSalva.get());
+		clienteService.validandoClienteExistente(cliente.getCpf());
 
 		reservaSalva.get().setIdCliente(cliente);
 
 		repository.save(reservaSalva.get());
+		log.info("Reserva Atualizada: "+ reservaSalva.get());
 	}
 
 	@Transactional
 	public void deleteReserva(Long id) {
 
 		Optional<Reserva> reservaSalva = findByIdReserva(id);
-
+		log.info("Iniciando processo de remoção de uma Reserva: "+ reservaSalva.get());
 		// ATUALIZANDO O STATUS DO LIVRO RESERVADO...
 		livroService.updateStatusLivro(reservaSalva.get().getIdLivro().getId(), StatusLivro.LIVRE);
 		repository.deleteById(id);
-
+		log.info("Reserva Deletada: "+ reservaSalva.get());
 	}
 
 	public Optional<Reserva> findByIdReserva(Long id) {
-		Optional<Reserva> reservaSalvo = repository.findById(id);
-		if (!reservaSalvo.isPresent()) {
+		Optional<Reserva> reservaSalva = repository.findById(id);
+		if (!reservaSalva.isPresent()) {
 			throw new ReservaInexistenteException("Reserva Selecionada Invalida ou Inexistente");
 		}
-		return reservaSalvo;
+		return reservaSalva;
 	}
 
 	/**

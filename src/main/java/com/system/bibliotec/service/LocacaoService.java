@@ -49,8 +49,9 @@ public class LocacaoService {
 	@Transactional
 	public Locacao realizarLocacao(Locacao locacao) {
 		log.info("Iniciando Processo de Locação de livro:" + locacao);
-		livroService.validaLivroExistente(locacao.getIdLivro());
-
+		
+		validarLocacao(locacao);
+		
 		locacao.setHoraLocacao(HoraDiasDataLocalService.horaLocal());
 
 		locacao.setDataLocacao(HoraDiasDataLocalService.dataLocal());

@@ -44,7 +44,7 @@ public class LivroResource {
 		return livroRepository.filtrar(livroFilter, page);
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE, params = "summary")
+	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE, params = "resumo")
 	public Page<ResumoLivro> resumo(LivroFilter livroFilter, Pageable page) {
 		return livroRepository.resumo(livroFilter, page);
 	}

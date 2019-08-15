@@ -3,6 +3,10 @@ package com.system.bibliotec.repository.projection;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class ResumoLivro {
 
 
@@ -85,7 +89,9 @@ public class ResumoLivro {
 	private String isbn13;
 
 	private Integer numeroPaginas;
-
+	
+	@JsonFormat(pattern = "yyyy-MM-dd")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate dataPublicacao;
 
 	private BigDecimal preco;

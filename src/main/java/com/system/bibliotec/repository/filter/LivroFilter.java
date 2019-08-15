@@ -2,14 +2,22 @@ package com.system.bibliotec.repository.filter;
 
 import java.time.LocalDate;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class LivroFilter {
 
 	private String nome;
 
 	private String isbn;
-
+	
+	@JsonFormat(pattern = "yyyy-MM-dd")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate dataPublicacaoDe;
 
+	@JsonFormat(pattern = "yyyy-MM-dd")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate dataPublicacaoAte;
 
 

@@ -9,7 +9,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -17,7 +16,6 @@ import lombok.ToString;
 @Setter
 @ToString
 @AllArgsConstructor
-@NoArgsConstructor
 public class ResumoLivro {
 	
 	private Long id;
@@ -37,7 +35,6 @@ public class ResumoLivro {
 	private LocalDate dataPublicacao;
 
 	private BigDecimal preco;
-
 	
 	
 	

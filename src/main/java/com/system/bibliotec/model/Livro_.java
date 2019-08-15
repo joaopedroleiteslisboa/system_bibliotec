@@ -13,11 +13,11 @@ import javax.persistence.metamodel.StaticMetamodel;
 @StaticMetamodel(Livro.class)
 public abstract class Livro_ {
 
-	public static volatile SetAttribute<Livro, Categoria> categorias;
+	public static volatile SingularAttribute<Livro, Categoria> categorias;
 	public static volatile SingularAttribute<Livro, LocalDate> dataPublicacao;
 	public static volatile SingularAttribute<Livro, String> nome;
 	public static volatile SingularAttribute<Livro, Idioma> idioma;
-	public static volatile SetAttribute<Livro, Autor> autores;
+	public static volatile SingularAttribute<Livro, Autor> autores;
 	public static volatile SingularAttribute<Livro, String> edicao;
 	public static volatile SingularAttribute<Livro, Editora> idEditora;
 	public static volatile SingularAttribute<Livro, String> descricao;

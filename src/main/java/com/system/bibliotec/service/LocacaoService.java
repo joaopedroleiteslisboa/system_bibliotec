@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.system.bibliotec.exception.ClienteInadimplenteException;
 import com.system.bibliotec.exception.ClienteInexistenteException;
-import com.system.bibliotec.exception.LivroInvalidoOuInexistenteException;
 import com.system.bibliotec.exception.LivroLocadoException;
 import com.system.bibliotec.exception.LivroReservadoException;
 import com.system.bibliotec.exception.LocacaoInvalidaOuInexistenteException;

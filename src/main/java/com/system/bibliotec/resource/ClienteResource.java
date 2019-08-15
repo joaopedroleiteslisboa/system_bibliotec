@@ -49,8 +49,8 @@ public class ClienteResource {
 	}
 
 	@ResponseStatus(code = HttpStatus.OK)
-	@RequestMapping(method = RequestMethod.GET, headers = "cpf", value = "/find/doc")
-	public ResponseEntity<Cliente> findOneByCpfIgnoreCase(@RequestHeader(required = true, name = "cpf") String cpf) {
+	@RequestMapping(method = RequestMethod.GET, params =  "cpf", value = "/find/doc")
+	public ResponseEntity<Cliente> findOneByCpfIgnoreCase(@RequestParam(required = true, name = "cpf") String cpf) {
 		if(!CpfUtilsValidator.isCPF(cpf)) {throw new CpfInvalidoOuInexistenteException("Cpf invalido. Informe outro CPF valido");}
 			Optional<Cliente> cliente = clienteRepository.findOneByCpfIgnoreCase(cpf);
 		return cliente.isPresent() ? ResponseEntity.ok(cliente.get()) : ResponseEntity.notFound().build();
@@ -84,7 +84,7 @@ public class ClienteResource {
 		clienteService.updatePropertyEndereco(cpf, endereco);
 	}
 
-	@RequestMapping(method = RequestMethod.PUT, headers = "cpf", value = "/up/doc/{idCliente}")
+	@RequestMapping(method = RequestMethod.PUT, headers = "cpf", value = "{idCliente}/up/doc")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void updatePropertyCpf(@PathVariable(required = true) Long idCliente,
 			@RequestHeader(required = true) String cpf) {

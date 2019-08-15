@@ -106,7 +106,7 @@ Linkedin: http://bit.ly/linkedinjoaopedroleiteslisboa
 
 	* Buscando clientes por cpf;
      
-      RequestMethod.GET >>> Headers: key = cpf  value = numeroDeUmCPFValidoPresenteNoBancoDeDados  
+      RequestMethod.GET >>> params: key = cpf  value = numeroDeUmCPFValidoPresenteNoBancoDeDados  
       			127.0.0.1:8080/api/clientes/find/doc
       			    
     

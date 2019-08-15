@@ -22,8 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.system.bibliotec.event.RecursoCriadorEvent;
 import com.system.bibliotec.model.Livro;
 import com.system.bibliotec.repository.LivroRepository;
+import com.system.bibliotec.repository.dto.projection.ResumoLivro;
 import com.system.bibliotec.repository.filter.LivroFilter;
-import com.system.bibliotec.repository.projection.ResumoLivro;
 import com.system.bibliotec.service.LivroService;
 
 @RestController

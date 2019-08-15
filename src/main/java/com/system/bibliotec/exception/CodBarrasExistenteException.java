@@ -1,4 +1,4 @@
-package com.system.bibliotec.service;
+package com.system.bibliotec.exception;
 
 public class CodBarrasExistenteException extends RuntimeException {
 

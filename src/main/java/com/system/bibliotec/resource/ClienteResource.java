@@ -58,8 +58,8 @@ public class ClienteResource {
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	@RequestMapping(method = RequestMethod.GET, value = "/find/cod/{id}")
 	public ResponseEntity<Cliente> findById(@PathVariable(required = true) Long id){
-		
-		return ResponseEntity.ok(clienteService.findByIdCliente(id).get());
+		Optional<Cliente> cliente = clienteRepository.findById(id);
+		return cliente.isPresent() ? ResponseEntity.ok(cliente.get()) : ResponseEntity.notFound().build();
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
@@ -69,11 +69,6 @@ public class ClienteResource {
 		return ResponseEntity.status(HttpStatus.CREATED).body(clienteSalvo);
 	}
 
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@RequestMapping(method = RequestMethod.DELETE, headers = "cpf")
-	public void delete(@RequestHeader(required = true) String cpf) {
-		clienteService.excluirCliente(cpf);
-	}
 
 	@RequestMapping(method = RequestMethod.PUT, headers = "cpf")
 	public ResponseEntity<Cliente> update(@RequestHeader(required = true) String cpf,

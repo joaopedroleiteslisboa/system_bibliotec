@@ -20,11 +20,11 @@ import com.system.bibliotec.model.Cliente;
 import com.system.bibliotec.model.Cliente_;
 import com.system.bibliotec.repository.filter.ClienteFilter;
 
-public class ClienteRepositoryQueryImpl implements ClienteRepositoryQuery{
+public class ClienteRepositoryQueryImpl implements ClienteRepositoryQuery {
 
 	@PersistenceContext
 	private EntityManager manager;
-	
+
 	@Override
 	public Page<Cliente> filtrar(ClienteFilter clienteFilter, Pageable pageable) {
 		CriteriaBuilder builder = manager.getCriteriaBuilder();
@@ -39,33 +39,41 @@ public class ClienteRepositoryQueryImpl implements ClienteRepositoryQuery{
 
 		return new PageImpl<>(query.getResultList(), pageable, total(clienteFilter));
 	}
+
 	private Predicate[] criarRestricoes(ClienteFilter clienteFilter, CriteriaBuilder builder, Root<Cliente> root) {
 		List<Predicate> predicates = new ArrayList<>();
 
 		if (!StringUtils.isEmpty(clienteFilter.getNome())) {
 			predicates.add(builder.like(builder.lower(root.get(Cliente_.nome)),
 					"%" + clienteFilter.getNome().toLowerCase() + "%"));
-		}		
-
-		// FIM DO BLOCO ARGUMENTADO COM PROBLEMAS
+		}
 
 		if (clienteFilter.getDataNascimento() != null) {
 			predicates.add(
 					builder.lessThanOrEqualTo(root.get(Cliente_.dataNascimento), clienteFilter.getDataNascimento()));
 		}
-		
+
+		if (clienteFilter.getDataNascimentoDe() != null) {
+			predicates.add(builder.greaterThanOrEqualTo(root.get(Cliente_.dataNascimento),
+					clienteFilter.getDataNascimentoDe()));
+		}
+
+		if (clienteFilter.getDataNascimentoAte() != null) {
+			predicates.add(
+					builder.lessThanOrEqualTo(root.get(Cliente_.dataNascimento), clienteFilter.getDataNascimentoAte()));
+		}
 
 		return predicates.toArray(new Predicate[predicates.size()]);
 	}
-	
-	  private void adicionarRestricoesDePaginacao(TypedQuery<?> query, Pageable pageable) { 
-	  int paginaAtual = pageable.getPageNumber(); 
-	  int totalRegistrosPorPagina = pageable.getPageSize();
-	  int primeiroRegistroDaPagina = paginaAtual * totalRegistrosPorPagina;
-	  
-	  query.setFirstResult(primeiroRegistroDaPagina);
-	  query.setMaxResults(totalRegistrosPorPagina); }
-	 
+
+	private void adicionarRestricoesDePaginacao(TypedQuery<?> query, Pageable pageable) {
+		int paginaAtual = pageable.getPageNumber();
+		int totalRegistrosPorPagina = pageable.getPageSize();
+		int primeiroRegistroDaPagina = paginaAtual * totalRegistrosPorPagina;
+
+		query.setFirstResult(primeiroRegistroDaPagina);
+		query.setMaxResults(totalRegistrosPorPagina);
+	}
 
 	private Long total(ClienteFilter clienteFilter) {
 		CriteriaBuilder builder = manager.getCriteriaBuilder();

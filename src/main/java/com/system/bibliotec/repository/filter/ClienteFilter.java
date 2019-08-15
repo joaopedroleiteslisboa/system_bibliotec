@@ -29,6 +29,12 @@ public class ClienteFilter {
 
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate dataNascimento;
+	
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private LocalDate dataNascimentoDe;
+	
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private LocalDate dataNascimentoAte;
 
 	@Enumerated(EnumType.STRING)
 	private StatusCliente statusCliente;

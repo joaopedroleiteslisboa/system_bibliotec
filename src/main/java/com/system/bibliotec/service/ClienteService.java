@@ -47,12 +47,15 @@ public class ClienteService {
 	public Cliente updateCliente(String cpf, Cliente cliente) {
 
 		Optional<Cliente> clienteSalvo = findByCpfCliente(cpf);
+		
+		//Obtendo o corrente Status do Cliente... Para que se tenha prudência com o mesmo...
+		cliente.setStatusCliente(clienteSalvo.get().getStatusCliente());
+		
+		log.info("Atualizando um Cliente: " + clienteSalvo.toString());
 
-		log.info("Atualizando um Cliente: " + cliente.toString());
+		validandoAtualizacaoClienteExistente(clienteSalvo.get());
 
-		validandoClienteExistente(clienteSalvo.get());
-
-		BeanUtils.copyProperties(cliente, clienteSalvo, "id");
+		BeanUtils.copyProperties(cliente, clienteSalvo.get(), "id", "cpf");
 		log.info("Cliente Atualizado: " + cliente.toString());
 
 		return clienteRepository.save(clienteSalvo.get());
@@ -127,16 +130,7 @@ public class ClienteService {
 
 	}
 
-	/**
-	 * Verifica se um Determinado Cliente existente é Invalido ou Inadimplente
-	 *
-	 * @param cpf CPF para ser analisado
-	 * @throws CpfInvalidoOuInexistenteException Se o CPF não for valido
-	 * @throws ClienteInexistenteException       Se o Cliente não possuir um
-	 *                                           cadastro
-	 * @throws ClienteInadimplenteException      Se Cliente Possuir Pendencias na
-	 *                                           Empresa
-	 */
+	
 	public void validandoClienteExistente(Cliente cliente) {
 
 		if (!CpfUtilsValidator.isCPF(cliente.getCpf())) {
@@ -161,6 +155,27 @@ public class ClienteService {
 		}
 
 	}
+	
+	public void validandoAtualizacaoClienteExistente(Cliente cliente) {
+
+		if (!CpfUtilsValidator.isCPF(cliente.getCpf())) {
+
+			throw new CpfInvalidoOuInexistenteException("Cpf do Cliente Invalido. Informe um Cpf Valido.");
+		}
+
+		if (cliente.getId() == null) {
+
+			throw new ClienteInexistenteException("Cliente Inexistente Ou Invalido. Informe um cliente Valido");
+		}
+
+		if (cliente.getStatusCliente() == StatusCliente.INADIMPLENTE) {
+
+			throw new ClienteInadimplenteException("Cliente Inadinplente. Operação não realizada");
+		}	
+
+	}
+	
+		
 
 	/**
 	 * Verifica se um Determinado Cliente é inativo Por meio do CPF

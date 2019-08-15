@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.system.bibliotec.config.ConstantsUtils;
+import com.system.bibliotec.exception.CodBarrasExistenteException;
 import com.system.bibliotec.exception.EstoqueInsuficienteException;
 import com.system.bibliotec.exception.IsbnInvalidoException;
 import com.system.bibliotec.exception.LivroAvariadoException;

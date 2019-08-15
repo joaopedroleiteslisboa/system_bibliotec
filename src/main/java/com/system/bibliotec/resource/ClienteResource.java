@@ -84,10 +84,9 @@ public class ClienteResource {
 		clienteService.updatePropertyEndereco(cpf, endereco);
 	}
 
-	@RequestMapping(method = RequestMethod.PUT, headers = "cpf", value = "{idCliente}/up/doc")
+	@RequestMapping(method = RequestMethod.PUT,  value = "{idCliente}/up/doc")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void updatePropertyCpf(@PathVariable(required = true) Long idCliente,
-			@RequestHeader(required = true) String cpf) {
+	public void updatePropertyCpf(@PathVariable(required = true) Long idCliente, @RequestBody String cpf) {
 		clienteService.updatePropertyCpf(idCliente, cpf);
 	}
 

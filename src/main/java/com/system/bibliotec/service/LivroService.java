@@ -23,7 +23,7 @@ import com.system.bibliotec.repository.LivroRepository;
 import com.system.bibliotec.service.ultis.RandomUtils;
 
 import lombok.RequiredArgsConstructor;
-
+//TODO: Precisa desenvolvedor sobrecarga de metodos para validação ficar mais coerente com um determinado contexto solicitado...
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class LivroService {

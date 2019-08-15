@@ -23,6 +23,7 @@ import com.system.bibliotec.service.ultis.CpfUtilsValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+//TODO: Precisa desenvolvedor sobrecarga de metodos para validação ficar mais coerente com um determinado contexto solicitado...
 @Service
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -47,10 +48,11 @@ public class ClienteService {
 	public Cliente updateCliente(String cpf, Cliente cliente) {
 
 		Optional<Cliente> clienteSalvo = findByCpfCliente(cpf);
-		
-		//Obtendo o corrente Status do Cliente... Para que se tenha prudência com o mesmo...
+
+		// Obtendo o corrente Status do Cliente... Para que se tenha prudência com o
+		// mesmo...
 		cliente.setStatusCliente(clienteSalvo.get().getStatusCliente());
-		
+
 		log.info("Atualizando um Cliente: " + clienteSalvo.toString());
 
 		validandoAtualizacaoClienteExistente(clienteSalvo.get());
@@ -63,6 +65,8 @@ public class ClienteService {
 
 	@Transactional
 	public Cliente updatePropertyCpf(Long idCliente, String cpf) {
+
+		validaCpf(cpf);
 
 		Optional<Cliente> clienteSalvo = findByIdCliente(idCliente);
 
@@ -83,7 +87,7 @@ public class ClienteService {
 
 		log.info("Atualizando Propriedade Endereço do Cliente: " + clienteSalvo.toString());
 		clienteSalvo.get().setEndereco(endereco);
-		
+
 		log.info("Endereço Atualizado");
 		return clienteRepository.save(clienteSalvo.get());
 
@@ -130,7 +134,6 @@ public class ClienteService {
 
 	}
 
-	
 	public void validandoClienteExistente(Cliente cliente) {
 
 		if (!CpfUtilsValidator.isCPF(cliente.getCpf())) {
@@ -155,7 +158,7 @@ public class ClienteService {
 		}
 
 	}
-	
+
 	public void validandoAtualizacaoClienteExistente(Cliente cliente) {
 
 		if (!CpfUtilsValidator.isCPF(cliente.getCpf())) {
@@ -171,11 +174,16 @@ public class ClienteService {
 		if (cliente.getStatusCliente() == StatusCliente.INADIMPLENTE) {
 
 			throw new ClienteInadimplenteException("Cliente Inadinplente. Operação não realizada");
-		}	
+		}
 
 	}
-	
-		
+
+	private void validaCpf(String cpf) {
+
+		if (!CpfUtilsValidator.isCPF(cpf)) {
+			throw new DocumentoInvalidoException("CPF Invalido");
+		}
+	}
 
 	/**
 	 * Verifica se um Determinado Cliente é inativo Por meio do CPF

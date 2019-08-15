@@ -5,6 +5,7 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.jboss.logging.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
@@ -57,8 +58,8 @@ public class ClienteResource {
 	}
 	
 	@ResponseStatus(HttpStatus.NOT_FOUND)
-	@RequestMapping(method = RequestMethod.GET, value = "/find/cod/{id}")
-	public ResponseEntity<Cliente> findById(@PathVariable(required = true) Long id){
+	@RequestMapping(method = RequestMethod.GET, params = "id", value = "/find/")
+	public ResponseEntity<Cliente> findById(@RequestParam(required = true) Long id){
 		Optional<Cliente> cliente = clienteRepository.findById(id);
 		return cliente.isPresent() ? ResponseEntity.ok(cliente.get()) : ResponseEntity.notFound().build();
 	}
@@ -78,15 +79,15 @@ public class ClienteResource {
 		return ResponseEntity.ok(clienteAtualizado);
 	}
 
-	@RequestMapping(method = RequestMethod.PUT, value = "{cpf}/up/end")
+	@RequestMapping(method = RequestMethod.PUT, value = "/end" , params = "cpf")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void updatePropertyEndereco(@PathVariable(required = true) String cpf, @Valid @RequestBody Endereco endereco) {
+	public void updatePropertyEndereco(@RequestParam(required = true) String cpf, @Valid @RequestBody Endereco endereco) {
 		clienteService.updatePropertyEndereco(cpf, endereco);
 	}
 
-	@RequestMapping(method = RequestMethod.PUT,  value = "{idCliente}/up/doc")
+	@RequestMapping(method = RequestMethod.PUT,  value = "{idCliente}/doc")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void updatePropertyCpf(@PathVariable(required = true) Long idCliente, @RequestBody String cpf) {
+	public void updatePropertyCpf(@PathVariable(required = true) Long idCliente, @Valid @RequestBody(required = true) String cpf) {
 		clienteService.updatePropertyCpf(idCliente, cpf);
 	}
 

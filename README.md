@@ -59,7 +59,8 @@ Linkedin: http://bit.ly/linkedinjoaopedroleiteslisboa
 	
 ### Instruções para uso -	Segue alguns, de varios paths para requisições...  
 
-	*  >>>>> Operações com CLIENTES <<<<<
+
+				*  >>>>> Operações com CLIENTES <<<<<
 	
 	* Salvando um cliente na Base de dados
 	
@@ -93,21 +94,27 @@ Linkedin: http://bit.ly/linkedinjoaopedroleiteslisboa
 		        }
         
         
+        
      * Buscando clientes por Id (do banco de dados);
      
-       RequestMethod.GET >>> http://127.0.0.1:8080/api/clientes/find/cod/1001
+       RequestMethod.GET >>>  params: key = id  value = http://127.0.0.1:8080/api/clientes/find/?id=1004
        
+    
     
      * Buscando clientes com paginação
       
      
        RequestMethod.GET >>> 127.0.0.1:8080/api/clientes?page=3&size=2
        
+       
+       
 
 	* Buscando clientes por cpf;
      
       RequestMethod.GET >>> params: key = cpf  value = numeroDeUmCPFValidoPresenteNoBancoDeDados  
-      			127.0.0.1:8080/api/clientes/find/doc
+      			http://127.0.0.1:8080/api/clientes/find/doc?cpf=03317970200
+      		
+      		
       			    
     
     * Buscando clientes por intervalo de data de Aniversario

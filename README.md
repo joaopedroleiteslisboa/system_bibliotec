@@ -128,5 +128,26 @@ Linkedin: http://bit.ly/linkedinjoaopedroleiteslisboa
       RequestMethod.PUT >>> @PathVariable = id 	127.0.0.1:8080/api/clientes/1000/doc
       
       
-      
+    * Atualizando Propriedade Endereco de um cliente
+    	
+      RequestMethod.PUT >>> params: key = cpf  value = numeroDeUmCPFValidoPresenteNoBancoDeDados
+      	
+      		URI: 	127.0.0.1:8080/api/clientes/end?cpf=09104537483
+     
+     Body >>> {
+		            
+    {
+        "id": 1000,
+        "cep": "58100432",
+        "logradouro": "Endereço atualizado João Pedro Leite S LISBOA",
+        "numero": "347 A | APT 433",
+        "complemento": "Edificio - La casa de Papel",
+        "bairro": "Santa Catarina",
+        "cidade": "João Pessoa",
+        "uf": "PB",
+        "ibge": "2599907"
+    }	
+    
+    
+     
      

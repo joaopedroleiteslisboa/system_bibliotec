@@ -114,29 +114,7 @@ public class ReservaService {
 		return reservaSalva;
 	}
 
-	/**
-	 * Metodo para validar uma Solicitação e Atualização de Reserva de
-	 * Exemplar/Livro
-	 *
-	 * @param id LONG para ser buscado e analisado
-	 * @throws ReservaInexistenteException         Se a Reserva selecionada não for
-	 *                                             encontrada para tal prodecimento
-	 * @throws LivroInvalidoOuInexistenteException Se o Livro informado na Reserva
-	 *                                             não possuir cadastro valido na
-	 *                                             Base de dados
-	 * @throws DocumentoInvalidoException          Se Cliente Possuir Pendencias ou
-	 *                                             Documentação sem valía
-	 * @throws ReservaCanceladaException           Se a Reserva selecionada Possuir
-	 *                                             registro de cancelamento em seu
-	 *                                             status junto a Base de dados
-	 * @throws ReservaLocadaException              Se a Reserva selecionada Possuir
-	 *                                             registro de Locação em seu status
-	 *                                             junto a Base de dados
-	 * @throws ReservaUpdateException              Se a Reserva selecionada Possuir
-	 *                                             pendencias ou quaisquer outra
-	 *                                             exceção supracitada registrada,
-	 *                                             registrada junto a base de dados
-	 */
+
 	public void validaReservaExistente(Reserva reserva) {
 
 		if (reserva.getId() == null) {

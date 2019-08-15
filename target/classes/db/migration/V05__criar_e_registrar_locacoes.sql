@@ -10,7 +10,8 @@ CREATE TABLE locacoes(
       dataCancelamentoLocacao DATE,
       idCliente BIGINT NOT NULL,
       idLivro BIGINT NOT NULL,
-      observacoesDeEntrega VARCHAR(100),
+      observacoesEntrega VARCHAR(100),
+      observacoesDevolucao VARCHAR(100),
             
       FOREIGN KEY (idCliente) REFERENCES clientes(id),
       FOREIGN KEY (idLivro) REFERENCES livros(id)

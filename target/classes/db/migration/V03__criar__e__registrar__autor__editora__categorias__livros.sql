@@ -11,7 +11,7 @@ CREATE TABLE livros(
         isbn13 varchar(30) NOT NULL UNIQUE,
         numeroPaginas LONG NOT NULL,
         dataPublicacao DATE NOT NULL,
-        preco DECIMAL NOT NULL,
+        valorUnitario DECIMAL NOT NULL,
         idEditora BIGINT,
         quantidade int,
   

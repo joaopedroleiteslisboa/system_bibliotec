@@ -2,22 +2,17 @@ package com.system.bibliotec.model;
 
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.AllArgsConstructor;
@@ -52,9 +47,8 @@ public class Editora {
 	@Size(max = 2000)
 	@Column(name = "descricao")
 	private String descricao;
-
-
 	
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "idEditora", orphanRemoval = false)
+	@JsonBackReference
+	@OneToMany(mappedBy = "editora", orphanRemoval = false)
 	private List<Livro> livros;
 }

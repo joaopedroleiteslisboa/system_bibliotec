@@ -77,8 +77,9 @@ public class Livro {
 	private Set<Autor> autores = new HashSet<Autor>();
 
 	@JsonManagedReference
+	@JoinColumn(name = "idEditora")
 	@ManyToOne(optional = false, fetch = FetchType.EAGER)
-	private Editora idEditora;
+	private Editora editora;
 
 	@NotNull(message = "Este campo é obrigatorio")
 	@Column(name = "edicao")

@@ -93,12 +93,12 @@ public class Locacao {
 	@JoinColumn(name = "idLivro")
 	private Livro livro;
 
-	@Column(name = "observacoesDeEntrega")
+	@Column(name = "observacoesEntrega")
 	@Size(max = 100)
-	private String observacoesDeEntrega;
+	private String observacoesEntrega;
 	
-	@Column(name = "observacoesDeDevolucao")
+	@Column(name = "observacoesDevolucao")
 	@Size(max = 100)
-	private String observacoesDeDevolucao;
+	private String observacoesDevolucao;
 	
 }

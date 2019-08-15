@@ -51,7 +51,7 @@ public class Locacao {
 	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	@Column(name = "quantidadeDeRenovacao")
 	@Size(max = 3)
-	private int quantidadeDeRenovacao = 0;
+	private int quantidadeDeRenovacao;
 
 	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	@JsonFormat(pattern = "kk:mm:ss")

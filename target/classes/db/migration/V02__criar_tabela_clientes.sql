@@ -13,7 +13,7 @@ CREATE TABLE clientes(
                          telefoneResidencial VARCHAR(60),
                          email_1  VARCHAR(60) NOT NULL,
                          email_2 VARCHAR(60),
-                         idEndereco BIGINT NOT NULL,
+                         idEndereco BIGINT,
                          FOREIGN KEY (idEndereco) REFERENCES enderecos(id)
 
                                          

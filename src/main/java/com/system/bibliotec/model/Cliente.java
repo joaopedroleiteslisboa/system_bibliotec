@@ -8,6 +8,7 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -51,7 +52,7 @@ public class Cliente {
 	@EqualsAndHashCode.Include
 	private Long id;
 
-	@NotNull
+	
 	@Enumerated(EnumType.STRING)
 	@Column(name = "StatusCliente")
 	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -94,8 +95,8 @@ public class Cliente {
 	private Contato contato;
 	
 	
-	@JoinColumn(name = "id")
-	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "id", referencedColumnName = "id")
+	@OneToOne(cascade = CascadeType.ALL ,fetch = FetchType.EAGER)
 	private Endereco idEndereco;
 
 	@JsonIgnore

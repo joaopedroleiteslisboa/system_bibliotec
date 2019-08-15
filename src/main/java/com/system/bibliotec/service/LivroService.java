@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.system.bibliotec.config.ConstantsUtils;
 import com.system.bibliotec.exception.EstoqueInsuficienteException;
 import com.system.bibliotec.exception.IsbnInvalidoException;
 import com.system.bibliotec.exception.LivroAvariadoException;
@@ -38,8 +39,9 @@ public class LivroService {
 	 */
 	@Transactional
 	public Livro save(Livro livro) {
-
+		
 		validaLivroNovo(livro);
+		livro.setStatusLivro(ConstantsUtils.DEFAULT_VALUE_STATUSLIVRO);
 		livro.setCodBarras(RandomUtils.randomCodBarras()); // TODO: Modificar essa implementação em um ambiente de
 															// produção...
 

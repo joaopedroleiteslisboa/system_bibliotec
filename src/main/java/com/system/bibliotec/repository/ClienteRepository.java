@@ -14,12 +14,10 @@ import com.system.bibliotec.repository.cliente.ClienteRepositoryQuery;
 
 public interface ClienteRepository extends PagingAndSortingRepository<Cliente, Long>, ClienteRepositoryQuery{
 
-	public Optional<Cliente> findByCpfStartingWithIgnoreCase(String cpf);
-
+	public Optional<Cliente> findOneByCpfIgnoreCase(String cpf);
+	
 	List<Cliente> findByNomeStartingWithIgnoreCase(String nome);
-	
-	Optional<Cliente> findByCpf(String cpf);
-	
+		
 	Optional<Cliente> findById(Long id);	
 	
 	void deleteByCpf(String cpf);

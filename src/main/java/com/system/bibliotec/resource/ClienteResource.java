@@ -21,11 +21,13 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.system.bibliotec.event.RecursoCriadorEvent;
+import com.system.bibliotec.exception.CpfInvalidoOuInexistenteException;
 import com.system.bibliotec.model.Cliente;
 import com.system.bibliotec.model.Endereco;
 import com.system.bibliotec.repository.ClienteRepository;
 import com.system.bibliotec.repository.filter.ClienteFilter;
 import com.system.bibliotec.service.ClienteService;
+import com.system.bibliotec.service.ultis.CpfUtilsValidator;
 
 @RestController
 @RequestMapping("/clientes")
@@ -46,15 +48,15 @@ public class ClienteResource {
 	}
 
 	@ResponseStatus(code = HttpStatus.OK)
-	@RequestMapping(method = RequestMethod.GET, headers = "cpf", value = "/find")
-	public ResponseEntity<Cliente> FindCpfCliente(@RequestHeader(required = true, name = "cpf") String cpf) {
-
-		Optional<Cliente> cliente = clienteRepository.findByCpfStartingWithIgnoreCase(cpf);
+	@RequestMapping(method = RequestMethod.GET, headers = "cpf", value = "/find/doc")
+	public ResponseEntity<Cliente> findOneByCpfIgnoreCase(@RequestHeader(required = true, name = "cpf") String cpf) {
+		if(!CpfUtilsValidator.isCPF(cpf)) {throw new CpfInvalidoOuInexistenteException("Cpf invalido. Informe outro CPF valido");}
+			Optional<Cliente> cliente = clienteRepository.findOneByCpfIgnoreCase(cpf);
 		return cliente.isPresent() ? ResponseEntity.ok(cliente.get()) : ResponseEntity.notFound().build();
 	}
 	
 	@ResponseStatus(HttpStatus.NOT_FOUND)
-	@RequestMapping(method = RequestMethod.GET, value = "/cod/{id}")
+	@RequestMapping(method = RequestMethod.GET, value = "/find/cod/{id}")
 	public ResponseEntity<Cliente> findById(@PathVariable(required = true) Long id){
 		
 		return ResponseEntity.ok(clienteService.findByIdCliente(id).get());

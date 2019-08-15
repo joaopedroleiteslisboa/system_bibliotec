@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.system.bibliotec.config.ConstantsUtils;
 import com.system.bibliotec.exception.ClienteExistenteException;
 import com.system.bibliotec.exception.ClienteInadimplenteException;
 import com.system.bibliotec.exception.ClienteInativoException;
@@ -32,7 +33,9 @@ public class ClienteService {
 	@Transactional
 	public Cliente criarNovoCliente(Cliente cliente) {
 
-		validandoNovoCliente(cliente);
+		validandoNovoCliente(cliente.getCpf());
+		cliente.setStatusCliente(ConstantsUtils.DEFAULT_VALUE_STATUSCLIENTE);
+		cliente.setAtivo(ConstantsUtils.DEFAULT_VALUE_ATIVO);
 
 		log.info("Cadastrando um Novo Cliente: " + cliente.toString());
 
@@ -42,11 +45,11 @@ public class ClienteService {
 
 	@Transactional
 	public Cliente updateCliente(String cpf, Cliente cliente) {
-		
+
 		Optional<Cliente> clienteSalvo = findByCpfCliente(cpf);
-		
+
 		log.info("Atualizando um Cliente: " + cliente.toString());
-		
+
 		validandoClienteExistente(clienteSalvo.get());
 
 		BeanUtils.copyProperties(cliente, clienteSalvo, "id");
@@ -75,8 +78,6 @@ public class ClienteService {
 		Optional<Cliente> clienteSalvo = findByCpfCliente(cpf);
 		validandoClienteExistente(clienteSalvo.get());
 
-		
-
 		log.info("Atualizando Propriedade Endereço do Cliente: " + clienteSalvo.toString());
 		clienteSalvo.get().setIdEndereco(endereco);
 
@@ -86,19 +87,37 @@ public class ClienteService {
 	}
 
 	/**
+	 * Deletar um Cliente.
+	 *
+	 * @param cpf CPF para proceder processo de exclusão
+	 * @return Deleta se o determinado Cliente não for Inadimplente ou Inativo.
+	 */
+	@Transactional
+	public void excluirCliente(String cpf) {
+		Optional<Cliente> cliente = findByCpfCliente(cpf);
+		log.info("Deletando um Cliente, CPF Nº: " + cpf);
+		validandoClienteExistente(cliente.get());
+
+		log.info("Deletando um Cliente, CPF Nº: " + cpf);
+		clienteRepository.deleteByCpf(cpf);
+		log.info("Cliente: " + cpf + " Deletado");
+
+	}
+
+	/**
 	 * Verifica se um cliente Recem cadastrado é válido ou não
 	 *
 	 * @param cliente Cliente para ser analisado
 	 * @throws DocumentoInvalidoException Se o Novo cliente for invalido.
 	 */
-	public void validandoNovoCliente(Cliente cliente) {
+	public void validandoNovoCliente(String cpf) {
 
-		if (!CpfUtilsValidator.isCPF(cliente.getCpf())) {
+		if (!CpfUtilsValidator.isCPF(cpf)) {
 
 			throw new DocumentoInvalidoException("Documentação Invalida. Verifique os campos exigentes");
 		}
 
-		Optional<Cliente> cpfVerificado = findByCpfCliente(cliente.getCpf());
+		Optional<Cliente> cpfVerificado = clienteRepository.findOneByCpfIgnoreCase(cpf);
 
 		if (cpfVerificado.isPresent()) {
 
@@ -176,30 +195,12 @@ public class ClienteService {
 			throw new CpfInvalidoOuInexistenteException("Cpf Invalido Ou Inexistente. Informe um Cpf Valido");
 		}
 		log.info("Find Cliente CPF: " + cpf);
-		Optional<Cliente> cliente = clienteRepository.findByCpf(cpf);
+		Optional<Cliente> cliente = clienteRepository.findOneByCpfIgnoreCase(cpf);
 
 		if (!cliente.isPresent()) {
 			throw new ClienteInexistenteException("Cliente invalido ou iexistente. Informe outro Cliente.");
 		}
 		return cliente;
-	}
-
-	/**
-	 * Deletar um Cliente.
-	 *
-	 * @param cpf CPF para proceder processo de exclusão
-	 * @return Deleta se o determinado Cliente não for Inadimplente ou Inativo.
-	 */
-	@Transactional
-	public void excluirCliente(String cpf) {
-		Optional<Cliente> cliente = clienteRepository.findByCpf(cpf);
-		log.info("Deletando um Cliente, CPF Nº: " + cpf);
-		validandoClienteExistente(cliente.get());		
-
-		log.info("Deletando um Cliente, CPF Nº: " + cpf);
-		clienteRepository.deleteByCpf(cpf);
-		log.info("Cliente: " + cpf + " Deletado");
-
 	}
 
 }

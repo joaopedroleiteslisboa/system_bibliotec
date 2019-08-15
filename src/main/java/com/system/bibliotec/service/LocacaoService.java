@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.system.bibliotec.config.ConstantsUtils;
 import com.system.bibliotec.exception.ClienteInadimplenteException;
 import com.system.bibliotec.exception.ClienteInexistenteException;
 import com.system.bibliotec.exception.LivroLocadoException;
@@ -58,10 +59,17 @@ public class LocacaoService {
 		locacao.setDataLocacao(HoraDiasDataLocalService.dataLocal());
 
 		locacao.setDataTerminoLocacao(HoraDiasDataLocalService.dataLocacaoDevolucao());
+		
+		locacao.setStatusLocacao(ConstantsUtils.DEFAULT_VALUE_STATUSLOCACAO);
 
+		locacao.setQuantidadeDeRenovacao(ConstantsUtils.DEFAULT_VALUE_QUANTIDADE_LOCACAO);
+		
 		livroService.updateStatusLivro(locacao.getLivro().getId(), StatusLivro.LOCADO);
+		
 		livroService.baixarEstoque(DEFAULT_COUNT, locacao.getLivro().getId());
+		
 		log.info("Locação realizada:" + locacao);
+		
 		return locacaoRepository.save(locacao);
 
 	}

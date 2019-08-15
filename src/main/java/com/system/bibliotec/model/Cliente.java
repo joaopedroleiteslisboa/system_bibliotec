@@ -97,7 +97,7 @@ public class Cliente {
 	
 	@JoinColumn(name = "id", referencedColumnName = "id")
 	@OneToOne(cascade = CascadeType.ALL ,fetch = FetchType.EAGER)
-	private Endereco idEndereco;
+	private Endereco endereco;
 
 	@JsonIgnore
 	@Transient

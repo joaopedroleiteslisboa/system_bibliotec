@@ -82,7 +82,7 @@ public class ClienteService {
 		validandoClienteExistente(clienteSalvo.get());
 
 		log.info("Atualizando Propriedade Endereço do Cliente: " + clienteSalvo.toString());
-		clienteSalvo.get().setIdEndereco(endereco);
+		clienteSalvo.get().setEndereco(endereco);
 
 		log.info("Endereço Atualizado");
 		return clienteRepository.save(clienteSalvo.get());

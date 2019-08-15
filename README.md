@@ -63,35 +63,34 @@ Linkedin: http://bit.ly/linkedinjoaopedroleiteslisboa
 	
 	* Salvando um cliente na Base de dados
 	
-	RequestMethod.POST >>> Type: application/json >>> 
-	
+	RequestMethod.POST >>> Type: application/json >>> 	URI: 127.0.0.1:8080/api/clientes/
 	Body >>> {
-	   {           
-            
-            "tipoCliente": "FISICA",
-            "nome": "João Pedro Leite S Lisboa",
-            "sobreNome": "Leite Soares",
-            "genero": "MASCULINO",
-            "cpf": "75573454102",
-            "dataNascimento": "1996-03-10",
-            "contato": {
-                "celular": "83999630573",
-                "telefoneResidencial": "83999630555",
-                "email_1": "joaopedroleite.s.lisboa@outlook.com",
-                "email_2": "joaopedroleite.s.lisboa.info@gmail.com"
-            },
-            "idEndereco": {
-                
-                "cep": "58100433",
-                "logradouro": "Rua: Tentando Localizar",
-                "numero": "333",
-                "complemento": "Residencial: Drumounts",
-                "bairro": "Santa Catarina",
-                "cidade": "João Pessoa",
-                "uf": "PB",
-                "ibge": "2503209"
-            }
-        }
+		 {           
+		            
+		            "tipoCliente": "FISICA",
+		            "nome": "João Pedro Leite S Lisboa",
+		            "sobreNome": "Leite Soares",
+		            "genero": "MASCULINO",
+		            "cpf": "12669673627",
+		            "dataNascimento": "1996-03-10",
+		            "contato": {
+		                "celular": "83999630573",
+		                "telefoneResidencial": "83999630555",
+		                "email_1": "joaopedroleite.s.lisboa@outlook.com",
+		                "email_2": "joaopedroleite.s.lisboa.info@gmail.com"
+		            },
+		            "endereco": {
+		                
+		                "cep": "58100433",
+		                "logradouro": "Rua: Tentando Localizar",
+		                "numero": "333",
+		                "complemento": "Residencial: Drumounts",
+		                "bairro": "Santa Catarina",
+		                "cidade": "João Pessoa",
+		                "uf": "PB",
+		                "ibge": "2503209"
+		            }
+		        }
         
         
      * Buscando clientes por Id (do banco de dados);

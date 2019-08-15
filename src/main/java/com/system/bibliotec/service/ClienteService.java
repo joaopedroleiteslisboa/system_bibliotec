@@ -83,7 +83,7 @@ public class ClienteService {
 
 		log.info("Atualizando Propriedade Endereço do Cliente: " + clienteSalvo.toString());
 		clienteSalvo.get().setEndereco(endereco);
-
+		
 		log.info("Endereço Atualizado");
 		return clienteRepository.save(clienteSalvo.get());
 

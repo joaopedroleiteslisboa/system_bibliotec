@@ -36,10 +36,6 @@ Escrito seguindo implementações Java, SpringBoot e Angular.
 		Em desenvolvimento...
 
 
-### Instruções para funcionamento
-
-
-	    Em desenvolvimento...
 
 ### Autor
 
@@ -52,6 +48,71 @@ Linkedin: http://bit.ly/linkedinjoaopedroleiteslisboa
 
 	   Em desenvolvimento...
 
+### Instruções para funcionamento - 
 
 
+	* Este Projeto possui dois perfis de Execução (application-dev e application-production), 
+	Contudo o application-production vem apresentando melhor eficiência no quesito consultas mais aprimoradas devido certas incompatibilidades do h2database...
+	
+	Desta forma, Lembre-se de adicionar o nome de seu usuario e senha do Banco de dados ( Preferencialmente Mysql).
+	
+	
+### Instruções para uso -	Segue alguns, de varios paths para requisições...  
 
+	*  >>>>> Operações com CLIENTES <<<<<
+	
+	* Salvando um cliente na Base de dados
+	
+	RequestMethod.POST >>> Type: application/json >>> 
+	
+	Body >>> {
+	   {           
+            
+            "tipoCliente": "FISICA",
+            "nome": "João Pedro Leite S Lisboa",
+            "sobreNome": "Leite Soares",
+            "genero": "MASCULINO",
+            "cpf": "75573454102",
+            "dataNascimento": "1996-03-10",
+            "contato": {
+                "celular": "83999630573",
+                "telefoneResidencial": "83999630555",
+                "email_1": "joaopedroleite.s.lisboa@outlook.com",
+                "email_2": "joaopedroleite.s.lisboa.info@gmail.com"
+            },
+            "idEndereco": {
+                
+                "cep": "58100433",
+                "logradouro": "Rua: Tentando Localizar",
+                "numero": "333",
+                "complemento": "Residencial: Drumounts",
+                "bairro": "Santa Catarina",
+                "cidade": "João Pessoa",
+                "uf": "PB",
+                "ibge": "2503209"
+            }
+        }
+        
+        
+     * Buscando clientes por Id (do banco de dados);
+     
+       RequestMethod.GET >>> http://127.0.0.1:8080/api/clientes/find/cod/1001
+       
+    
+     * Buscando clientes com paginação
+      
+     
+       RequestMethod.GET >>> 127.0.0.1:8080/api/clientes?page=3&size=2
+       
+
+	* Buscando clientes por cpf;
+     
+      RequestMethod.GET >>> Headers: key = cpf  value = numeroDeUmCPFValidoPresenteNoBancoDeDados  
+      			127.0.0.1:8080/api/clientes/find/doc
+      			    
+    
+    * Buscando clientes por intervalo de data de Aniversario
+    	
+      RequestMethod.GET >>> Params: dataNascimentoDe & dataNascimentoAte >>> 
+      			127.0.0.1:8080/api/clientes?dataNascimentoDe=1996-03-10&dataNascimentoAte=2001-10-04
+     

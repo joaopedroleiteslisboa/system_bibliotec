@@ -121,4 +121,12 @@ Linkedin: http://bit.ly/linkedinjoaopedroleiteslisboa
     	
       RequestMethod.GET >>> Params: dataNascimentoDe & dataNascimentoAte >>> 
       			127.0.0.1:8080/api/clientes?dataNascimentoDe=1996-03-10&dataNascimentoAte=2001-10-04
+      			
+      		
+   	* Atualizando Propriedade CPF de um cliente
+    	
+      RequestMethod.PUT >>> @PathVariable = id 	127.0.0.1:8080/api/clientes/1000/doc
+      
+      
+      
      

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.system.bibliotec.config.ConstantsUtils;
 import com.system.bibliotec.exception.DocumentoInvalidoException;
 import com.system.bibliotec.exception.LivroInvalidoOuInexistenteException;
 import com.system.bibliotec.exception.ReservaCanceladaException;
@@ -58,8 +59,12 @@ public class ReservaService {
 
 		reserva.setDataLimite(HoraDiasDataLocalService.dataReservaLimite());
 
+		reserva.setStatusReserva(ConstantsUtils.DEFAULT_VALUE_STATUSRESERVA);
+		
 		livroService.updateStatusLivro(reserva.getLivro().getId(), StatusLivro.RESERVADO);
+		
 		log.info("Livro Reservado:" + reserva.getLivro());
+		
 		return repository.save(reserva);
 
 	}

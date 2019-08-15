@@ -3,6 +3,7 @@ package com.system.bibliotec.config;
 import com.system.bibliotec.model.enums.StatusCliente;
 import com.system.bibliotec.model.enums.StatusLivro;
 import com.system.bibliotec.model.enums.StatusLocacao;
+import com.system.bibliotec.model.enums.StatusReserva;
 
 /**
  * Application constants.
@@ -26,9 +27,11 @@ public final class ConstantsUtils {
 	
 	public static final StatusLocacao DEFAULT_VALUE_STATUSLOCACAO = StatusLocacao.ATIVA;
 	
+	public static final StatusReserva DEFAULT_VALUE_STATUSRESERVA = StatusReserva.ATIVA;
+	
 	public static final int DEFAULT_VALUE_QUANTIDADE_LOCACAO = 0;
 	
-	
+
 
 	private ConstantsUtils() {
 	}

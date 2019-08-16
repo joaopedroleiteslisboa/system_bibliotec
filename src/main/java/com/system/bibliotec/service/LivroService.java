@@ -17,14 +17,18 @@ import com.system.bibliotec.exception.LivroExistenteException;
 import com.system.bibliotec.exception.LivroInvalidoOuInexistenteException;
 import com.system.bibliotec.exception.LivroLocadoException;
 import com.system.bibliotec.exception.LivroReservadoException;
+import com.system.bibliotec.model.Cliente;
 import com.system.bibliotec.model.Livro;
 import com.system.bibliotec.model.enums.StatusLivro;
 import com.system.bibliotec.repository.LivroRepository;
 import com.system.bibliotec.service.ultis.RandomUtils;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 //TODO: Precisa desenvolvedor sobrecarga de metodos para validação ficar mais coerente com um determinado contexto solicitado...
 @Service
+@Slf4j
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class LivroService {
 
@@ -43,9 +47,10 @@ public class LivroService {
 		
 		validaLivroNovo(livro);
 		livro.setStatusLivro(ConstantsUtils.DEFAULT_VALUE_STATUSLIVRO);
+		livro.setImagenUrl(ConstantsUtils.DEFAULT_VALUE_URL_PHOTOS_BOOK+RandomUtils.randomIntForUrlPic()+ConstantsUtils.PHOTOS_BOOK_LENGTH_WIDTH_200_X_300);
 		livro.setCodBarras(RandomUtils.randomCodBarras()); // TODO: Modificar essa implementação em um ambiente de
 															// produção...
-
+		log.info("Iniciando processo de Persistencia de Livro: "+ livro);
 		return livroRepository.save(livro);
 
 	}
@@ -196,33 +201,27 @@ public class LivroService {
 	 * @throws IsbnInvalidoException   Para um {@link Livro} com o Registro geral de
 	 *                                 ISBN Invalido
 	 */
+	
 	public void validaLivroNovo(Livro livro) {
-
-		if (existsByIdLivro(livro.getId())) {
-
-			throw new LivroExistenteException("Este livro já possui cadastro no sistema. Informe outro livro.");
-		}
+		System.out.println(livro);
 		if (existsCodBarrasLivro(livro.getCodBarras())) {
 
 			throw new CodBarrasExistenteException("Codigo de barras existente! Gere outro codigo de barras!");
 		}
 
-		if (!isbnValidator.isValid(livro.getIsbn13(), null)) {
-
-			throw new IsbnInvalidoException("ISBN Invalido. Informe um Registro Valido");
-		}
-
+	
 	}
 
-	public boolean existsByIdLivro(Long id) {
+	private boolean existsByIdLivro(Long id) {
 
 		return livroRepository.existsById(id);
 	}
 
-	public boolean existsCodBarrasLivro(String codBarras) {
+	private boolean existsCodBarrasLivro(String codBarras) {
 
 		return livroRepository.findOneByCodBarrasIgnoreCase(codBarras).isPresent();
 	}
-
+	
+	
 
 }

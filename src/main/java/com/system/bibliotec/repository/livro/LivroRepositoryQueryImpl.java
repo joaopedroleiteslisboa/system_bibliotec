@@ -16,9 +16,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.util.StringUtils;
 
-import com.system.bibliotec.model.Autor_;
-import com.system.bibliotec.model.Categoria;
-import com.system.bibliotec.model.Categoria_;
 import com.system.bibliotec.model.Livro;
 import com.system.bibliotec.model.Livro_;
 import com.system.bibliotec.repository.dto.projection.ResumoLivro;
@@ -91,7 +88,9 @@ public class LivroRepositoryQueryImpl implements LivroRepositoryQuery {
 		criteria.select(builder.count(root));
 		return manager.createQuery(criteria).getSingleResult();
 	}
-		//TODO: Fica o desafio para incluir categorias e editoras neste resumo... cujo ambos é um Set<>
+
+	// TODO: Fica o desafio para incluir categorias e editoras neste resumo... cujo
+	// ambos é um Set<>
 	@Override
 	public Page<ResumoLivro> resumo(LivroFilter livroFilter, Pageable pageable) {
 		// TODO Auto-generated method stub

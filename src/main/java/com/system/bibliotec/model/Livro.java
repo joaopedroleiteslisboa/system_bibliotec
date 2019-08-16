@@ -5,12 +5,14 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -24,13 +26,10 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 
+import org.hibernate.validator.constraints.Range;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.system.bibliotec.model.enums.Idioma;
 import com.system.bibliotec.model.enums.StatusLivro;
@@ -53,14 +52,18 @@ import lombok.ToString;
 public class Livro {
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	@EqualsAndHashCode.Include
 	private Long id;
-
+	
+	//TODO: Mudar em ambiente de produção
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	@Column(name = "codBarras", length = 13)
 	private String codBarras;
-
+	
+	//TODO: Mudar implementação @JsonProperty(access = JsonProperty.Access.READ_ONLY) em ambiente de produção...
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	@Size(max = 256)
 	@Column(name = "imagenUrl", length = 256)
 	private String imagenUrl;
@@ -70,15 +73,15 @@ public class Livro {
 	@Column(name = "nome")
 	private String nome;
 
-	@JsonManagedReference
-	@ManyToMany(fetch = FetchType.EAGER)
+	
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinTable(name = "livro_has_autores", joinColumns = { @JoinColumn(name = "id_livro") }, inverseJoinColumns = {
 			@JoinColumn(name = "id_autor") })
 	private Set<Autor> autores = new HashSet<Autor>();
 
-	@JsonManagedReference
+	
 	@JoinColumn(name = "idEditora")
-	@ManyToOne(optional = false, fetch = FetchType.EAGER)
+	@ManyToOne(optional = false, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Editora editora;
 
 	@NotNull(message = "Este campo é obrigatorio")
@@ -94,8 +97,8 @@ public class Livro {
 	@Column(name = "idioma")
 	private Idioma idioma;
 
-	@JsonManagedReference
-	@ManyToMany(fetch = FetchType.EAGER)
+	
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinTable(name = "livro_has_categorias", joinColumns = { @JoinColumn(name = "id_livro") }, inverseJoinColumns = {
 			@JoinColumn(name = "id_categoria") })
 	private Set<Categoria> categorias = new HashSet<Categoria>();
@@ -127,7 +130,7 @@ public class Livro {
 
 	@NotNull(message = "Informe uma quantidade adicionada em seu Estoque de Livros")
 	@Column(name = "quantidade")
-	@Size(min = 1, message = "Informe pelo menos {min} livro para Salvar no Estoque")
+	@Range(min = 1, max = 100, message = "Informe pelo menos {min} livro para Salvar no Estoque ou um valor maximo de  {max}")
 	private Integer quantidade;
 
 	

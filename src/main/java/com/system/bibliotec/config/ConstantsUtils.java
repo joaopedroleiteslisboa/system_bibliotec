@@ -31,6 +31,10 @@ public final class ConstantsUtils {
 	
 	public static final int DEFAULT_VALUE_QUANTIDADE_LOCACAO = 0;
 	
+	public static final String DEFAULT_VALUE_URL_PHOTOS_BOOK = "https://picsum.photos/id/";
+	
+	public static final String PHOTOS_BOOK_LENGTH_WIDTH_200_X_300 = "/200/300";
+	
 
 
 	private ConstantsUtils() {

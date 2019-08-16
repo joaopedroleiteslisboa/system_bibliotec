@@ -26,4 +26,6 @@ public interface LivroRepository extends JpaRepository<Livro, Long>, LivroReposi
 
 	public Optional<Livro> findOneByCodBarrasIgnoreCase(String codBarras);
 
+	public Optional<Livro> findOneByIsbn13IgnoreCase(String isbn13);
+
 }

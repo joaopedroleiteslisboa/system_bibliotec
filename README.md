@@ -160,9 +160,8 @@ Linkedin: http://bit.ly/linkedinjoaopedroleiteslisboa
 	
 	RequestMethod.POST >>> Type: application/json >>> 	URI: 127.0.0.1:8080/api/livros/
 	Body >>> {
-		 {           
-     
-     {
+		     
+{
 
     "nome": "RESTful API Design Part II",
     "autores": [

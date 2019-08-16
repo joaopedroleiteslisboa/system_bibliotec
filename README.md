@@ -159,9 +159,7 @@ Linkedin: http://bit.ly/linkedinjoaopedroleiteslisboa
      * Salvando um livro na Base de dados
 	
 	RequestMethod.POST >>> Type: application/json >>> 	URI: 127.0.0.1:8080/api/livros/
-	Body >>> {
-		     
-{
+	Body >>> {	
 
     "nome": "RESTful API Design Part II",
     "autores": [

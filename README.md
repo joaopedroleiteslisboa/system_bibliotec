@@ -148,8 +148,7 @@ Linkedin: http://bit.ly/linkedinjoaopedroleiteslisboa
         "ibge": "2599907"
     }	
     
-    
-    
+        
     
 				*  >>>>> Operações com LIVROS <<<<<
     
@@ -188,5 +187,39 @@ Linkedin: http://bit.ly/linkedinjoaopedroleiteslisboa
     "valorUnitario": 15,
     "quantidade": 100
 }
+    
+     * Buscando livro por Id (do banco de dados);
+     
+       RequestMethod.GET >>> @PathVariable   http://127.0.0.1:8080/api/livros/1013
+       
+    
+    
+     * Buscando Livros com paginação      
+         
+       RequestMethod.GET >>> 127.0.0.1:8080/api/livros?page=3&size=2
+       
+     
+     
+      * Buscando livros com resumo de json       
+   		    
+   		     RequestMethod.GET >>> 127.0.0.1:8080/api/livros?resumo
+   		        		     
+   		       			    
+    
+    * Buscando livros por intervalo de data de Publicação 
+    	
+      RequestMethod.GET >>> Params: dataPublicacaoDe & dataPublicacaoAte >>> 
+      			
+      			127.0.0.1:8080/api/livros?dataPublicacaoDe=2015-07-10&dataPublicacaoAte=2017-07-10
+    
+    
+    
+    
+    * Buscando livros por intervalo de data de Publicação e resumido
+    	
+      RequestMethod.GET >>> Params: dataPublicacaoDe & dataPublicacaoAte >>> 
+      
+      			127.0.0.1:8080/api/livros?dataPublicacaoDe=2015-07-10&dataPublicacaoAte=2017-07-10&resumo
+     
      
      

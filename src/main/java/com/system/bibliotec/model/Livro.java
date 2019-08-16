@@ -74,14 +74,14 @@ public class Livro {
 	private String nome;
 
 	
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "livro_has_autores", joinColumns = { @JoinColumn(name = "id_livro") }, inverseJoinColumns = {
 			@JoinColumn(name = "id_autor") })
 	private Set<Autor> autores = new HashSet<Autor>();
 
 	
 	@JoinColumn(name = "idEditora")
-	@ManyToOne(optional = false, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToOne(optional = false, fetch = FetchType.EAGER)
 	private Editora editora;
 
 	@NotNull(message = "Este campo é obrigatorio")
@@ -98,7 +98,7 @@ public class Livro {
 	private Idioma idioma;
 
 	
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "livro_has_categorias", joinColumns = { @JoinColumn(name = "id_livro") }, inverseJoinColumns = {
 			@JoinColumn(name = "id_categoria") })
 	private Set<Categoria> categorias = new HashSet<Categoria>();

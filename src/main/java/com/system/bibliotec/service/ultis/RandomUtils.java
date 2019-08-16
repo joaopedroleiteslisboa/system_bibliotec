@@ -7,6 +7,8 @@ import org.apache.commons.lang3.RandomStringUtils;
 public class RandomUtils {
 
 	private static final int DEF_COUNT = 20;
+	
+	private static final int DEF_COUNT_PIC_URL_RANDOM = 899;
 
     private RandomUtils() {
     }
@@ -49,7 +51,7 @@ public class RandomUtils {
 	 public static String randomIntForUrlPic() {
 	
 		 	Random random = new Random();
-		 	return String.valueOf(random.nextInt(999));
+		 	return String.valueOf(random.nextInt(DEF_COUNT_PIC_URL_RANDOM));
 	 }
 	 
 	 	//TODO: Remover ester metodo quando implementar o gerador oficial e leitor de codigo de barras desta aplicação....

@@ -1,5 +1,6 @@
 package com.system.bibliotec.config;
 
+import com.system.bibliotec.model.enums.Idioma;
 import com.system.bibliotec.model.enums.StatusCliente;
 import com.system.bibliotec.model.enums.StatusLivro;
 import com.system.bibliotec.model.enums.StatusLocacao;
@@ -25,6 +26,8 @@ public final class ConstantsUtils {
 	
 	public static final StatusLivro DEFAULT_VALUE_STATUSLIVRO = StatusLivro.LIVRE;
 	
+	public static final Idioma DEFAULT_VALUE_IDIOMA_LIVRO = Idioma.PORTUGUES;
+	
 	public static final StatusLocacao DEFAULT_VALUE_STATUSLOCACAO = StatusLocacao.ATIVA;
 	
 	public static final StatusReserva DEFAULT_VALUE_STATUSRESERVA = StatusReserva.ATIVA;
@@ -40,3 +43,4 @@ public final class ConstantsUtils {
 	private ConstantsUtils() {
 	}
 }
+

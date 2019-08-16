@@ -11,8 +11,8 @@ CREATE TABLE clientes(
                          tipoCliente VARCHAR(15) NOT NULL,
                          celular VARCHAR(60) NOT NULL,
                          telefoneResidencial VARCHAR(60),
-                         email_1  VARCHAR(60) NOT NULL,
-                         email_2 VARCHAR(60),
+                         email_1  VARCHAR(60) NOT NULL UNIQUE,
+                         email_2 VARCHAR(60) UNIQUE,
                          idEndereco BIGINT,
                          FOREIGN KEY (idEndereco) REFERENCES enderecos(id)
 

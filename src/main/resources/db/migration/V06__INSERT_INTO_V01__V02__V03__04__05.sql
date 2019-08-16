@@ -27,13 +27,13 @@
 	
 	INSERT INTO clientes(ativo, statusCliente, nome, sobreNome, genero, cpf, dataNascimento, tipoCliente,  celular, telefoneResidencial, email_1, email_2, idEndereco)VALUES (true, 'ADIMPLENTE', 'Bianca cardoso', 'Cardoso',  'FEMININO', '03317970200', '1992-10-03', 'FISICA',   '83999633543', '8332287887', 'biancacardoso@outlook.com', 'biancacardoso@gmail.com', 1003);
 	
-	INSERT INTO clientes(ativo, statusCliente, nome, sobreNome, genero, cpf, dataNascimento, tipoCliente,  celular, telefoneResidencial, email_1, email_2, idEndereco)VALUES (true, 'ADIMPLENTE', 'Ze lezin', 'Cardoso',  'MASCULINO', '06615286424', '1992-10-03', 'FISICA',   '83999633543', '8332287887', 'biancacardoso@outlook.com', 'biancacardoso@gmail.com', 1004);
+	INSERT INTO clientes(ativo, statusCliente, nome, sobreNome, genero, cpf, dataNascimento, tipoCliente,  celular, telefoneResidencial, email_1, email_2, idEndereco)VALUES (true, 'ADIMPLENTE', 'Ze lezin', 'Cardoso',  'MASCULINO', '06615286424', '1992-10-03', 'FISICA',   '83999633543', '8332287887', 'bia@outlook.com', 'bia@gmail.com', 1004);
 	
-	INSERT INTO clientes(ativo, statusCliente, nome, sobreNome, genero, cpf, dataNascimento, tipoCliente,  celular, telefoneResidencial, email_1, email_2, idEndereco)VALUES (true, 'ADIMPLENTE', 'Fabiana', 'Soares',  'FEMININO', '74449085914', '1992-10-03', 'FISICA',   '83999633543', '8332287887', 'biancacardoso@outlook.com', 'biancacardoso@gmail.com', 1005);
+	INSERT INTO clientes(ativo, statusCliente, nome, sobreNome, genero, cpf, dataNascimento, tipoCliente,  celular, telefoneResidencial, email_1, email_2, idEndereco)VALUES (true, 'ADIMPLENTE', 'Fabiana', 'Soares',  'FEMININO', '74449085914', '1992-10-03', 'FISICA',   '83999633543', '8332287887', 'bianca@outlook.com', 'bianca@gmail.com', 1005);
 	
-	INSERT INTO clientes(ativo, statusCliente, nome, sobreNome, genero, cpf, dataNascimento, tipoCliente,  celular, telefoneResidencial, email_1, email_2, idEndereco)VALUES (true, 'ADIMPLENTE', 'Ze ', 'Cardoso', 'MASCULINO', '43506004506', '1992-10-03', 'FISICA',   '83999633543', '8332287887', 'biancacardoso@outlook.com', 'biancacardoso@gmail.com', 1006);
+	INSERT INTO clientes(ativo, statusCliente, nome, sobreNome, genero, cpf, dataNascimento, tipoCliente,  celular, telefoneResidencial, email_1, email_2, idEndereco)VALUES (true, 'ADIMPLENTE', 'Ze ', 'Cardoso', 'MASCULINO', '43506004506', '1992-10-03', 'FISICA',   '83999633543', '8332287887', 'cardoso@outlook.com', 'cacardoso@gmail.com', 1006);
 	
-	INSERT INTO clientes(ativo, statusCliente, nome, sobreNome, genero, cpf, dataNascimento, tipoCliente,  celular, telefoneResidencial, email_1, email_2, idEndereco)VALUES (true, 'ADIMPLENTE', 'Lezin', 'Feitosa', 'MASCULINO', '77353603470', '1992-10-03', 'FISICA',   '83999633543', '8332287887', 'biancacardoso@outlook.com', 'biancacardoso@gmail.com', 1007);
+	INSERT INTO clientes(ativo, statusCliente, nome, sobreNome, genero, cpf, dataNascimento, tipoCliente,  celular, telefoneResidencial, email_1, email_2, idEndereco)VALUES (true, 'ADIMPLENTE', 'Lezin', 'Feitosa', 'MASCULINO', '77353603470', '1992-10-03', 'FISICA',   '83999633543', '8332287887', 'microsoft@outlook.com', 'microsoft@gmail.com', 1007);
 			
 	
 	

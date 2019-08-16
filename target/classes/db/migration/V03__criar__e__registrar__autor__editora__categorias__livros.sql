@@ -1,14 +1,14 @@
 CREATE TABLE livros(
 
         id BIGINT PRIMARY KEY AUTO_INCREMENT,
-        codBarras CHAR(13) NOT NULL,
+        codBarras VARCHAR(20) NOT NULL,
         imagenUrl varchar(2048),
         nome VARCHAR(200) NOT NULL,
         edicao VARCHAR(9),
         statusLivro VARCHAR(10) DEFAULT 'LIVRE',
         idioma VARCHAR(12) NOT NULL,
         descricao MEDIUMTEXT,
-        isbn13 varchar(30) NOT NULL UNIQUE,
+        isbn13 varchar(30) NOT NULL,
         numeroPaginas LONG NOT NULL,
         dataPublicacao DATE NOT NULL,
         valorUnitario DECIMAL NOT NULL,
@@ -61,7 +61,7 @@ CREATE TABLE livro_has_categorias (
 CREATE TABLE editoras(
 
         id BIGINT PRIMARY KEY AUTO_INCREMENT,
-        nome VARCHAR(50) NOT NULL,
+        nome VARCHAR(50) NOT NULL UNIQUE,
         descricao MEDIUMTEXT NOT NULL
 
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1000;

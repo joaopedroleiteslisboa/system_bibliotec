@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -51,6 +52,6 @@ public class Editora {
 	private String descricao;
 	
 	@JsonBackReference
-	@OneToMany(mappedBy = "editora", orphanRemoval = false)
+	@OneToMany(mappedBy = "editora", orphanRemoval = false, fetch = FetchType.EAGER)
 	private List<Livro> livros;
 }

@@ -22,21 +22,26 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.system.bibliotec.event.RecursoCriadorEvent;
 import com.system.bibliotec.model.Locacao;
+import com.system.bibliotec.repository.LivroRepository;
 import com.system.bibliotec.repository.LocacaoRepository;
+import com.system.bibliotec.service.LivroService;
 import com.system.bibliotec.service.LocacaoService;
+
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping(value = "/locacoes")
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class LocacaoResource {
 
 	
-	  @Autowired private LocacaoRepository locacaoRepository;
+	private final LocacaoRepository locacaoRepository;
 	  
-	  @Autowired
-	  private LocacaoService locacaoService;
 	  
-	  @Autowired
-	  private ApplicationEventPublisher publisher;
+	  private final LocacaoService locacaoService;
+	  
+	  
+	  private final ApplicationEventPublisher publisher;
 	  
 	  @GetMapping
 	  public List<Locacao> pesquisar() {

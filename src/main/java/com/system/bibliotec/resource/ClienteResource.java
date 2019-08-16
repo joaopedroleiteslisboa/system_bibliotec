@@ -27,22 +27,27 @@ import com.system.bibliotec.exception.CpfInvalidoOuInexistenteException;
 import com.system.bibliotec.model.Cliente;
 import com.system.bibliotec.model.Endereco;
 import com.system.bibliotec.repository.ClienteRepository;
+import com.system.bibliotec.repository.LivroRepository;
 import com.system.bibliotec.repository.filter.ClienteFilter;
 import com.system.bibliotec.service.ClienteService;
+import com.system.bibliotec.service.LivroService;
 import com.system.bibliotec.service.ultis.CpfUtilsValidator;
+
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/clientes")
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ClienteResource {
 
-	@Autowired
-	private ClienteRepository clienteRepository;
+	
+	private final ClienteRepository clienteRepository;
 
-	@Autowired
-	private ClienteService clienteService;
+	
+	private final ClienteService clienteService;
 
-	@Autowired
-	private ApplicationEventPublisher publisher;
+	
+	private final ApplicationEventPublisher publisher;
 
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public Page<Cliente> pesquisar(ClienteFilter clienteFilter,Pageable page) {

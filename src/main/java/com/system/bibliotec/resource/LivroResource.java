@@ -26,18 +26,21 @@ import com.system.bibliotec.repository.dto.projection.ResumoLivro;
 import com.system.bibliotec.repository.filter.LivroFilter;
 import com.system.bibliotec.service.LivroService;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
 @RequestMapping("/livros")
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class LivroResource {
 
-	@Autowired
-	private LivroRepository livroRepository;
+	
+	private final LivroRepository livroRepository;
 
-	@Autowired
-	private LivroService livroService;
+	
+	private final LivroService livroService;
 
-	@Autowired
-	private ApplicationEventPublisher publisher;
+	
+	private final ApplicationEventPublisher publisher;
 
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public Page<Livro> pesquisar(LivroFilter livroFilter, Pageable page) {

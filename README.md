@@ -134,7 +134,7 @@ Linkedin: http://bit.ly/linkedinjoaopedroleiteslisboa
       	
       		URI: 	127.0.0.1:8080/api/clientes/end?cpf=09104537483
      
-     Body >>> {
+     Body >>> 
 		            
     {
         "id": 1000,
@@ -151,11 +151,45 @@ Linkedin: http://bit.ly/linkedinjoaopedroleiteslisboa
     
     
     
-    *  >>>>> Operações com Livros <<<<<
+				*  >>>>> Operações com LIVROS <<<<<
+    
+    
+    
      
      * Salvando um livro na Base de dados
 	
 	RequestMethod.POST >>> Type: application/json >>> 	URI: 127.0.0.1:8080/api/livros/
 	Body >>> {
 		 {           
+     
+     {
+
+    "nome": "RESTful API Design Part II",
+    "autores": [
+        {
+            "id": 1006
+        }
+    ],
+    "editora": {
+        	
+        	"id": 1006
+    },
+    "edicao": "Ed. 1ª",
+    "statusLivro": "LIVRE",
+    "idioma": "INGLES",
+    "categorias": [
+        {
+            "id": 1000
+           
+        }
+     
+    ],
+    "descricao": "Looking for Best Practices for RESTful APIs? This book is for you! Why? Because this book is packed with practical experience on what works best for RESTful API Design. You want to design APIs like a Pro? Use API description languages to both design APIs and develop APIs efficiently. The book introduces the two most common API description languages RAML, OpenAPI, and Swagger. Your company cares about its customers? Learn API product management with a customer-centric design and development approach for APIs. Learn how to manage APIs as a product and how to follow an API-first approach. Build APIs your customers love! You want to manage the complete API lifecycle? An API development methodology is proposed to guide you through the lifecycle: API inception, API design, API development, API publication, API evolution, and maintenance. You want to build APIs right? This book shows best practices for REST design, such as the correct use of resources, URIs, representations, content types, data formats, parameters, HTTP status codes, and HTTP methods. Your APIs connect to legacy systems? The book shows best practices for connecting APIs to existing backend systems. Your APIs connect to a mesh of microservices? The book shows the principles for designing APIs for scalable, autonomous microservices. You expect lots of traffic on your API? The book shows you how to achieve high performance, availability and maintainability. You want to build APIs that last for decades? We study API versioning, API evolution, backward- and forward-compatibility and show API design patterns for versioning. The API-University Series is a modular series of books on API-related topics. Each book focuses on a particular API topic, so you can select the topics within APIs, which are relevant for you.",
+    "isbn13": "978-1514735169",
+    "numeroPaginas": 296,
+    "dataPublicacao": "25-08-2016",
+    "valorUnitario": 15,
+    "quantidade": 100
+}
+     
      

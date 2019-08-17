@@ -224,7 +224,7 @@ Linkedin: http://bit.ly/linkedinjoaopedroleiteslisboa
     
         
 					*  >>>>> Estrutura do Retorno de Erros do Projeto <<<<<     
-     EX.:     
+     EX     
 [
     {
         "mensagemUsuario": "Livro Reservado. Operação não permitida",

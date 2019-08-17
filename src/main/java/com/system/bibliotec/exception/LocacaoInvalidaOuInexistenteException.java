@@ -2,6 +2,28 @@ package com.system.bibliotec.exception;
 
 public class LocacaoInvalidaOuInexistenteException extends RuntimeException {
 	
+	public LocacaoInvalidaOuInexistenteException() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+
+
+	public LocacaoInvalidaOuInexistenteException(String message, Throwable cause, boolean enableSuppression,
+			boolean writableStackTrace) {
+		super(message, cause, enableSuppression, writableStackTrace);
+		// TODO Auto-generated constructor stub
+	}
+
+
+
+	public LocacaoInvalidaOuInexistenteException(Throwable cause) {
+		super(cause);
+		// TODO Auto-generated constructor stub
+	}
+
+
+
 	/**
 	 * 
 	 */

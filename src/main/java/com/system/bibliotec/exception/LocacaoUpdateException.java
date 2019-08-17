@@ -2,6 +2,28 @@ package com.system.bibliotec.exception;
 
 public class LocacaoUpdateException extends RuntimeException{
 
+	public LocacaoUpdateException() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+
+
+	public LocacaoUpdateException(String message, Throwable cause, boolean enableSuppression,
+			boolean writableStackTrace) {
+		super(message, cause, enableSuppression, writableStackTrace);
+		// TODO Auto-generated constructor stub
+	}
+
+
+
+	public LocacaoUpdateException(Throwable cause) {
+		super(cause);
+		// TODO Auto-generated constructor stub
+	}
+
+
+
 	/**
 	 * 
 	 */

@@ -124,7 +124,7 @@ public class ClienteService {
 			throw new DocumentoInvalidoException("Documentação Invalida. Verifique os campos exigentes");
 		}
 
-		Optional<Cliente> cpfVerificado = clienteRepository.findOneByCpfIgnoreCase(cpf);
+		Optional<Cliente> cpfVerificado = clienteRepository.findOneByCpf(cpf);
 
 		if (cpfVerificado.isPresent()) {
 
@@ -218,7 +218,7 @@ public class ClienteService {
 			throw new CpfInvalidoOuInexistenteException("Cpf Invalido Ou Inexistente. Informe um Cpf Valido");
 		}
 		log.info("Find Cliente CPF: " + cpf);
-		Optional<Cliente> cliente = clienteRepository.findOneByCpfIgnoreCase(cpf);
+		Optional<Cliente> cliente = clienteRepository.findOneByCpf(cpf);
 
 		if (!cliente.isPresent()) {
 			throw new ClienteInexistenteException("Cliente invalido ou iexistente. Informe outro Cliente.");

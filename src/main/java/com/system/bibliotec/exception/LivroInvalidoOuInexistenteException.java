@@ -2,6 +2,22 @@ package com.system.bibliotec.exception;
 
 public class LivroInvalidoOuInexistenteException extends RuntimeException {
 
+	public LivroInvalidoOuInexistenteException() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public LivroInvalidoOuInexistenteException(String message, Throwable cause, boolean enableSuppression,
+			boolean writableStackTrace) {
+		super(message, cause, enableSuppression, writableStackTrace);
+		// TODO Auto-generated constructor stub
+	}
+
+	public LivroInvalidoOuInexistenteException(Throwable cause) {
+		super(cause);
+		// TODO Auto-generated constructor stub
+	}
+
 	/**
 	 * 
 	 */

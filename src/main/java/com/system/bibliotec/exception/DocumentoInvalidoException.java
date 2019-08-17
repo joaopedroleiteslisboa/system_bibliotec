@@ -2,6 +2,22 @@ package com.system.bibliotec.exception;
 
 public class DocumentoInvalidoException extends RuntimeException {
 
+	public DocumentoInvalidoException() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public DocumentoInvalidoException(String message, Throwable cause, boolean enableSuppression,
+			boolean writableStackTrace) {
+		super(message, cause, enableSuppression, writableStackTrace);
+		// TODO Auto-generated constructor stub
+	}
+
+	public DocumentoInvalidoException(Throwable cause) {
+		super(cause);
+		// TODO Auto-generated constructor stub
+	}
+
 	/**
 	 * 
 	 */

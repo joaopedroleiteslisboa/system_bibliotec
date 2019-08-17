@@ -2,6 +2,22 @@ package com.system.bibliotec.exception;
 
 public class IsbnInvalidoException extends RuntimeException {
 	
+	public IsbnInvalidoException() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public IsbnInvalidoException(String message, Throwable cause, boolean enableSuppression,
+			boolean writableStackTrace) {
+		super(message, cause, enableSuppression, writableStackTrace);
+		// TODO Auto-generated constructor stub
+	}
+
+	public IsbnInvalidoException(Throwable cause) {
+		super(cause);
+		// TODO Auto-generated constructor stub
+	}
+
 	/**
 	 * 
 	 */

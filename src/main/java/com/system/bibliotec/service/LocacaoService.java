@@ -196,8 +196,7 @@ public class LocacaoService {
 
 		if (locacao.getLivro().getStatusLivro() == StatusLivro.RESERVADO) {
 
-			throw new LivroReservadoException(
-					"Operação não realizada. Livro selecionado estar Reservado. Selecione outro Exemplar");
+			throw new LivroReservadoException();
 		}
 		if (locacao.getLivro().getStatusLivro() == StatusLivro.LOCADO) {
 

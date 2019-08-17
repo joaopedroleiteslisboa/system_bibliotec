@@ -4,6 +4,28 @@ public class ReservaCanceladaException extends RuntimeException {
 
 	
 
+	public ReservaCanceladaException() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+
+
+	public ReservaCanceladaException(String message, Throwable cause, boolean enableSuppression,
+			boolean writableStackTrace) {
+		super(message, cause, enableSuppression, writableStackTrace);
+		// TODO Auto-generated constructor stub
+	}
+
+
+
+	public ReservaCanceladaException(Throwable cause) {
+		super(cause);
+		// TODO Auto-generated constructor stub
+	}
+
+
+
 	/**
 	 * 
 	 */

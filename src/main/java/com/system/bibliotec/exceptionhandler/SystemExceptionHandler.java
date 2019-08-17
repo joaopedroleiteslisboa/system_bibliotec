@@ -15,6 +15,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -28,12 +29,17 @@ import com.system.bibliotec.exception.LivroReservadoException;
 import com.system.bibliotec.exception.ReservaInexistenteException;
 import com.system.bibliotec.exception.ReservaUpdateException;
 
+import lombok.RequiredArgsConstructor;
+
+
+@ControllerAdvice
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class SystemExceptionHandler extends ResponseEntityExceptionHandler {
 
 	// NECESSITA-SE IMPLEMENTAR UM METODO GENERICO PARA TODAS EXCEÇÕES...
 	
-	@Autowired
-	private MessageSource messageSource;
+	
+	private final MessageSource messageSource;
 
 	@Override
 	protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
@@ -97,10 +103,8 @@ public class SystemExceptionHandler extends ResponseEntityExceptionHandler {
 	}
 	
 	@ExceptionHandler({ LivroReservadoException.class })
-	public ResponseEntity<Object> livroReservadoException(LivroReservadoException ex,
-			WebRequest request) {
-		String mensagemUsuario = messageSource.getMessage("recurso.livro.reservado", null,
-				LocaleContextHolder.getLocale());
+	public ResponseEntity<Object> livroReservadoException(LivroReservadoException ex, WebRequest request) {
+		String mensagemUsuario = messageSource.getMessage("recurso.livro.reservado", null,	LocaleContextHolder.getLocale());
 		String mensagemDesenvolvedor = ExceptionUtils.getRootCauseMessage(ex);
 		List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));
 		return handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);

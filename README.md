@@ -230,5 +230,10 @@ Linkedin: http://bit.ly/linkedinjoaopedroleiteslisboa
 		        "mensagemUsuario": "Livro Reservado. Operação não permitida",
 		        "mensagemDesenvolvedor": "LivroReservadoException: O livro selecionado estar Reservado. Operação não Realizada"
 		    }
+		    
+		    {
+		        "mensagemUsuario": "Operação não permitida. Documentação Invalida",
+		        "mensagemDesenvolvedor": "DocumentoInvalidoException: CPF Invalido"
+		    }
 
      

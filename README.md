@@ -222,14 +222,9 @@ Linkedin: http://bit.ly/linkedinjoaopedroleiteslisboa
       			127.0.0.1:8080/api/livros?dataPublicacaoDe=2015-07-10&dataPublicacaoAte=2017-07-10&resumo
     
     
-    
-    
-    
-    
+        
 					*  >>>>> Estrutura do Retorno de Erros do Projeto <<<<<     
-    
-    EX.:
-     
+     EX.:     
 [
     {
         "mensagemUsuario": "Livro Reservado. Operação não permitida",

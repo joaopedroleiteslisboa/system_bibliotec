@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.system.bibliotec.event.RecursoCriadorEvent;
+import com.system.bibliotec.exception.CpfInvalidoException;
 import com.system.bibliotec.exception.CpfInvalidoOuInexistenteException;
 import com.system.bibliotec.model.Cliente;
 import com.system.bibliotec.model.Endereco;
@@ -57,7 +58,7 @@ public class ClienteResource {
 	@ResponseStatus(code = HttpStatus.OK)
 	@RequestMapping(method = RequestMethod.GET, params =  "cpf", value = "/find/doc")
 	public ResponseEntity<Cliente> findOneByCpfIgnoreCase(@RequestParam(required = true, name = "cpf") String cpf) {
-		if(!CpfUtilsValidator.isCPF(cpf)) {throw new CpfInvalidoOuInexistenteException("Cpf invalido. Informe outro CPF valido");}
+		if(!CpfUtilsValidator.isCPF(cpf)) {throw new CpfInvalidoException("Cpf invalido. Informe outro CPF valido");}
 			Optional<Cliente> cliente = clienteRepository.findOneByCpf(cpf);
 		return cliente.isPresent() ? ResponseEntity.ok(cliente.get()) : ResponseEntity.notFound().build();
 	}

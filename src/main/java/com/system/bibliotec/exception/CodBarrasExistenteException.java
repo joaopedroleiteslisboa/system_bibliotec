@@ -1,7 +1,11 @@
 package com.system.bibliotec.exception;
 
 public class CodBarrasExistenteException extends RuntimeException {
-
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1444094131813813792L;
+	
 	public CodBarrasExistenteException() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -27,10 +31,7 @@ public class CodBarrasExistenteException extends RuntimeException {
 		// TODO Auto-generated constructor stub
 	}
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1444094131813813792L;
+
 
 	
 	

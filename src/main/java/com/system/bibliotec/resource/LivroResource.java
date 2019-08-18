@@ -62,8 +62,9 @@ public class LivroResource {
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	@RequestMapping(method = RequestMethod.GET, value = "/{id}")
 	public ResponseEntity<Livro> findById(@PathVariable Long id) {
-		Optional<Livro> livro = livroService.findByIdLivro(id);
-		return livro.isPresent() ? ResponseEntity.ok(livro.get()) : ResponseEntity.notFound().build();
+		Livro livro = livroService.findByIdLivro(id);
+		
+		return (livro != null) ? ResponseEntity.ok(livro) : ResponseEntity.notFound().build();
 
 	}
 

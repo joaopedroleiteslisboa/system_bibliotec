@@ -12,6 +12,7 @@ import com.system.bibliotec.exception.ClienteExistenteException;
 import com.system.bibliotec.exception.ClienteInadimplenteException;
 import com.system.bibliotec.exception.ClienteInativoException;
 import com.system.bibliotec.exception.ClienteInexistenteException;
+import com.system.bibliotec.exception.CpfInvalidoException;
 import com.system.bibliotec.exception.CpfInvalidoOuInexistenteException;
 import com.system.bibliotec.exception.DocumentoInvalidoException;
 import com.system.bibliotec.model.Cliente;
@@ -138,7 +139,7 @@ public class ClienteService {
 
 		if (!CpfUtilsValidator.isCPF(cliente.getCpf())) {
 
-			throw new CpfInvalidoOuInexistenteException("Cpf do Cliente Invalido. Informe um Cpf Valido.");
+			throw new CpfInvalidoException("Cpf do Cliente Invalido. Informe um Cpf Valido.");
 		}
 
 		if (cliente.getId() == null) {
@@ -215,7 +216,7 @@ public class ClienteService {
 	public Optional<Cliente> findByCpfCliente(String cpf) {
 
 		if (cpf.isEmpty() || !CpfUtilsValidator.isCPF(cpf)) {
-			throw new CpfInvalidoOuInexistenteException("Cpf Invalido Ou Inexistente. Informe um Cpf Valido");
+			throw new CpfInvalidoException("Cpf Invalido Ou Inexistente. Informe um Cpf Valido");
 		}
 		log.info("Find Cliente CPF: " + cpf);
 		Optional<Cliente> cliente = clienteRepository.findOneByCpf(cpf);

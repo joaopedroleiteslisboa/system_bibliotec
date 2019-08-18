@@ -91,19 +91,19 @@ public class LocacaoService {
 	@Transactional
 	public void updatePropertyLivro(Long idLocacao, Long idLivro) {
 		Optional<Locacao> locacaoSalva = findByIdLocacao(idLocacao);
-		Optional<Livro> livroSalvo = livroService.findByIdLivro(idLivro);
+		Livro livroSalvo = livroService.findByIdLivro(idLivro);
 
 		log.info("Iniciando Processo de Atualização de Locação: Atualizando propriedade livro:" + locacaoSalva.get());
 
 		validaLocacaoExistente(locacaoSalva.get());
 
-		livroService.validaLivroExistente(livroSalvo.get());
+		livroService.validaLivroExistente(livroSalvo);
 
 		livroService.updateStatusLivro(locacaoSalva.get().getLivro().getId(), StatusLivro.LIVRE);
 
-		livroService.updateStatusLivro(livroSalvo.get().getId(), StatusLivro.LOCADO);
+		livroService.updateStatusLivro(livroSalvo.getId(), StatusLivro.LOCADO);
 
-		locacaoSalva.get().setLivro(livroSalvo.get());
+		locacaoSalva.get().setLivro(livroSalvo);
 
 		locacaoRepository.save(locacaoSalva.get());
 		log.info("Processo de Atualização de Locação de livro realizada:" + locacaoSalva.get());
@@ -230,16 +230,7 @@ public class LocacaoService {
 			throw new LocacaoLimiteDataException("Operação não realizada. Data de Termino da Locação ultrapassada.");
 		}
 
-	}
-	public Iterable<Locacao> findAll() {
-
-		return locacaoRepository.findAll();
-	}
-
-	public boolean existsByIdLocacao(Long id) {
-
-		return locacaoRepository.existsById(id);
-	}
-	
+	}	
+		
 
 }

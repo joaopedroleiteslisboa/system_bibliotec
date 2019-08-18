@@ -113,6 +113,15 @@
 	
 	INSERT INTO livro_has_autores (id_livro, id_autor) values (1003, 1003);
 	
+	INSERT INTO livro_has_autores (id_livro, id_autor) values (1004, 1003);
+	
+	INSERT INTO livro_has_autores (id_livro, id_autor) values (1005, 1003);
+	
+	INSERT INTO livro_has_autores (id_livro, id_autor) values (1006, 1003);
+	
+	INSERT INTO livro_has_autores (id_livro, id_autor) values (1007, 1003);
+	
+	
     
 	-- livro_has_categorias
 	INSERT INTO livro_has_categorias (id_livro, id_categoria) values (1000, 1000);
@@ -122,6 +131,14 @@
 	INSERT INTO livro_has_categorias (id_livro, id_categoria) values (1002, 1002);
 	
 	INSERT INTO livro_has_categorias (id_livro, id_categoria) values (1003, 1003);
+	
+	INSERT INTO livro_has_categorias (id_livro, id_categoria) values (1004, 1003);
+	
+	INSERT INTO livro_has_categorias (id_livro, id_categoria) values (1005, 1003);
+	
+	INSERT INTO livro_has_categorias (id_livro, id_categoria) values (1006, 1003);
+	
+	INSERT INTO livro_has_categorias (id_livro, id_categoria) values (1007, 1003);
 		
 	
 	-- insert editoras

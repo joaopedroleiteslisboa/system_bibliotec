@@ -21,6 +21,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.system.bibliotec.exception.ClienteInexistenteException;
+import com.system.bibliotec.exception.CpfInvalidoException;
 import com.system.bibliotec.exception.CpfInvalidoOuInexistenteException;
 import com.system.bibliotec.exception.DocumentoInvalidoException;
 import com.system.bibliotec.exception.LivroInvalidoOuInexistenteException;
@@ -60,10 +61,10 @@ public class SystemExceptionHandler extends ResponseEntityExceptionHandler {
 	}
 
 	
-	@ExceptionHandler({ CpfInvalidoOuInexistenteException.class, ClienteInexistenteException.class })
+	@ExceptionHandler({ CpfInvalidoException.class, ClienteInexistenteException.class })
 	public ResponseEntity<Object> cpfInvalidoOuInexistenteException(RuntimeException ex,
 			WebRequest request) {
-		String mensagemUsuario = messageSource.getMessage("recurso.cliente.inexistente-ou-inativo", null,
+		String mensagemUsuario = messageSource.getMessage("recurso.cpf.invalido", null,
 				LocaleContextHolder.getLocale());
 		String mensagemDesenvolvedor = ex.toString();
 		List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));

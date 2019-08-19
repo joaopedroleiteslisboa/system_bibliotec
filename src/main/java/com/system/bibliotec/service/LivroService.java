@@ -10,29 +10,26 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.system.bibliotec.config.ConstantsUtils;
 import com.system.bibliotec.exception.EstoqueInsuficienteException;
-import com.system.bibliotec.exception.IsbnInvalidoException;
-import com.system.bibliotec.exception.LivroAvariadoException;
 import com.system.bibliotec.exception.LivroInvalidoOuInexistenteException;
-import com.system.bibliotec.exception.LivroLocadoException;
-import com.system.bibliotec.exception.LivroReservadoException;
 import com.system.bibliotec.model.Livro;
 import com.system.bibliotec.model.enums.StatusLivro;
 import com.system.bibliotec.repository.LivroRepository;
 import com.system.bibliotec.service.ultis.RandomUtils;
+import com.system.bibliotec.service.validation.ValidaLivro;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-
 @Service
 @Transactional
 @Slf4j
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class LivroService {
+	
+	@Autowired
+	private LivroRepository livroRepository;
 
-	private final LivroRepository livroRepository;
-
-	private ISBNValidator isbnValidator;
+	@Autowired
+	private ValidaLivro validador;
 
 	/**
 	 * Metodo para Registrar um novo Livro.
@@ -63,7 +60,7 @@ public class LivroService {
 	public Livro updateLivro(Long id, Livro livro) {
 
 		Livro livroSalvo = findByIdLivro(id);
-		validaLivroExistente(livroSalvo);
+		validador.validaLivro(livroSalvo.getId(), livroSalvo.getStatusLivro(), livroSalvo.getQuantidade());
 
 		BeanUtils.copyProperties(livro, livroSalvo, "id", "codBarras", "imagenUrl", "statusLivro");
 
@@ -71,8 +68,8 @@ public class LivroService {
 	}
 
 	public void updateStatusLivro(Long id, StatusLivro statusLivro) {
-		validaLivro(id);
-		
+		validador.validaLivro(id);
+
 		Livro livroSalvo = findByIdLivro(id);
 
 		livroSalvo.setStatusLivro(statusLivro);
@@ -81,17 +78,17 @@ public class LivroService {
 	}
 
 	public void updatePropertyIsbn13Livro(Long id, String isbn13) {
-			//TODO: Estar retornando null... verificar depois
+		// TODO: Estar retornando null... verificar depois
 		/*
 		 * System.out.println(isbn13); if (!isbnValidator.isValid(isbn13, null)) { throw
 		 * new IsbnInvalidoException("ISBN 13 Invalido. Informe outro valido"); }
 		 */
 		Livro livroSalvo = findByIdLivro(id);
-		
-		validaLivro(livroSalvo.getId(), livroSalvo.getStatusLivro());
+
+		validador.validaLivro(livroSalvo.getId(), livroSalvo.getStatusLivro());
 
 		livroSalvo.setIsbn13(isbn13);
-		
+
 		livroRepository.save(livroSalvo);
 
 	}
@@ -116,7 +113,7 @@ public class LivroService {
 
 	public void deleteLivro(Long id) {
 		Livro livroSalvo = findByIdLivro(id);
-		validaLivro(id, livroSalvo.getStatusLivro());
+		validador.validaLivro(id, livroSalvo.getStatusLivro());
 		livroRepository.deleteById(id);
 
 	}
@@ -128,42 +125,7 @@ public class LivroService {
 		}
 		return livroSalvo.get();
 	}
-	
-	public void validaLivroExistente(Livro livro) {
-		// TODO Auto-generated method stub
 
-		validaLivro(livro.getId(), livro.getStatusLivro(), livro.getQuantidade());
 
-	}
 
-	public void validaLivro(Long id) {
-		if (id == null) {
-			throw new LivroInvalidoOuInexistenteException("Livro Invalido ou inexistente Exceptio");
-		}
-	}
-
-	public void validaLivro(Long id, StatusLivro status) {
-		if (status == StatusLivro.RESERVADO) {
-			throw new LivroReservadoException("O livro selecionado estar Reservado. Operação não Realizada");
-		}
-
-		if (status == StatusLivro.LOCADO) {
-			throw new LivroLocadoException("O livro selecionado estar Locado. Operação não Realizada");
-		}
-
-		if (status == StatusLivro.AVARIADO) {
-
-			throw new LivroAvariadoException("O livro selecionado estar Avariado. Operação não Realizada");
-		}
-
-		validaLivro(id);
-	}
-
-	public void validaLivro(Long id, StatusLivro status, Integer quantidade) {
-
-		if (quantidade == 0) {
-			throw new EstoqueInsuficienteException("Estoque insuficiente. Operação não realizada");
-		}
-		validaLivro(id, status);
-	}
 }

@@ -22,6 +22,7 @@ import com.system.bibliotec.model.enums.StatusReserva;
 import com.system.bibliotec.repository.ReservaRepository;
 import com.system.bibliotec.service.ultis.CpfUtilsValidator;
 import com.system.bibliotec.service.ultis.HoraDiasDataLocalService;
+import com.system.bibliotec.service.validation.ValidaLivro;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +38,8 @@ public class ReservaService {
 	private final ClienteService clienteService;
 
 	private final LivroService livroService;
+	
+	private final ValidaLivro validadorLivro;
 
 	// RESERVANDO UM LIVRO.....
 
@@ -50,7 +53,7 @@ public class ReservaService {
 	@Transactional
 	public Reserva save(Reserva reserva) {
 		log.info("Iniciando Processo de reserva de livro");
-		livroService.validaLivroExistente(reserva.getLivro());
+		validadorLivro.validaLivro(reserva.getLivro().getId(), reserva.getLivro().getStatusLivro(), reserva.getLivro().getQuantidade());
 
 		clienteService.validandoClienteExistente(reserva.getCliente());
 
@@ -76,7 +79,7 @@ public class ReservaService {
 		log.info("Iniciando processo de Atualização de atributo livro da Reserva:" + reservaSalva.get());
 		validaReservaExistente(reservaSalva.get());
 
-		livroService.validaLivroExistente(livro);
+		validadorLivro.validaLivro(livro.getId(), livro.getStatusLivro(), livro.getQuantidade());
 
 		livroService.updateStatusLivro(reservaSalva.get().getLivro().getId(), StatusLivro.LIVRE);
 

@@ -24,21 +24,24 @@ import com.system.bibliotec.model.enums.StatusLivro;
 import com.system.bibliotec.model.enums.StatusLocacao;
 import com.system.bibliotec.repository.LocacaoRepository;
 import com.system.bibliotec.service.ultis.HoraDiasDataLocalService;
+import com.system.bibliotec.service.validation.ValidaLivro;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 //TODO: Precisa desenvolvedor sobrecarga de metodos para validação ficar mais coerente com um determinado contexto solicitado...
 @Service
 @Slf4j
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class LocacaoService {
 	
 	private static final int DEFAULT_COUNT = 1;
 	
-	private final ClienteService clienteService;
-
-	private final LivroService livroService;
-
+	@Autowired
+	private  ClienteService clienteService;
+	@Autowired
+	private  LivroService livroService;
+	@Autowired
+	private  ValidaLivro validadorLivro;
+	@Autowired
 	private LocacaoRepository locacaoRepository;
 
 	/**
@@ -97,7 +100,7 @@ public class LocacaoService {
 
 		validaLocacaoExistente(locacaoSalva.get());
 
-		livroService.validaLivroExistente(livroSalvo);
+		validadorLivro.validaLivro(livroSalvo.getId(), livroSalvo.getStatusLivro(), livroSalvo.getQuantidade());
 
 		livroService.updateStatusLivro(locacaoSalva.get().getLivro().getId(), StatusLivro.LIVRE);
 

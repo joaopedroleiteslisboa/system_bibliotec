@@ -94,9 +94,9 @@ public class SystemExceptionHandler extends ResponseEntityExceptionHandler {
 		
 	
 	@ExceptionHandler({ LivroLocadoException.class })
-	public ResponseEntity<Object> livroAlugadoException(LivroInvalidoOuInexistenteException ex,
+	public ResponseEntity<Object> livroAlugadoException(LivroLocadoException ex,
 			WebRequest request) {
-		String mensagemUsuario = messageSource.getMessage("recurso.livro.alugado", null,
+		String mensagemUsuario = messageSource.getMessage("recurso.livro.locado", null,
 				LocaleContextHolder.getLocale());
 		String mensagemDesenvolvedor = ExceptionUtils.getRootCauseMessage(ex);
 		List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));

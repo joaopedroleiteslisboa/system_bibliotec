@@ -1,14 +1,12 @@
 package com.system.bibliotec.service.validation;
 
-import org.springframework.context.annotation.Configuration;
-
 import com.system.bibliotec.model.Livro;
 import com.system.bibliotec.model.enums.StatusLivro;
 
 /**
  * Contrato de Validação da Entidade/Modelo Livro {@link Livro}.
  */
-@Configuration
+
 public interface ValidaLivro {
 	
 	

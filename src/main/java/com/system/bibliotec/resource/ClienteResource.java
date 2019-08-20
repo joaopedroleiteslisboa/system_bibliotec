@@ -64,9 +64,9 @@ public class ClienteResource {
 	}
 	
 	@ResponseStatus(HttpStatus.NOT_FOUND)
-	@RequestMapping(method = RequestMethod.GET, params = "id", value = "/find/")
-	public ResponseEntity<Cliente> findById(@RequestParam(required = true) Long id){
-		Optional<Cliente> cliente = clienteRepository.findById(id);
+	@RequestMapping(method = RequestMethod.GET, value = "/{id}")
+	public ResponseEntity<Cliente> findById(@PathVariable(required = true) Long id){
+		Optional<Cliente> cliente = clienteService.findByIdCliente(id);
 		return cliente.isPresent() ? ResponseEntity.ok(cliente.get()) : ResponseEntity.notFound().build();
 	}
 

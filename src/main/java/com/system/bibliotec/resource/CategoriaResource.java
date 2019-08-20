@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,10 +22,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.system.bibliotec.event.RecursoCriadorEvent;
+import com.system.bibliotec.exception.LivroAvariadoException;
 import com.system.bibliotec.model.Categoria;
-import com.system.bibliotec.model.Cliente;
 import com.system.bibliotec.repository.CategoriaRepository;
-import com.system.bibliotec.repository.filter.ClienteFilter;
 
 import lombok.RequiredArgsConstructor;
 
@@ -45,9 +43,9 @@ public class CategoriaResource {
 	}
 
 	@ResponseStatus(HttpStatus.NOT_FOUND)
-	@RequestMapping(method = RequestMethod.GET, value = "/{idCategoria")
-	public ResponseEntity<Categoria> findById(@PathVariable(required = true) Long idCategoria) {
-		Optional<Categoria> categoriaSalva = repository.findById(idCategoria);
+	@RequestMapping(method = RequestMethod.GET, value = "/{id}")
+	public ResponseEntity<Categoria> findById(@PathVariable(required = true) Long id) {
+		Optional<Categoria> categoriaSalva = repository.findById(id);
 		return categoriaSalva.isPresent() ? ResponseEntity.ok(categoriaSalva.get()) : ResponseEntity.notFound().build();
 	}
 

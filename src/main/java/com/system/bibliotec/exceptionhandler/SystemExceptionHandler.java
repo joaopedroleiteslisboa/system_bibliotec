@@ -75,10 +75,19 @@ public class SystemExceptionHandler extends ResponseEntityExceptionHandler {
 		List<Erro> erros = criarListaDeErros(ex.getBindingResult());
 		return handleExceptionInternal(ex, erros, headers, HttpStatus.BAD_REQUEST, request);
 	}
-
-	@ExceptionHandler({ CpfInvalidoException.class, ClienteInexistenteException.class })
+	
+	@ExceptionHandler({ CpfInvalidoException.class })
 	public ResponseEntity<Object> cpfInvalidoOuInexistenteException(RuntimeException ex, WebRequest request) {
 		String mensagemUsuario = messageSource.getMessage("recurso.cpf.invalido", null,
+				LocaleContextHolder.getLocale());
+		String mensagemDesenvolvedor = ex.toString();
+		List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));
+		return handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+	}
+	
+	@ExceptionHandler({ ClienteInexistenteException.class })
+	public ResponseEntity<Object> clienteInexistenteException(RuntimeException ex, WebRequest request) {
+		String mensagemUsuario = messageSource.getMessage("recurso.cliente.inexistente-ou-inativo", null,
 				LocaleContextHolder.getLocale());
 		String mensagemDesenvolvedor = ex.toString();
 		List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));

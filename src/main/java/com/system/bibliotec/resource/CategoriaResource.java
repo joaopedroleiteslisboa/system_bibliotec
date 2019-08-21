@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.system.bibliotec.event.RecursoCriadorEvent;
-import com.system.bibliotec.exception.LivroAvariadoException;
 import com.system.bibliotec.model.Categoria;
 import com.system.bibliotec.repository.CategoriaRepository;
 

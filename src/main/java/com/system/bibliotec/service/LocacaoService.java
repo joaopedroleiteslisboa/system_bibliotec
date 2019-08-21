@@ -33,7 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class LocacaoService {
 	
-	private static final int DEFAULT_COUNT = 1;
+	private static final Integer DEFAULT_COUNT = 1;
 	
 	@Autowired
 	private  ClienteService clienteService;
@@ -69,7 +69,7 @@ public class LocacaoService {
 		
 		livroService.updateStatusLivro(locacao.getLivro().getId(), StatusLivro.LOCADO);
 		
-		livroService.baixarEstoque(DEFAULT_COUNT, locacao.getLivro().getId());
+		livroService.decrescentarEstoque(locacao.getLivro().getId(), DEFAULT_COUNT);
 		
 		log.info("Locação realizada:" + locacao);
 		

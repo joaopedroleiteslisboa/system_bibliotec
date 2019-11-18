@@ -13,5 +13,10 @@ public abstract class Contato_ {
 	public static volatile SingularAttribute<Contato, String> email_1;
 	public static volatile SingularAttribute<Contato, String> celular;
 
+	public static final String TELEFONE_RESIDENCIAL = "telefoneResidencial";
+	public static final String EMAIL_2 = "email_2";
+	public static final String EMAIL_1 = "email_1";
+	public static final String CELULAR = "celular";
+
 }
 

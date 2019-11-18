@@ -14,5 +14,10 @@ public abstract class Autor_ {
 	public static volatile SingularAttribute<Autor, Long> id;
 	public static volatile SingularAttribute<Autor, String> descricao;
 
+	public static final String LIVROS = "livros";
+	public static final String NOME = "nome";
+	public static final String ID = "id";
+	public static final String DESCRICAO = "descricao";
+
 }
 

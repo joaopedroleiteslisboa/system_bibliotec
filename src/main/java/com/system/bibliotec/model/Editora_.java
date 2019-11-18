@@ -14,5 +14,10 @@ public abstract class Editora_ {
 	public static volatile SingularAttribute<Editora, Long> id;
 	public static volatile SingularAttribute<Editora, String> descricao;
 
+	public static final String LIVROS = "livros";
+	public static final String NOME = "nome";
+	public static final String ID = "id";
+	public static final String DESCRICAO = "descricao";
+
 }
 

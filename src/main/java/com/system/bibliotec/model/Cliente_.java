@@ -14,8 +14,9 @@ import javax.persistence.metamodel.StaticMetamodel;
 public abstract class Cliente_ {
 
 	public static volatile SingularAttribute<Cliente, TipoCliente> tipoCliente;
+	public static volatile SingularAttribute<Cliente, Boolean> ativo;
 	public static volatile SingularAttribute<Cliente, StatusCliente> statusCliente;
-	public static volatile SingularAttribute<Cliente, Endereco> idEndereco;
+	public static volatile SingularAttribute<Cliente, Endereco> endereco;
 	public static volatile SingularAttribute<Cliente, Genero> genero;
 	public static volatile SingularAttribute<Cliente, String> cpf;
 	public static volatile SingularAttribute<Cliente, String> nome;
@@ -23,6 +24,18 @@ public abstract class Cliente_ {
 	public static volatile SingularAttribute<Cliente, LocalDate> dataNascimento;
 	public static volatile SingularAttribute<Cliente, String> sobreNome;
 	public static volatile SingularAttribute<Cliente, Contato> contato;
+
+	public static final String TIPO_CLIENTE = "tipoCliente";
+	public static final String ATIVO = "ativo";
+	public static final String STATUS_CLIENTE = "statusCliente";
+	public static final String ENDERECO = "endereco";
+	public static final String GENERO = "genero";
+	public static final String CPF = "cpf";
+	public static final String NOME = "nome";
+	public static final String ID = "id";
+	public static final String DATA_NASCIMENTO = "dataNascimento";
+	public static final String SOBRE_NOME = "sobreNome";
+	public static final String CONTATO = "contato";
 
 }
 

@@ -1,10 +1,6 @@
 package com.system.bibliotec.config;
 
-import com.system.bibliotec.model.enums.Idioma;
-import com.system.bibliotec.model.enums.StatusCliente;
-import com.system.bibliotec.model.enums.StatusLivro;
-import com.system.bibliotec.model.enums.StatusLocacao;
-import com.system.bibliotec.model.enums.StatusReserva;
+import com.system.bibliotec.model.enums.*;
 
 /**
  * Application constants.

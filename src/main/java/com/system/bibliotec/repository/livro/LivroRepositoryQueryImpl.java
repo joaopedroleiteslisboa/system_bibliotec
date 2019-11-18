@@ -1,7 +1,13 @@
 package com.system.bibliotec.repository.livro;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.system.bibliotec.model.Livro;
+import com.system.bibliotec.model.Livro_;
+import com.system.bibliotec.repository.dto.projection.ResumoLivro;
+import com.system.bibliotec.repository.filter.LivroFilter;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -10,16 +16,8 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
-import org.springframework.util.StringUtils;
-
-import com.system.bibliotec.model.Livro;
-import com.system.bibliotec.model.Livro_;
-import com.system.bibliotec.repository.dto.projection.ResumoLivro;
-import com.system.bibliotec.repository.filter.LivroFilter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LivroRepositoryQueryImpl implements LivroRepositoryQuery {
 

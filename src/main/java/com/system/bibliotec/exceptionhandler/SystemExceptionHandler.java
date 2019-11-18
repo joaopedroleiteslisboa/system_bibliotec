@@ -1,9 +1,7 @@
 package com.system.bibliotec.exceptionhandler;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
+import com.system.bibliotec.exception.*;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -23,16 +21,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import com.system.bibliotec.exception.ClienteInexistenteException;
-import com.system.bibliotec.exception.CpfInvalidoException;
-import com.system.bibliotec.exception.DocumentoInvalidoException;
-import com.system.bibliotec.exception.LivroInvalidoOuInexistenteException;
-import com.system.bibliotec.exception.LivroLocadoException;
-import com.system.bibliotec.exception.LivroReservadoException;
-import com.system.bibliotec.exception.ReservaInexistenteException;
-import com.system.bibliotec.exception.ReservaUpdateException;
-
-import lombok.RequiredArgsConstructor;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @ControllerAdvice
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))

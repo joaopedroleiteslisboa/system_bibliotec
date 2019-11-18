@@ -1,21 +1,12 @@
 package com.system.bibliotec.repository.filter;
 
-import java.time.LocalDate;
+import com.system.bibliotec.model.enums.StatusCliente;
+import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-
-import org.springframework.format.annotation.DateTimeFormat;
-
-import com.system.bibliotec.model.enums.StatusCliente;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import java.time.LocalDate;
 @Getter
 @Setter
 @ToString

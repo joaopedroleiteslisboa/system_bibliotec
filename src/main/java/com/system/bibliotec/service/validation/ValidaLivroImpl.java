@@ -1,14 +1,8 @@
 package com.system.bibliotec.service.validation;
 
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-
-import com.system.bibliotec.exception.EstoqueInsuficienteException;
-import com.system.bibliotec.exception.LivroAvariadoException;
-import com.system.bibliotec.exception.LivroInvalidoOuInexistenteException;
-import com.system.bibliotec.exception.LivroLocadoException;
-import com.system.bibliotec.exception.LivroReservadoException;
+import com.system.bibliotec.exception.*;
 import com.system.bibliotec.model.enums.StatusLivro;
+import org.springframework.stereotype.Component;
 @Component
 public class ValidaLivroImpl implements ValidaLivro {
 

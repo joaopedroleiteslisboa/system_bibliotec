@@ -1,8 +1,8 @@
 package com.system.bibliotec.service.ultis;
 
-import java.util.InputMismatchException;
-
 import org.springframework.stereotype.Component;
+
+import java.util.InputMismatchException;
 
 @Component
 public class CpfUtilsValidator {

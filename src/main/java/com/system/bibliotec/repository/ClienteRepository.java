@@ -1,9 +1,8 @@
 package com.system.bibliotec.repository;
 
 
-import java.util.List;
-import java.util.Optional;
-
+import com.system.bibliotec.model.Cliente;
+import com.system.bibliotec.repository.cliente.ClienteRepositoryQuery;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -11,8 +10,8 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.system.bibliotec.model.Cliente;
-import com.system.bibliotec.repository.cliente.ClienteRepositoryQuery;
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ClienteRepository extends PagingAndSortingRepository<Cliente, Long>, ClienteRepositoryQuery{

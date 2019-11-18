@@ -1,28 +1,20 @@
 package com.system.bibliotec.service;
 
-import java.util.Optional;
-
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.system.bibliotec.config.ConstantsUtils;
-import com.system.bibliotec.exception.ClienteExistenteException;
-import com.system.bibliotec.exception.ClienteInadimplenteException;
-import com.system.bibliotec.exception.ClienteInativoException;
-import com.system.bibliotec.exception.ClienteInexistenteException;
-import com.system.bibliotec.exception.CpfInvalidoException;
-import com.system.bibliotec.exception.CpfInvalidoOuInexistenteException;
-import com.system.bibliotec.exception.DocumentoInvalidoException;
+import com.system.bibliotec.exception.*;
 import com.system.bibliotec.model.Cliente;
 import com.system.bibliotec.model.Endereco;
 import com.system.bibliotec.model.enums.StatusCliente;
 import com.system.bibliotec.repository.ClienteRepository;
 import com.system.bibliotec.service.ultis.CpfUtilsValidator;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 //TODO: Precisa desenvolvedor sobrecarga de metodos para validação ficar mais coerente com um determinado contexto solicitado...
 @Service

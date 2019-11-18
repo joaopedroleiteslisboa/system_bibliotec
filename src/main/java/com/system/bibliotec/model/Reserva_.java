@@ -1,11 +1,12 @@
 package com.system.bibliotec.model;
 
 import com.system.bibliotec.model.enums.StatusReserva;
-import java.time.LocalDate;
-import java.time.LocalTime;
+
 import javax.annotation.Generated;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Generated(value = "org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor")
 @StaticMetamodel(Reserva.class)

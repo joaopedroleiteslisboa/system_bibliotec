@@ -1,11 +1,5 @@
 package com.system.bibliotec.service.operations;
 
-import java.util.Optional;
-
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.system.bibliotec.config.ConstantsUtils;
 import com.system.bibliotec.exception.EstoqueInsuficienteException;
 import com.system.bibliotec.exception.LivroInvalidoOuInexistenteException;
@@ -14,9 +8,13 @@ import com.system.bibliotec.model.enums.StatusLivro;
 import com.system.bibliotec.repository.LivroRepository;
 import com.system.bibliotec.service.ultis.RandomUtils;
 import com.system.bibliotec.service.validation.ValidaLivro;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 @Component
 @Slf4j

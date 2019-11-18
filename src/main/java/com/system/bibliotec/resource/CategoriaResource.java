@@ -1,10 +1,9 @@
 package com.system.bibliotec.resource;
 
-import java.util.Optional;
-
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-
+import com.system.bibliotec.event.RecursoCriadorEvent;
+import com.system.bibliotec.model.Categoria;
+import com.system.bibliotec.repository.CategoriaRepository;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -13,19 +12,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.system.bibliotec.event.RecursoCriadorEvent;
-import com.system.bibliotec.model.Categoria;
-import com.system.bibliotec.repository.CategoriaRepository;
-
-import lombok.RequiredArgsConstructor;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/categorias")

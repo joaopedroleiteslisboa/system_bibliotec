@@ -4,10 +4,11 @@ import com.system.bibliotec.model.embeddeds.Contato;
 import com.system.bibliotec.model.enums.Genero;
 import com.system.bibliotec.model.enums.StatusCliente;
 import com.system.bibliotec.model.enums.TipoCliente;
-import java.time.LocalDate;
+
 import javax.annotation.Generated;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
+import java.time.LocalDate;
 
 @Generated(value = "org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor")
 @StaticMetamodel(Cliente.class)

@@ -1,13 +1,11 @@
 package com.system.bibliotec.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.system.bibliotec.model.Livro;
 import com.system.bibliotec.model.enums.StatusLivro;
 import com.system.bibliotec.service.operations.OperacaoLivro;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))

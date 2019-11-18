@@ -1,19 +1,7 @@
 package com.system.bibliotec.service;
 
-import java.time.LocalDate;
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.system.bibliotec.config.ConstantsUtils;
-import com.system.bibliotec.exception.DocumentoInvalidoException;
-import com.system.bibliotec.exception.LivroInvalidoOuInexistenteException;
-import com.system.bibliotec.exception.ReservaCanceladaException;
-import com.system.bibliotec.exception.ReservaInexistenteException;
-import com.system.bibliotec.exception.ReservaLocadaException;
-import com.system.bibliotec.exception.ReservaUpdateException;
+import com.system.bibliotec.exception.*;
 import com.system.bibliotec.model.Cliente;
 import com.system.bibliotec.model.Livro;
 import com.system.bibliotec.model.Reserva;
@@ -23,9 +11,14 @@ import com.system.bibliotec.repository.ReservaRepository;
 import com.system.bibliotec.service.ultis.CpfUtilsValidator;
 import com.system.bibliotec.service.ultis.HoraDiasDataLocalService;
 import com.system.bibliotec.service.validation.ValidaLivro;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.util.Optional;
 
 //TODO: Precisa desenvolvedor sobrecarga de metodos para validação ficar mais coerente com um determinado contexto solicitado...
 @Service

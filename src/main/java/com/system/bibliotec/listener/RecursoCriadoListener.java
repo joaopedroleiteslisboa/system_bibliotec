@@ -1,14 +1,12 @@
 package com.system.bibliotec.listener;
 
-import java.net.URI;
-
-import javax.servlet.http.HttpServletResponse;
-
+import com.system.bibliotec.event.RecursoCriadorEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.system.bibliotec.event.RecursoCriadorEvent;
+import javax.servlet.http.HttpServletResponse;
+import java.net.URI;
 
 @Component
 public class RecursoCriadoListener implements ApplicationListener<RecursoCriadorEvent> {

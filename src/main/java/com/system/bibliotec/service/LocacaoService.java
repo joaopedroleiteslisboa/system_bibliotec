@@ -1,21 +1,7 @@
 package com.system.bibliotec.service;
 
-import java.time.LocalDate;
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.system.bibliotec.config.ConstantsUtils;
-import com.system.bibliotec.exception.ClienteInadimplenteException;
-import com.system.bibliotec.exception.ClienteInexistenteException;
-import com.system.bibliotec.exception.LivroLocadoException;
-import com.system.bibliotec.exception.LivroReservadoException;
-import com.system.bibliotec.exception.LocacaoInvalidaOuInexistenteException;
-import com.system.bibliotec.exception.LocacaoLimiteDataException;
-import com.system.bibliotec.exception.LocacaoLimiteException;
-import com.system.bibliotec.exception.LocacaoUpdateException;
+import com.system.bibliotec.exception.*;
 import com.system.bibliotec.model.Cliente;
 import com.system.bibliotec.model.Livro;
 import com.system.bibliotec.model.Locacao;
@@ -25,9 +11,13 @@ import com.system.bibliotec.model.enums.StatusLocacao;
 import com.system.bibliotec.repository.LocacaoRepository;
 import com.system.bibliotec.service.ultis.HoraDiasDataLocalService;
 import com.system.bibliotec.service.validation.ValidaLivro;
-
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.util.Optional;
 //TODO: Precisa desenvolvedor sobrecarga de metodos para validação ficar mais coerente com um determinado contexto solicitado...
 @Service
 @Slf4j

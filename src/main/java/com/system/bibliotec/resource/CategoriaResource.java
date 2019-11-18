@@ -20,12 +20,13 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/categorias")
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class CategoriaResource {
 
-	private final CategoriaRepository repository;
+	@Autowired
+	private CategoriaRepository repository;
 
-	private final ApplicationEventPublisher publisher;
+	@Autowired
+	private ApplicationEventPublisher publisher;
 
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public Page<Categoria> pesquisar(Pageable pageable) {

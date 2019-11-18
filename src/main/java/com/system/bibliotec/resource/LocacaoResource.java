@@ -19,17 +19,17 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/locacoes")
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class LocacaoResource {
 
-	
-	private final LocacaoRepository locacaoRepository;
-	  
-	  
-	  private final LocacaoService locacaoService;
-	  
-	  
-	  private final ApplicationEventPublisher publisher;
+
+	@Autowired
+	private LocacaoRepository locacaoRepository;
+
+	@Autowired
+	private LocacaoService locacaoService;
+
+	@Autowired
+	private ApplicationEventPublisher publisher;
 	  
 	  @GetMapping
 	  public List<Locacao> pesquisar() {

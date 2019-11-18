@@ -23,16 +23,18 @@ import java.util.Optional;
 //TODO: Precisa desenvolvedor sobrecarga de metodos para validação ficar mais coerente com um determinado contexto solicitado...
 @Service
 @Slf4j
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ReservaService {
 
-	private final ReservaRepository repository;
+	@Autowired
+	private ReservaRepository repository;
+	@Autowired
+	private ClienteService clienteService;
 
-	private final ClienteService clienteService;
+	@Autowired
+	private LivroService livroService;
 
-	private final LivroService livroService;
-	
-	private final ValidaLivro validadorLivro;
+	@Autowired
+	private ValidaLivro validadorLivro;
 
 	// RESERVANDO UM LIVRO.....
 

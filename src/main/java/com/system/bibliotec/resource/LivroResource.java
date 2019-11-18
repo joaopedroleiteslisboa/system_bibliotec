@@ -21,17 +21,16 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/livros")
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class LivroResource {
 
-	
-	private final LivroRepository livroRepository;
+	@Autowired
+	private LivroRepository livroRepository;
 
-	
-	private final LivroService livroService;
+	@Autowired
+	private LivroService livroService;
 
-	
-	private final ApplicationEventPublisher publisher;
+	@Autowired
+	private ApplicationEventPublisher publisher;
 
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public Page<Livro> pesquisar(LivroFilter livroFilter, Pageable page) {

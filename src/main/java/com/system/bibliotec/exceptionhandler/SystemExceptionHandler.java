@@ -26,10 +26,10 @@ import java.util.Arrays;
 import java.util.List;
 
 @ControllerAdvice
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class SystemExceptionHandler extends ResponseEntityExceptionHandler {
 
-	private final MessageSource messageSource;
+	@Autowired
+	private MessageSource messageSource;
 
 	@ExceptionHandler({ NotFoundException.class })
 	public ResponseEntity<Object> NotFoundException(RuntimeException ex, WebRequest request) {
@@ -67,7 +67,7 @@ public class SystemExceptionHandler extends ResponseEntityExceptionHandler {
 		return handleExceptionInternal(ex, erros, headers, HttpStatus.BAD_REQUEST, request);
 	}
 	
-	@ExceptionHandler({ CpfInvalidoException.class })
+	@ExceptionHandler({CpfInvalidoException.class })
 	public ResponseEntity<Object> cpfInvalidoOuInexistenteException(RuntimeException ex, WebRequest request) {
 		String mensagemUsuario = messageSource.getMessage("recurso.cpf.invalido", null,
 				LocaleContextHolder.getLocale());

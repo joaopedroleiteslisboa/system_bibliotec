@@ -8,7 +8,6 @@ import com.system.bibliotec.model.enums.StatusLivro;
 import com.system.bibliotec.repository.LivroRepository;
 import com.system.bibliotec.service.ultis.RandomUtils;
 import com.system.bibliotec.service.validation.ValidaLivro;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,14 +17,17 @@ import java.util.Optional;
 
 @Component
 @Slf4j
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class OperacaoLivroServiceImpl implements OperacaoLivro {
 
-	private final ValidaLivro validador;
-	
-	private final LivroRepository livroRepository;
-	
-	
+	@Autowired
+	private ValidaLivro validador;
+
+	@Autowired
+	private LivroRepository livroRepository;
+
+
+
+
 	@Override
 	public Livro save(Livro livro) {
 		// TODO Auto-generated method stub

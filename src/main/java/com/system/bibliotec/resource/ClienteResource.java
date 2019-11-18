@@ -24,17 +24,16 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/clientes")
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ClienteResource {
 
-	
-	private final ClienteRepository clienteRepository;
+	@Autowired
+	private ClienteRepository clienteRepository;
 
-	
-	private final ClienteService clienteService;
+	@Autowired
+	private ClienteService clienteService;
 
-	
-	private final ApplicationEventPublisher publisher;
+	@Autowired
+	private ApplicationEventPublisher publisher;
 
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public Page<Cliente> pesquisar(ClienteFilter clienteFilter,Pageable page) {

@@ -19,10 +19,10 @@ import java.util.Optional;
 //TODO: Precisa desenvolvedor sobrecarga de metodos para validação ficar mais coerente com um determinado contexto solicitado...
 @Service
 @Slf4j
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ClienteService {
 
-	private final ClienteRepository clienteRepository;
+	@Autowired
+	private ClienteRepository clienteRepository;
 
 	@Transactional
 	public Cliente criarNovoCliente(Cliente cliente) {

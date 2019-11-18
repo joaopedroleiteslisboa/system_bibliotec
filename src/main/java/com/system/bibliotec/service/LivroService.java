@@ -8,10 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+
 public class LivroService {
 
-	private final OperacaoLivro operacao;
+	@Autowired
+	private OperacaoLivro operacao;
 
 	public Livro save(Livro livro) {
 

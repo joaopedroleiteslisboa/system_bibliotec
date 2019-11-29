@@ -7,8 +7,9 @@ import com.system.bibliotec.model.enums.StatusLivro;
  * Contrato de Validação da Entidade/Modelo Livro {@link Livro}.
  */
 
-public interface ValidaLivro {
+public interface IValidaLivro {
 	
+	void validaLivro(Livro livro);
 	
 	void validaLivro(Long id);
 			

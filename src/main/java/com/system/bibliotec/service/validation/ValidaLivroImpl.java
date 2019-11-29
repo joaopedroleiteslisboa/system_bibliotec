@@ -1,10 +1,11 @@
 package com.system.bibliotec.service.validation;
 
 import com.system.bibliotec.exception.*;
+import com.system.bibliotec.model.Livro;
 import com.system.bibliotec.model.enums.StatusLivro;
 import org.springframework.stereotype.Component;
 @Component
-public class ValidaLivroImpl implements ValidaLivro {
+public class ValidaLivroImpl implements IValidaLivro {
 
 	@Override
 	public void validaLivro(Long id) {
@@ -53,6 +54,13 @@ public class ValidaLivroImpl implements ValidaLivro {
 		validaLivro(id);
 		validaLivro(status);
 		validaLivro(estoque);
+	}
+
+	@Override
+	public void validaLivro(Livro livro) {
+		// TODO Auto-generated method stub
+		validaLivro(livro.getId(), livro.getStatusLivro(), livro.getQuantidade());
+		
 	}
 
 }

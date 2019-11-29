@@ -1,11 +1,13 @@
 package com.system.bibliotec.service.validation;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.system.bibliotec.model.Cliente;
 import com.system.bibliotec.service.validation.fields.IValidaCpf;
 import com.system.bibliotec.service.validation.fields.IValidaEndereco;
 
+@Component
 public class ValidaClienteImpl implements IValidaCliente {
 
 	@Autowired

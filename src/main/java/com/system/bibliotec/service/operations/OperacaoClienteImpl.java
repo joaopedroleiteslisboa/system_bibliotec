@@ -12,7 +12,6 @@ import com.system.bibliotec.exception.ClienteInexistenteException;
 import com.system.bibliotec.exception.CpfInvalidoException;
 import com.system.bibliotec.model.Cliente;
 import com.system.bibliotec.model.Endereco;
-import com.system.bibliotec.model.Livro;
 import com.system.bibliotec.model.enums.StatusCliente;
 import com.system.bibliotec.repository.ClienteRepository;
 import com.system.bibliotec.service.ultis.CpfUtilsValidator;
@@ -22,19 +21,18 @@ import lombok.extern.slf4j.Slf4j;
 
 @Component
 @Slf4j
-public class OperacaoClienteImpl implements OperacaoCliente{
-
+public class OperacaoClienteImpl implements IOperacaoCliente {
 
 	@Autowired
 	private ClienteRepository clienteRepository;
-	
+
 	@Autowired
 	private IValidaCliente servicoValidaCliente;
-	
+
 	@Override
 	public Cliente save(Cliente cliente) {
 		// TODO Auto-generated method stub
-		
+
 		servicoValidaCliente.validaCliente(cliente);
 		cliente.setStatusCliente(ConstantsUtils.DEFAULT_VALUE_STATUSCLIENTE);
 		cliente.setAtivo(ConstantsUtils.DEFAULT_VALUE_ATIVO);
@@ -47,15 +45,15 @@ public class OperacaoClienteImpl implements OperacaoCliente{
 	public Cliente updateCliente(String cpf, Cliente cliente) {
 		// TODO Auto-generated method stub,
 		Cliente clienteSalvo = findByCpfCliente(cpf);
-	
+
 		log.info("Atualizando um Cliente: " + clienteSalvo.toString());
 
 		servicoValidaCliente.validaCliente(clienteSalvo);
 
 		BeanUtils.copyProperties(cliente, clienteSalvo, "id", "cpf");
-		
+
 		servicoValidaCliente.validaCliente(clienteSalvo);
-		
+
 		log.info("Cliente Atualizado: " + clienteSalvo.toString());
 
 		return clienteSalvo;
@@ -68,22 +66,22 @@ public class OperacaoClienteImpl implements OperacaoCliente{
 		log.info("Atualizando Status do Cliente: " + clienteSalvo.toString());
 
 		servicoValidaCliente.validaCliente(clienteSalvo);
-		
+
 		clienteSalvo.setStatusCliente(updateStatusCliente);
-		
+
 		clienteRepository.save(clienteSalvo);
 		log.info("Propriedade Status do Cliente: %s  Atualizado " + clienteSalvo.toString());
-		
+
 	}
 
 	@Override
 	@Transactional
 	public void updatePropertyCpf(Long id, String cpf) {
 		// TODO Auto-generated method stub
-		
+
 		Cliente clienteSalvo = findByIdCliente(id);
 		servicoValidaCliente.validaCliente(clienteSalvo);
-		
+
 		log.info("Atualizando Propriedade CPF do Cliente " + clienteSalvo.toString());
 		clienteSalvo.setCpf(cpf);
 
@@ -95,10 +93,10 @@ public class OperacaoClienteImpl implements OperacaoCliente{
 	@Transactional
 	public void updatePropertyEndereco(String cpf, Endereco endereco) {
 		// TODO Auto-generated method stub
-		
+
 		Cliente clienteSalvo = findByCpfCliente(cpf);
 		servicoValidaCliente.validaCliente(clienteSalvo);
-		
+
 		log.info("Atualizando Propriedade Endereço do Cliente: " + clienteSalvo.toString());
 		clienteSalvo.setEndereco(endereco);
 
@@ -108,7 +106,7 @@ public class OperacaoClienteImpl implements OperacaoCliente{
 	@Override
 	public void deleteCliente(String cpf) {
 		// TODO Auto-generated method stub
-		
+
 		Cliente clienteSalvo = findByCpfCliente(cpf);
 		log.info("Deletando  Cliente:" + clienteSalvo.toString());
 		servicoValidaCliente.validaCliente(clienteSalvo);
@@ -120,7 +118,7 @@ public class OperacaoClienteImpl implements OperacaoCliente{
 	@Override
 	public Cliente findByIdCliente(Long id) {
 		// TODO Auto-generated method stub
-		
+
 		log.info("Find Cliente ID: " + id);
 		Optional<Cliente> clienteSalvo = clienteRepository.findById(id);
 		if (!clienteSalvo.isPresent()) {
@@ -145,6 +143,14 @@ public class OperacaoClienteImpl implements OperacaoCliente{
 		return cliente.get();
 	}
 
-	
+	@Override
+	public boolean isInativo(String cpf) {
+		// TODO Auto-generated method stub
+		Cliente clienteSalvo = findByCpfCliente(cpf);
 
+		if (clienteSalvo.isInativo()) {
+			return false;
+		}
+		return true;
+	}
 }

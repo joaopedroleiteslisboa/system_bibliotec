@@ -2,7 +2,7 @@ package com.system.bibliotec.service;
 
 import com.system.bibliotec.model.Livro;
 import com.system.bibliotec.model.enums.StatusLivro;
-import com.system.bibliotec.service.operations.OperacaoLivro;
+import com.system.bibliotec.service.operations.IOperacaoLivro;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 public class LivroService {
 
 	@Autowired
-	private OperacaoLivro operacao;
+	private IOperacaoLivro operacao;
 
 	public Livro save(Livro livro) {
 
@@ -34,11 +34,11 @@ public class LivroService {
 
 	}
 
-	public void decrescentarEstoque(Long idLivro, Integer quantidade) {
+	public void decrescentarEstoque(Long idLivro, int quantidade) {
 		operacao.decrescentarEstoque(idLivro, quantidade);
 	}
 
-	public void acrescentarEstoque(Long idLivro, Integer quantidade) {
+	public void acrescentarEstoque(Long idLivro, int quantidade) {
 		operacao.acrescentarEstoque(idLivro, quantidade);
 	}
 
@@ -50,5 +50,8 @@ public class LivroService {
 	public Livro findByIdLivro(Long id) {
 		return operacao.findByIdLivro(id);
 	}
+	
+
+
 
 }

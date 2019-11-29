@@ -9,7 +9,10 @@ import com.system.bibliotec.model.enums.StatusCliente;
 import com.system.bibliotec.model.enums.StatusLivro;
 import com.system.bibliotec.model.enums.StatusLocacao;
 import com.system.bibliotec.repository.LocacaoRepository;
+import com.system.bibliotec.service.operations.IOperacaoLocacao;
 import com.system.bibliotec.service.ultis.HoraDiasDataLocalService;
+import com.system.bibliotec.service.validation.IValidaCliente;
+import com.system.bibliotec.service.validation.IValidaLivro;
 import com.system.bibliotec.service.validation.ValidaLivro;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,105 +21,34 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.Optional;
-//TODO: Precisa desenvolvedor sobrecarga de metodos para validação ficar mais coerente com um determinado contexto solicitado...
+
 @Service
-@Slf4j
 public class LocacaoService {
 	
 	private static final Integer DEFAULT_COUNT = 1;
 	
+	
 	@Autowired
-	private  ClienteService clienteService;
-	@Autowired
-	private  LivroService livroService;
-	@Autowired
-	private  ValidaLivro validadorLivro;
-	@Autowired
-	private LocacaoRepository locacaoRepository;
-
-	/**
-	 * Metodo para avaliar possibilidade de Locar um Livro
-	 * 
-	 * @param locacao {@link Locacao} Objeto com os respectivos dados para
-	 *                homologação do requerimento de locação
-	 *                {@link #validaLocacao()}
-	 */
-	@Transactional
+	private IOperacaoLocacao operacao;
+	
 	public Locacao realizarLocacao(Locacao locacao) {
-		log.info("Iniciando Processo de Locação de livro:" + locacao);
-		
-		validarLocacao(locacao);
-		
-		locacao.setHoraLocacao(HoraDiasDataLocalService.horaLocal());
-
-		locacao.setDataLocacao(HoraDiasDataLocalService.dataLocal());
-
-		locacao.setDataTerminoLocacao(HoraDiasDataLocalService.dataLocacaoDevolucao());
-		
-		locacao.setStatusLocacao(ConstantsUtils.DEFAULT_VALUE_STATUSLOCACAO);
-
-		locacao.setQuantidadeDeRenovacao(ConstantsUtils.DEFAULT_VALUE_QUANTIDADE_LOCACAO);
-		
-		livroService.updateStatusLivro(locacao.getLivro().getId(), StatusLivro.LOCADO);
-		
-		livroService.decrescentarEstoque(locacao.getLivro().getId(), DEFAULT_COUNT);
-		
-		log.info("Locação realizada:" + locacao);
-		
-		return locacaoRepository.save(locacao);
+				
+		return operacao.realizarLocacao(locacao);
 
 	}
 
-	@Transactional
+	
 	public void renovarLocacao(Long id) {
-		Optional<Locacao> locacaoSalva = findByIdLocacao(id);
-		log.info("Iniciando Processo de Renovação de Locação de livro:" + locacaoSalva.get());
-
-		validaLocacaoExistente(locacaoSalva.get());
-
-		int quantidadeRenovada = locacaoSalva.get().getQuantidadeDeRenovacao();
-		locacaoSalva.get().setQuantidadeDeRenovacao(quantidadeRenovada + 1);
-		locacaoSalva.get().setDataTerminoLocacao(
-				HoraDiasDataLocalService.dataRenovacaoLocacao(locacaoSalva.get().getDataTerminoLocacao()));
-		log.info("Processo de Renovação de Locação de livro realizada:" + locacaoSalva.get());
+		
 	}
 
 	@Transactional
 	public void updatePropertyLivro(Long idLocacao, Long idLivro) {
-		Optional<Locacao> locacaoSalva = findByIdLocacao(idLocacao);
-		Livro livroSalvo = livroService.findByIdLivro(idLivro);
-
-		log.info("Iniciando Processo de Atualização de Locação: Atualizando propriedade livro:" + locacaoSalva.get());
-
-		validaLocacaoExistente(locacaoSalva.get());
-
-		validadorLivro.validaLivro(livroSalvo.getId(), livroSalvo.getStatusLivro(), livroSalvo.getQuantidade());
-
-		livroService.updateStatusLivro(locacaoSalva.get().getLivro().getId(), StatusLivro.LIVRE);
-
-		livroService.updateStatusLivro(livroSalvo.getId(), StatusLivro.LOCADO);
-
-		locacaoSalva.get().setLivro(livroSalvo);
-
-		locacaoRepository.save(locacaoSalva.get());
-		log.info("Processo de Atualização de Locação de livro realizada:" + locacaoSalva.get());
+		
 	}
 
 	public void updatePropertyCliente(Long idLocacao, Long idCliente) {
-		Optional<Cliente> clienteSalvo = clienteService.findByIdCliente(idCliente);
-
-		Optional<Locacao> locacaoSalva = findByIdLocacao(idLocacao);
 		
-		log.info("Iniciando Processo de Atualização de Locação: Atualizando propriedade Cliente:" + locacaoSalva.get());
-
-		clienteService.validandoClienteExistente(locacaoSalva.get().getCliente());
-
-		clienteService.validandoClienteExistente(clienteSalvo.get());
-
-		locacaoSalva.get().setCliente(clienteSalvo.get());
-
-		locacaoRepository.save(locacaoSalva.get());
-		log.info("Processo de Atualização de Locação de livro realizada:" + locacaoSalva.get());
 	}
 
 //ADICIONAR @Scheduled para alterar o status do emprestimo caso o prazo de entrega seja atingido ou ultrapassado 
@@ -125,26 +57,11 @@ public class LocacaoService {
 	}
 	//TODO: Implementar serviço de disparo de email notificando o cliente...
 	public void cancelarLocacao(Long id) {
-		Optional<Locacao> locacaoSalva = findByIdLocacao(id);
-		log.info("Iniciando Processo de Cancelamento de Locação:" + locacaoSalva.get());
 		
-		clienteService.validandoClienteExistente(locacaoSalva.get().getCliente());
-
-		locacaoSalva.get().setHoraCancelamentoLocacao(HoraDiasDataLocalService.horaLocal());
-		
-		locacaoSalva.get().setDataCancelamentoLocacao(HoraDiasDataLocalService.dataLocal());
-		
-		locacaoSalva.get().setStatusLocacao(StatusLocacao.CANCELADA);
-		
-		livroService.updateStatusLivro(locacaoSalva.get().getLivro().getId(), StatusLivro.LIVRE);
-		
-		locacaoRepository.save(locacaoSalva.get());
-		log.info("Locação cancelada:" + locacaoSalva.get());
 	}
 	//TODO: Implementar serviço de disparo de email notificando o cliente...
 	public void devolucaoLivro(Long id) {
-		Optional<Locacao> locacaoSalva = findByIdLocacao(id);
-		log.info("Iniciando Processo de Devolução de Livros:" + locacaoSalva.get());
+		
 		
 		
 	}

@@ -2,7 +2,7 @@ package com.system.bibliotec.model.enums;
 
 public enum StatusLocacao {
 
-	ATRASADA("Atrasada"), ATIVA("Ativa"), CANCELADA("Cancelada"), DEVOLVIDA("Devolvida");
+	ATRASADA("Atrasada"), ATIVA("Ativa"), CANCELADA("Cancelada"), FINALIZADA("Finalizada");
 
 	private String statusEmprestimo;
 

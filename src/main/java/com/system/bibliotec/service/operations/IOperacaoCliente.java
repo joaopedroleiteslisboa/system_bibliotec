@@ -4,14 +4,12 @@ import com.system.bibliotec.model.Cliente;
 import com.system.bibliotec.model.Endereco;
 import com.system.bibliotec.model.enums.StatusCliente;
 
-public interface OperacaoCliente {
+public interface IOperacaoCliente {
 	
 	public Cliente save(Cliente cliente);
 	
 	public Cliente updateCliente(String cpf, Cliente cliente);
-	
-	
-	
+		
 	public void updateStatus(String cpf, StatusCliente updateStatusCliente);
 	
 	public void updatePropertyCpf(Long id, String cpf);
@@ -23,6 +21,8 @@ public interface OperacaoCliente {
 	public Cliente findByIdCliente(Long id);
 	
 	public Cliente findByCpfCliente(String cpf);
+	
+	public boolean isInativo(String cpf);
 	
 
 }

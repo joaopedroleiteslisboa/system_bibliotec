@@ -18,13 +18,17 @@ public interface IOperacaoLocacao {
 	
 	public void cancelarLocacao(Long id);
 	
-	public void devolucaoLivro(Long idLivro, String cpfCliente);
+	public void devolucaoLivro(Long idLocacao);
 	
 	public void updatePropertyStatusLocacao(Long idLocacao, StatusLocacao statusLocacao);
 	
 	public Locacao findByIdLocacao(Long id);
 
 
+
+	
+
+	
 	
 	
 	

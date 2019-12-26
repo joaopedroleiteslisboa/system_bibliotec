@@ -3,7 +3,7 @@ package com.system.bibliotec.service.operations;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.system.bibliotec.config.ConstantsUtils;
@@ -12,6 +12,7 @@ import com.system.bibliotec.model.Cliente;
 import com.system.bibliotec.model.Livro;
 import com.system.bibliotec.model.Reserva;
 import com.system.bibliotec.model.enums.StatusLivro;
+import com.system.bibliotec.model.enums.StatusReserva;
 import com.system.bibliotec.repository.ReservaRepository;
 import com.system.bibliotec.service.LivroService;
 import com.system.bibliotec.service.ultis.HoraDiasDataLocalService;
@@ -21,7 +22,7 @@ import com.system.bibliotec.service.validation.IValidaReserva;
 
 import lombok.extern.slf4j.Slf4j;
 
-@Service
+@Component
 @Slf4j
 public class OperacaoReservaImpl implements IOperacaoReserva {
 
@@ -148,6 +149,35 @@ public class OperacaoReservaImpl implements IOperacaoReserva {
 		}
 		return true;
 
+	}
+
+	@Override
+	public void mudarStatusReserva(Long idReserva, StatusReserva statusReserva) {
+		// TODO Auto-generated method stub
+		
+		Reserva r = findByIdReserva(idReserva);
+		r.setStatusReserva(statusReserva);
+		repository.save(r);
+		
+	}
+
+	@Override
+	@Transactional
+	public void cancelarReserva(Long idReserva) {
+		// TODO Auto-generated method stub
+		
+		Reserva r = findByIdReserva(idReserva);
+		
+		livroService.updateStatusLivro(r.getLivro().getId(), ConstantsUtils.DEFAULT_VALUE_STATUSLIVRO_LIVRE);
+		
+		livroService.acrescentarEstoque(r.getLivro().getId(), ConstantsUtils.DEFAULT_VALUE_ACRESCENTAR_QUANTIDADE_LIVRO);
+		
+		r.setStatusReserva(ConstantsUtils.DEFAULT_VALUE_STATUSRESERVA_CANCELADA);
+		
+		repository.save(r);
+		
+		
+		
 	}
 
 }

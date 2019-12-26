@@ -161,9 +161,9 @@
 	-- insert locacoes
 	
 		
-	INSERT INTO locacoes(statusLocacao, quantidadeDeRenovacao, horaLocacao, dataLocacao, dataTerminoLocacao, horaCancelamentoLocacao, dataCancelamentoLocacao, idCliente, idLivro) values ('ATIVA', 1,'19:09:32','2019-08-13','2019-08-20',NULL,NULL ,1003,1003);
+	INSERT INTO locacoes(statusLocacao, quantidadeDeRenovacao, horaLocacao, dataLocacao, dataPrevisaoTerminoLocacao, horaEncerramento, dataEncerramento, idCliente, idLivro) values ('ATIVA', 1,'19:09:32','2019-12-30','2020-01-20',NULL,NULL ,1003,1003);
 	
-	INSERT INTO locacoes(statusLocacao, quantidadeDeRenovacao, horaLocacao, dataLocacao, dataTerminoLocacao, horaCancelamentoLocacao, dataCancelamentoLocacao, idCliente, idLivro) values ('ATIVA', 1, '19:15:11','2019-08-13','2019-08-20',NULL,NULL,1004,1004);
+	INSERT INTO locacoes(statusLocacao, quantidadeDeRenovacao, horaLocacao, dataLocacao, dataPrevisaoTerminoLocacao, horaCancelamentoLocacao, dataEncerramento, idCliente, idLivro) values ('ATIVA', 1, '19:15:11','2019-12-30','2020-01-20',NULL,NULL,1004,1004);
 		
 	
 		 

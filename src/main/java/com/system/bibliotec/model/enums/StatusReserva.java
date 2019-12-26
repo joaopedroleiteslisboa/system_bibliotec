@@ -2,7 +2,7 @@ package com.system.bibliotec.model.enums;
 
 public enum StatusReserva {
 
-	ATIVA("Ativa"), CANCELADA("Cancelada"), ALUGADA("Alugada");
+	ATIVA("Ativa"), CANCELADA("Cancelada"), FINALIZADA("Finalizada");
 	
 	private String statusStatusReserva;
 

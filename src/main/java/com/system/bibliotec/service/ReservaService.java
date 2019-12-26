@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import com.system.bibliotec.model.Cliente;
 import com.system.bibliotec.model.Livro;
 import com.system.bibliotec.model.Reserva;
+import com.system.bibliotec.model.enums.StatusReserva;
 import com.system.bibliotec.service.operations.IOperacaoReserva;
 
 
@@ -28,6 +29,15 @@ public class ReservaService {
 	
 	public void updatePropertyCliente(Long idReserva, Cliente cliente) {
 		operacao.updatePropertyCliente(idReserva, cliente);
+	}
+
+	public void cancelarReserva(Long idReserva) {
+		
+		operacao.cancelarReserva(idReserva);
+	}
+	
+	public void mudarStatusReserva(Long idReserva, StatusReserva statusReserva) {
+		operacao.mudarStatusReserva(idReserva, statusReserva);
 	}
 
 	

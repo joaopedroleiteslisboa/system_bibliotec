@@ -32,7 +32,11 @@ public final class ConstantsUtils {
 	
 	public static final StatusLocacao DEFAULT_VALUE_STATUSLOCACAO_CANCELADA = StatusLocacao.CANCELADA;
 	
+	public static final StatusLocacao DEFAULT_VALUE_STATUSLOCACAO_FINALIZADA = StatusLocacao.FINALIZADA;
+	
 	public static final StatusReserva DEFAULT_VALUE_STATUSRESERVA_ATIVA = StatusReserva.ATIVA;
+	
+	public static final StatusReserva DEFAULT_VALUE_STATUSRESERVA_CANCELADA = StatusReserva.CANCELADA;
 	
 	public static final int DEFAULT_VALUE_QUANTIDADE_LOCACAO = 1;
 	

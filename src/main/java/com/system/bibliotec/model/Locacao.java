@@ -51,21 +51,36 @@ public class Locacao {
 	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	@Column(name = "dataTerminoLocacao")
-	private LocalDate dataTerminoLocacao;
+	@Column(name = "dataPrevisaoTerminoLocacao")
+	private LocalDate dataPrevisaoTerminoLocacao;
 
 	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	@JsonFormat(pattern = "kk:mm:ss")
 	@DateTimeFormat(pattern = "kk:mm:ss")
-	@Column(name = "horaCancelamentoLocacao")
-	private LocalTime horaCancelamentoLocacao;
+	@Column(name = "horaCancelamento")
+	private LocalTime horaCancelamento;
 
 	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	@Column(name = "dataCancelamentoLocacao")
-	private LocalDate dataCancelamentoLocacao;
+	@Column(name = "dataCancelamento")
+	private LocalDate dataCancelamento;
 
+	
+	
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
+	@JsonFormat(pattern = "kk:mm:ss")
+	@DateTimeFormat(pattern = "kk:mm:ss")
+	@Column(name = "horaEncerramento")
+	private LocalTime horaEncerramento;
+
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
+	@JsonFormat(pattern = "yyyy-MM-dd")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@Column(name = "dataEncerramento")
+	private LocalDate dataEncerramento;
+
+	
 	@OneToOne
 	@Size(min = 1, message = "O Locacao precisar ter no minimo um Cliente")
 	@JoinColumn(name = "idCliente")

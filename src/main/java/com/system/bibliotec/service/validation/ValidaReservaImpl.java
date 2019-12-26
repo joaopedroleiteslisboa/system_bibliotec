@@ -31,12 +31,12 @@ public class ValidaReservaImpl implements IValidaReserva{
 			throw new ReservaCanceladaException("Operação não Realizada.  Reserva Cancelada ou Encerrada");
 		}
 		
-		if (reserva.getStatusReserva() == StatusReserva.ALUGADA) {
+		if (reserva.getStatusReserva() == StatusReserva.ATIVA) {
 			throw new ReservaLocadaException(
-					"Operação não Realizada.  O Intem reservado já estar sob processo de Locação");
+					"Operação não Realizada.  O Item reservado já estar sob processo de Locação");
 		}
 		
-		if (reserva.getDataLimite().isBefore(LocalDate.now())) {
+		if (reserva.getDataLimite().isBefore(LocalDate .now())) {
 			throw new ReservaUpdateException("Operação não Realizada. Data limite de Reserva Ultrapassada");
 		}
 

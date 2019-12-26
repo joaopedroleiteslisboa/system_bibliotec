@@ -1,13 +1,11 @@
 package com.system.bibliotec.service.ultis;
 
-import org.springframework.stereotype.Component;
-
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
-@Component
+
 public class HoraDiasDataLocalService {
 
 	public static LocalTime horaLocal() {
@@ -106,6 +104,13 @@ public class HoraDiasDataLocalService {
 
 		return dataAgendada;
 
+	}
+	
+	private static boolean isvalidaCancelamentoLocacao(LocalDate dataCancelamento) {
+		
+		
+		
+		return (Boolean) null;
 	}
 
 }

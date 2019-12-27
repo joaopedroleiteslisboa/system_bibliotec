@@ -21,5 +21,7 @@ public interface IOperacaoReserva {
 	
 	public boolean existsByIdReserva(Reserva idReserva);
 	
+	public Reserva findByIdReserva(Long idReserva);
+	
 	
 }

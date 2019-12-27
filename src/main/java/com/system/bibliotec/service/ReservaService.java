@@ -1,5 +1,7 @@
 package com.system.bibliotec.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,6 +46,14 @@ public class ReservaService {
 	public void deleteReserva(Long id) {
 
 		operacao.deleteReserva(id);
+	}
+
+
+	public Reserva findByIdReserva(Long id) {
+		// TODO Auto-generated method stub
+		
+		return operacao.findByIdReserva(id);
+			
 	}
 
 	

@@ -30,8 +30,8 @@ public interface LivroRepository extends JpaRepository<Livro, Long>, LivroReposi
 
 	public Optional<Livro> findOneByIsbn13IgnoreCase(String isbn13);
 
-	@Modifying
-	@Query("update livros l set l.statusLivro = :status where l.id = :id")
+	
+	@Query(nativeQuery = true, value = "update livros l set l.statusLivro = :status where l.id = :id")
 	public void updateStatusLivro(@Param("status") StatusLivro status, @Param("id") Long id);
 
 }

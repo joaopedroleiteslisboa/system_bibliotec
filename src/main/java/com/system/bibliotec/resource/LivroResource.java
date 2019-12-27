@@ -2,6 +2,7 @@ package com.system.bibliotec.resource;
 
 import com.system.bibliotec.event.RecursoCriadorEvent;
 import com.system.bibliotec.model.Livro;
+import com.system.bibliotec.model.enums.StatusLivro;
 import com.system.bibliotec.repository.LivroRepository;
 import com.system.bibliotec.repository.dto.projection.ResumoLivro;
 import com.system.bibliotec.repository.filter.LivroFilter;
@@ -77,5 +78,16 @@ public class LivroResource {
 		livroService.updatePropertyIsbn13Livro(id, isbn13);
 	}
 
+	
+	
+	@RequestMapping(method = RequestMethod.PUT, value = "/{id}/status")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void updateStatusLivro(@PathVariable Long id, @RequestBody StatusLivro status) {
+		livroService.updateStatusLivro(id, status);
+	}
+	
+	
+	
+	
 	
 }

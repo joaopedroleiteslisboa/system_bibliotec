@@ -133,7 +133,8 @@ public class OperacaoReservaImpl implements IOperacaoReserva {
 		log.info("Reserva Deletada: " + reservaSalva);
 	}
 
-	private Reserva findByIdReserva(Long id) {
+	@Override
+	public Reserva findByIdReserva(Long id) {
 		Optional<Reserva> reservaSalva = repository.findById(id);
 		if (!reservaSalva.isPresent()) {
 			throw new ReservaInexistenteException("Reserva Selecionada Invalida ou Inexistente");

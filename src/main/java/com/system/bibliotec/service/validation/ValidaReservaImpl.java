@@ -3,6 +3,7 @@ package com.system.bibliotec.service.validation;
 import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.system.bibliotec.exception.ReservaCanceladaException;
 import com.system.bibliotec.exception.ReservaInexistenteException;
@@ -11,6 +12,7 @@ import com.system.bibliotec.exception.ReservaUpdateException;
 import com.system.bibliotec.model.Reserva;
 import com.system.bibliotec.model.enums.StatusReserva;
 
+@Component
 public class ValidaReservaImpl implements IValidaReserva{
 
 	@Autowired

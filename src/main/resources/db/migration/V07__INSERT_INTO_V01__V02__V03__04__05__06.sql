@@ -166,5 +166,67 @@
 	INSERT INTO locacoes(statusLocacao, quantidadeDeRenovacao, horaLocacao, dataLocacao, dataPrevisaoTerminoLocacao, horaEncerramento, dataEncerramento, idCliente, idLivro) values ('ATIVA', 1, '19:15:11','2019-12-30','2020-01-20',NULL,NULL,1004,1004);
 		
 	
-		 
+ -- insert client_web_mobile Apps		
+	
+	--INSERT INTO oauth_client_details (client_id, client_secret, scope, authorized_grant_types, web_server_redirect_uri, authorities, access_token_validity, refresh_token_validity, additional_information, autoapprove) VALUES ("angular", "angular123", "foo,read,write, "password,authorization_code,refresh_token", null, null, 36000, 36000, null, true);
+	
+
+	-- insert usuarios 
+	
+	INSERT INTO usuario (id, nome, email, senha) values (1000, 'admin', 'admin@bibliotec.com', '$2a$10$X607ZPhQ4EgGNaYKt3n4SONjIv9zc.VMWdEuhCuba7oLAL5IvcL5.');
+	INSERT INTO usuario (id, nome, email, senha) values (1001, 'Pedro Leite Soares', 'pedro@gmail.com', '$2a$10$Zc3w6HyuPOPXamaMhh.PQOXvDnEsadztbfi6/RyZWJDzimE8WQjaq');
+
+	INSERT INTO permissao (id, descricao) values (1000, 'ROLE_CADASTRAR_LIVRO');
+	INSERT INTO permissao (id, descricao) values (1001, 'ROLE_PESQUISAR_LIVRO');
+	INSERT INTO permissao (id, descricao) values (1002, 'ROLE_REMOVER_LIVRO');
+	
+	INSERT INTO permissao (id, descricao) values (1003, 'ROLE_CADASTRAR_PESSOA');
+	INSERT INTO permissao (id, descricao) values (1004, 'ROLE_REMOVER_PESSOA');
+	INSERT INTO permissao (id, descricao) values (1005, 'ROLE_PESQUISAR_PESSOA');
+	
+	INSERT INTO permissao (id, descricao) values (1006, 'ROLE_CADASTRAR_LOCACAO');
+	INSERT INTO permissao (id, descricao) values (1007, 'ROLE_REMOVER_LOCACAO');
+	INSERT INTO permissao (id, descricao) values (1008, 'ROLE_PESQUISAR_LOCACAO');
+	
+	INSERT INTO permissao (id, descricao) values (1009, 'ROLE_CADASTRAR_RESERVA');
+	INSERT INTO permissao (id, descricao) values (1010, 'ROLE_REMOVER_RESERVA');
+	INSERT INTO permissao (id, descricao) values (1011, 'ROLE_PESQUISAR_RESERVA');
+
+	
+	INSERT INTO permissao (id, descricao) values (1012, 'ROLE_CADASTRAR_CLIENT_APP');
+	INSERT INTO permissao (id, descricao) values (1013, 'ROLE_REMOVER_CLIENT_APP');
+	INSERT INTO permissao (id, descricao) values (1014, 'ROLE_PESQUISAR_CLIENT_APP');
+	
+-- EM CASO DE NECESSIDDE PODE-SE CRIAR ROLES PARA CADASTRO DE CATEGORIAS, EDITORAS E AUTORES... CONTUDO O AUTOR ACHU DESNECESSARIO TAL PROCESSO DEVIDO O LIVRO CONTER COMO PRIPRIEDADES ESSENCIAS ESSES SUPRACITADOS ATRIBUTOS....
+	
+		-- USER PEDRO
+	INSERT INTO usuario_permissao (id_usuario, id_permissao) values (2, 1001);
+	INSERT INTO usuario_permissao (id_usuario, id_permissao) values (2, 1006);
+	INSERT INTO usuario_permissao (id_usuario, id_permissao) values (2, 1009);
+	
+	
+	-- USER ADMIN DO SISTEMA
+	INSERT INTO usuario_permissao (id_usuario, id_permissao) values (1000, 1000);
+	INSERT INTO usuario_permissao (id_usuario, id_permissao) values (1000, 1001);
+	INSERT INTO usuario_permissao (id_usuario, id_permissao) values (1000, 1002);
+	INSERT INTO usuario_permissao (id_usuario, id_permissao) values (1000, 1003);
+	INSERT INTO usuario_permissao (id_usuario, id_permissao) values (1000, 1004);
+	INSERT INTO usuario_permissao (id_usuario, id_permissao) values (1000, 1005);
+	INSERT INTO usuario_permissao (id_usuario, id_permissao) values (1000, 1006);
+	INSERT INTO usuario_permissao (id_usuario, id_permissao) values (1000, 1007);
+	INSERT INTO usuario_permissao (id_usuario, id_permissao) values (1000, 1008);
+	INSERT INTO usuario_permissao (id_usuario, id_permissao) values (1000, 1009);
+	INSERT INTO usuario_permissao (id_usuario, id_permissao) values (1000, 1010);
+	INSERT INTO usuario_permissao (id_usuario, id_permissao) values (1000, 1011);
+	INSERT INTO usuario_permissao (id_usuario, id_permissao) values (1000, 1012);
+	INSERT INTO usuario_permissao (id_usuario, id_permissao) values (1000, 1013);
+	INSERT INTO usuario_permissao (id_usuario, id_permissao) values (1000, 1014);
+
+
+		
+		
+		
+		
+	
+	
 SET FOREIGN_KEY_CHECKS = 1; 

@@ -6,10 +6,12 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties("bibliotec")
 public class ApiPropertyConfig {
-	
+
 	private String originPermitida = "http://localhost:4200";
 
 	private final Seguranca seguranca = new Seguranca();
+
+
 
 	public Seguranca getSeguranca() {
 		return seguranca;
@@ -36,5 +38,7 @@ public class ApiPropertyConfig {
 		}
 
 	}
+
+
 
 }

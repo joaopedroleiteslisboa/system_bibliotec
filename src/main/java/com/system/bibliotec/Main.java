@@ -7,9 +7,15 @@ public class Main {
 	public static void main(String[] args) {
 	
 		
-		String decoderr = "$2a$10$X607ZPhQ4EgGNaYKt3n4SONjIv9zc.VMWdEuhCuba7oLAL5IvcL5.";
+		
 		
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-		System.out.println(encoder.matches("admin", decoderr));
+		System.out.println(encoder.encode("mobileADMIN"));
+		System.out.println();
+		System.out.println();
+		
+		System.out.println(encoder.matches("mobileADMIN", "$2a$10$uyQJCv.8OMNpBUQB5hXHNuFped8lLqlhsH8uFwTQARDJBDMtlvQ7q"));
+		
+		
 	}
 }

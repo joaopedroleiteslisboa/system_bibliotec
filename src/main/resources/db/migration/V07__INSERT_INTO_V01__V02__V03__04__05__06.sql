@@ -168,13 +168,19 @@
 	
  -- insert client_web_mobile Apps		
 	
-	--INSERT INTO oauth_client_details (client_id, client_secret, scope, authorized_grant_types, web_server_redirect_uri, authorities, access_token_validity, refresh_token_validity, additional_information, autoapprove) VALUES ("angular", "angular123", "foo,read,write, "password,authorization_code,refresh_token", null, null, 36000, 36000, null, true);
 	
+	INSERT INTO oauth_client_details (client_id, client_secret, scope, authorized_grant_types, authorities, access_token_validity)
+  	VALUES ('angular', '{bcrypt}$2a$10$eEPHedaBm5onHbuHxQu3COtr8t7z4KqTIfLbNCaNhIShhJNuvvRJO', 'read,write', 'password,refresh_token,client_credentials', 'ROLE_CLIENT', 300);	
+  
+  
+  	INSERT INTO oauth_client_details (client_id, client_secret, scope, authorized_grant_types, authorities, access_token_validity)
+  	VALUES ('mobile', '{bcrypt}$2a$10$uyQJCv.8OMNpBUQB5hXHNuFped8lLqlhsH8uFwTQARDJBDMtlvQ7q', 'read,write', 'password,refresh_token,client_credentials', 'ROLE_CLIENT', 300);
 
-	-- insert usuarios 
 	
-	INSERT INTO usuario (id, nome, email, senha) values (1000, 'admin', 'admin@bibliotec.com', '$2a$10$X607ZPhQ4EgGNaYKt3n4SONjIv9zc.VMWdEuhCuba7oLAL5IvcL5.');
-	INSERT INTO usuario (id, nome, email, senha) values (1001, 'Pedro Leite Soares', 'pedro@gmail.com', '$2a$10$Zc3w6HyuPOPXamaMhh.PQOXvDnEsadztbfi6/RyZWJDzimE8WQjaq');
+  	-- insert usuarios 
+	
+	INSERT INTO usuario (id, nome, email, senha) values (1000, 'admin', 'admin@bibliotec.com', '{bcrypt}$2a$10$vxFcjinyrbuDiNPgWNT0hevwdqdLldfsndwr417UCAyqvof8PeNIW');
+	INSERT INTO usuario (id, nome, email, senha) values (1001, 'Pedro Leite Soares', 'pedro@gmail.com', '{bcrypt}$2a$10$Zc3w6HyuPOPXamaMhh.PQOXvDnEsadztbfi6/RyZWJDzimE8WQjaq');
 
 	INSERT INTO permissao (id, descricao) values (1000, 'ROLE_CADASTRAR_LIVRO');
 	INSERT INTO permissao (id, descricao) values (1001, 'ROLE_PESQUISAR_LIVRO');
@@ -197,6 +203,7 @@
 	INSERT INTO permissao (id, descricao) values (1013, 'ROLE_REMOVER_CLIENT_APP');
 	INSERT INTO permissao (id, descricao) values (1014, 'ROLE_PESQUISAR_CLIENT_APP');
 	
+		
 -- EM CASO DE NECESSIDDE PODE-SE CRIAR ROLES PARA CADASTRO DE CATEGORIAS, EDITORAS E AUTORES... CONTUDO O AUTOR ACHU DESNECESSARIO TAL PROCESSO DEVIDO O LIVRO CONTER COMO PRIPRIEDADES ESSENCIAS ESSES SUPRACITADOS ATRIBUTOS....
 	
 		-- USER PEDRO

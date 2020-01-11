@@ -4,8 +4,7 @@ import java.security.KeyPair;
 
 import javax.sql.DataSource;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.ApiPropertyConfig;
+import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,29 +26,27 @@ import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFacto
 
 @Configuration
 @EnableAuthorizationServer
-@EnableConfigurationProperties(ApiPropertyConfig.class)
+@EnableConfigurationProperties(ApiSecurityAuthorizationServerProperties.class)
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
-	 @Autowired
-	 private DataSource dataSource;
-	 
-	 @Autowired
-	 private PasswordEncoder passwordEncoder;
-	 
-	 @Autowired
-	 private AuthenticationManager authenticationManager;
-	 
-	 @Autowired
-	 private ApiPropertyConfig ApiPropertyConfig;
-	 
-	 @Autowired
-	 private UserDetailsService userDetailsService;
-	 
-	 @Autowired
-	 private JwtAccessTokenConverter jwtAccessTokenConverter;
-	 
-	 @Autowired
-	 private TokenStore tokenStore;
+	private final DataSource dataSource;
+    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final ApiSecurityAuthorizationServerProperties securityProperties;
+    private final UserDetailsService userDetailsService;
+
+    private JwtAccessTokenConverter jwtAccessTokenConverter;
+    private TokenStore tokenStore;
+
+    public AuthorizationServerConfig(final DataSource dataSource, final PasswordEncoder passwordEncoder,
+                                            final AuthenticationManager authenticationManager, final ApiSecurityAuthorizationServerProperties securityProperties,
+                                            final UserDetailsService userDetailsService) {
+        this.dataSource = dataSource;
+        this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
+        this.securityProperties = securityProperties;
+        this.userDetailsService = userDetailsService;
+    }
 	
 	  @Bean
 	    public TokenStore tokenStore() {
@@ -76,7 +73,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	            return jwtAccessTokenConverter;
 	        }
 
-	        ApiPropertyConfig.JwtProperties jwtProperties = ApiPropertyConfig.getJwt();
+	        ApiSecurityAuthorizationServerProperties.JwtProperties jwtProperties = securityProperties.getJwt();
 	        KeyPair keyPair = keyPair(jwtProperties, keyStoreKeyFactory(jwtProperties));
 
 	        jwtAccessTokenConverter = new JwtAccessTokenConverter();
@@ -103,11 +100,11 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	                .checkTokenAccess("isAuthenticated()");
 	    }
 
-	    private KeyPair keyPair(ApiPropertyConfig.JwtProperties jwtProperties, KeyStoreKeyFactory keyStoreKeyFactory) {
+	    private KeyPair keyPair(ApiSecurityAuthorizationServerProperties.JwtProperties jwtProperties, KeyStoreKeyFactory keyStoreKeyFactory) {
 	        return keyStoreKeyFactory.getKeyPair(jwtProperties.getKeyPairAlias(), jwtProperties.getKeyPairPassword().toCharArray());
 	    }
 
-	    private KeyStoreKeyFactory keyStoreKeyFactory(ApiPropertyConfig.JwtProperties jwtProperties) {
+	    private KeyStoreKeyFactory keyStoreKeyFactory(ApiSecurityAuthorizationServerProperties.JwtProperties jwtProperties) {
 	        return new KeyStoreKeyFactory(jwtProperties.getKeyStore(), jwtProperties.getKeyStorePassword().toCharArray());
 	    }
 

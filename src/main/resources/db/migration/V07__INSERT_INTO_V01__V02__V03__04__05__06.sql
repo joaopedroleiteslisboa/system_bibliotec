@@ -179,8 +179,8 @@
 	
   	-- insert usuarios 
 	
-	INSERT INTO usuario (id, nome, email, senha) values (1000, 'admin', 'admin@bibliotec.com', '{bcrypt}$2a$10$vxFcjinyrbuDiNPgWNT0hevwdqdLldfsndwr417UCAyqvof8PeNIW');
-	INSERT INTO usuario (id, nome, email, senha) values (1001, 'Pedro Leite Soares', 'pedro@gmail.com', '{bcrypt}$2a$10$Zc3w6HyuPOPXamaMhh.PQOXvDnEsadztbfi6/RyZWJDzimE8WQjaq');
+	INSERT INTO usuario (id, nome, email, senha, ativo) values (1000, 'admin', 'admin@bibliotec.com', '{bcrypt}$2a$10$vxFcjinyrbuDiNPgWNT0hevwdqdLldfsndwr417UCAyqvof8PeNIW' ,true);
+	INSERT INTO usuario (id, nome, email, senha, ativo) values (1001, 'Pedro Leite Soares', 'pedro@gmail.com', '{bcrypt}$2a$10$Zc3w6HyuPOPXamaMhh.PQOXvDnEsadztbfi6/RyZWJDzimE8WQjaq' ,true);
 
 	INSERT INTO permissao (id, descricao) values (1000, 'ROLE_CADASTRAR_LIVRO');
 	INSERT INTO permissao (id, descricao) values (1001, 'ROLE_PESQUISAR_LIVRO');

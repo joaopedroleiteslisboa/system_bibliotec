@@ -3,56 +3,57 @@ package com.system.bibliotec.config;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.core.io.Resource;
 
+
 @ConfigurationProperties("bibliotec-security-authorization-server")
 public class ApiSecurityAuthorizationServerProperties {
 
 	private JwtProperties jwt;
 
-	public JwtProperties getJwt() {
-		return jwt;
-	}
+    public JwtProperties getJwt() {
+        return jwt;
+    }
 
-	public void setJwt(JwtProperties jwt) {
-		this.jwt = jwt;
-	}
-	
-	public static class JwtProperties {
+    public void setJwt(JwtProperties jwt) {
+        this.jwt = jwt;
+    }
 
-		private Resource keyStore;
-		private String keyStorePassword;
-		private String keyPairAlias;
-		private String keyPairPassword;
+    public static class JwtProperties {
 
-		public Resource getKeyStore() {
-			return keyStore;
-		}
+        private Resource keyStore;
+        private String keyStorePassword;
+        private String keyPairAlias;
+        private String keyPairPassword;
 
-		public void setKeyStore(Resource keyStore) {
-			this.keyStore = keyStore;
-		}
+        public Resource getKeyStore() {
+            return keyStore;
+        }
 
-		public String getKeyStorePassword() {
-			return keyStorePassword;
-		}
+        public void setKeyStore(Resource keyStore) {
+            this.keyStore = keyStore;
+        }
 
-		public void setKeyStorePassword(String keyStorePassword) {
-			this.keyStorePassword = keyStorePassword;
-		}
+        public String getKeyStorePassword() {
+            return keyStorePassword;
+        }
 
-		public String getKeyPairAlias() {
-			return keyPairAlias;
-		}
+        public void setKeyStorePassword(String keyStorePassword) {
+            this.keyStorePassword = keyStorePassword;
+        }
 
-		public void setKeyPairAlias(String keyPairAlias) {
-			this.keyPairAlias = keyPairAlias;
-		}
+        public String getKeyPairAlias() {
+            return keyPairAlias;
+        }
 
-		public String getKeyPairPassword() {
-			return keyPairPassword;
-		}
+        public void setKeyPairAlias(String keyPairAlias) {
+            this.keyPairAlias = keyPairAlias;
+        }
 
-		public void setKeyPairPassword(String keyPairPassword) {
-			this.keyPairPassword = keyPairPassword;
-		}
-	}
+        public String getKeyPairPassword() {
+            return keyPairPassword;
+        }
+
+        public void setKeyPairPassword(String keyPairPassword) {
+            this.keyPairPassword = keyPairPassword;
+        }
+    }
 }

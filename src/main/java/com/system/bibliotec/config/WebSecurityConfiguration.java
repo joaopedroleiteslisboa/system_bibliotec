@@ -13,6 +13,8 @@ import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.system.bibliotec.security.AppUserDetailsService;
+
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -29,7 +31,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService())
+        auth.userDetailsService(userDetailsServiceBean())
                 .passwordEncoder(passwordEncoder());
     }
 
@@ -47,14 +49,20 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         return passwordEncoder;
     }
 
+//    @Bean
+//    public UserDetailsService userDetailsService() {
+//        if (userDetailsService == null) {
+//            userDetailsService = new JdbcDaoImpl();
+//            ((JdbcDaoImpl) userDetailsService).setDataSource(dataSource);
+//        }
+//        return userDetailsService;
+//    }
+	
+	
     @Bean
-    public UserDetailsService userDetailsService() {
-        if (userDetailsService == null) {
-            userDetailsService = new JdbcDaoImpl();
-            ((JdbcDaoImpl) userDetailsService).setDataSource(dataSource);
-        }
-        return userDetailsService;
+    @Override
+    public UserDetailsService userDetailsServiceBean() throws Exception {
+        return new AppUserDetailsService();
     }
-	
-	
+
 }

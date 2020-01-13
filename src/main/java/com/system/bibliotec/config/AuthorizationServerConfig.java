@@ -23,6 +23,8 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 
+import com.system.bibliotec.security.AppUserDetailsService;
+
 
 @Configuration
 @EnableAuthorizationServer
@@ -33,14 +35,14 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final ApiSecurityAuthorizationServerProperties securityProperties;
-    private final UserDetailsService userDetailsService;
+    private final AppUserDetailsService userDetailsService;
 
     private JwtAccessTokenConverter jwtAccessTokenConverter;
     private TokenStore tokenStore;
 
     public AuthorizationServerConfig(final DataSource dataSource, final PasswordEncoder passwordEncoder,
                                             final AuthenticationManager authenticationManager, final ApiSecurityAuthorizationServerProperties securityProperties,
-                                            final UserDetailsService userDetailsService) {
+                                            final AppUserDetailsService userDetailsService) {
         this.dataSource = dataSource;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;

@@ -12,7 +12,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "usuario")
+@Table(name = "users")
 public class Usuario {
 
 	
@@ -49,7 +49,7 @@ public class Usuario {
 	private boolean ativo;
 
 	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "usuario_permissao", joinColumns = @JoinColumn(name = "id_usuario")
+	@JoinTable(name = "usuarios_permissao", joinColumns = @JoinColumn(name = "id_usuario")
 		, inverseJoinColumns = @JoinColumn(name = "id_permissao"))
 	private List<Permissao> permissoes;
 	

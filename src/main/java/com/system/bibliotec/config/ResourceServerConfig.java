@@ -35,8 +35,10 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 	        this.securityProperties = securityProperties;
 	    }
 	  
+	    
 	    @Override
 	    public void configure(final ResourceServerSecurityConfigurer resources) {
+	    	
 	        resources.tokenStore(tokenStore());
 	    }
 

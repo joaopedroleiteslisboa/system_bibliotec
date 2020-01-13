@@ -179,8 +179,8 @@
 	
   	-- insert usuarios 
 	
-	INSERT INTO usuario (id, nome, email, senha, ativo) values (1000, 'admin', 'admin@bibliotec.com', '{bcrypt}$2a$10$vxFcjinyrbuDiNPgWNT0hevwdqdLldfsndwr417UCAyqvof8PeNIW' ,true);
-	INSERT INTO usuario (id, nome, email, senha, ativo) values (1001, 'Pedro Leite Soares', 'pedro@gmail.com', '{bcrypt}$2a$10$Zc3w6HyuPOPXamaMhh.PQOXvDnEsadztbfi6/RyZWJDzimE8WQjaq' ,true);
+	INSERT INTO users (id, nome, email, senha, ativo) values (1000, 'admin', 'admin@bibliotec.com', '{bcrypt}$2a$10$vxFcjinyrbuDiNPgWNT0hevwdqdLldfsndwr417UCAyqvof8PeNIW' ,true);
+	INSERT INTO users (id, nome, email, senha, ativo) values (1001, 'Pedro Leite Soares', 'pedro@gmail.com', '{bcrypt}$2a$10$Zc3w6HyuPOPXamaMhh.PQOXvDnEsadztbfi6/RyZWJDzimE8WQjaq' ,true);
 
 	INSERT INTO permissao (id, descricao) values (1000, 'ROLE_CADASTRAR_LIVRO');
 	INSERT INTO permissao (id, descricao) values (1001, 'ROLE_PESQUISAR_LIVRO');
@@ -207,27 +207,27 @@
 -- EM CASO DE NECESSIDDE PODE-SE CRIAR ROLES PARA CADASTRO DE CATEGORIAS, EDITORAS E AUTORES... CONTUDO O AUTOR ACHU DESNECESSARIO TAL PROCESSO DEVIDO O LIVRO CONTER COMO PRIPRIEDADES ESSENCIAS ESSES SUPRACITADOS ATRIBUTOS....
 	
 		-- USER PEDRO
-	INSERT INTO usuario_permissao (id_usuario, id_permissao) values (2, 1001);
-	INSERT INTO usuario_permissao (id_usuario, id_permissao) values (2, 1006);
-	INSERT INTO usuario_permissao (id_usuario, id_permissao) values (2, 1009);
+	INSERT INTO usuarios_permissao (id_usuario, id_permissao) values (1001, 1001);
+	INSERT INTO usuarios_permissao (id_usuario, id_permissao) values (1001, 1006);
+	INSERT INTO usuarios_permissao (id_usuario, id_permissao) values (1001, 1009);
 	
 	
 	-- USER ADMIN DO SISTEMA
-	INSERT INTO usuario_permissao (id_usuario, id_permissao) values (1000, 1000);
-	INSERT INTO usuario_permissao (id_usuario, id_permissao) values (1000, 1001);
-	INSERT INTO usuario_permissao (id_usuario, id_permissao) values (1000, 1002);
-	INSERT INTO usuario_permissao (id_usuario, id_permissao) values (1000, 1003);
-	INSERT INTO usuario_permissao (id_usuario, id_permissao) values (1000, 1004);
-	INSERT INTO usuario_permissao (id_usuario, id_permissao) values (1000, 1005);
-	INSERT INTO usuario_permissao (id_usuario, id_permissao) values (1000, 1006);
-	INSERT INTO usuario_permissao (id_usuario, id_permissao) values (1000, 1007);
-	INSERT INTO usuario_permissao (id_usuario, id_permissao) values (1000, 1008);
-	INSERT INTO usuario_permissao (id_usuario, id_permissao) values (1000, 1009);
-	INSERT INTO usuario_permissao (id_usuario, id_permissao) values (1000, 1010);
-	INSERT INTO usuario_permissao (id_usuario, id_permissao) values (1000, 1011);
-	INSERT INTO usuario_permissao (id_usuario, id_permissao) values (1000, 1012);
-	INSERT INTO usuario_permissao (id_usuario, id_permissao) values (1000, 1013);
-	INSERT INTO usuario_permissao (id_usuario, id_permissao) values (1000, 1014);
+	INSERT INTO usuarios_permissao (id_usuario, id_permissao) values (1000, 1000);
+	INSERT INTO usuarios_permissao (id_usuario, id_permissao) values (1000, 1001);
+	INSERT INTO usuarios_permissao (id_usuario, id_permissao) values (1000, 1002);
+	INSERT INTO usuarios_permissao (id_usuario, id_permissao) values (1000, 1003);
+	INSERT INTO usuarios_permissao (id_usuario, id_permissao) values (1000, 1004);
+	INSERT INTO usuarios_permissao (id_usuario, id_permissao) values (1000, 1005);
+	INSERT INTO usuarios_permissao (id_usuario, id_permissao) values (1000, 1006);
+	INSERT INTO usuarios_permissao (id_usuario, id_permissao) values (1000, 1007);
+	INSERT INTO usuarios_permissao (id_usuario, id_permissao) values (1000, 1008);
+	INSERT INTO usuarios_permissao (id_usuario, id_permissao) values (1000, 1009);
+	INSERT INTO usuarios_permissao (id_usuario, id_permissao) values (1000, 1010);
+	INSERT INTO usuarios_permissao (id_usuario, id_permissao) values (1000, 1011);
+	INSERT INTO usuarios_permissao (id_usuario, id_permissao) values (1000, 1012);
+	INSERT INTO usuarios_permissao (id_usuario, id_permissao) values (1000, 1013);
+	INSERT INTO usuarios_permissao (id_usuario, id_permissao) values (1000, 1014);
 
 
 		

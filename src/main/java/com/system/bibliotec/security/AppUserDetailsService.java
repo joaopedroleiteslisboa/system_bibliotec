@@ -27,7 +27,7 @@ public class AppUserDetailsService implements UserDetailsService{
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		// TODO Auto-generated method stub
 
-		Optional<Usuario> usuarioOptional = usuarioRepository.findByEmail(email);
+		Optional<Usuario> usuarioOptional = usuarioRepository.findUsuarioByEmail(email);
 		Usuario usuario = usuarioOptional.orElseThrow(() -> new UsernameNotFoundException("Usuário e/ou senha incorretos"));
 		return new UserSystem(usuario, getPermissoes(usuario));
 	}

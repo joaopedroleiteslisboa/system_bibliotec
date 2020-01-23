@@ -71,7 +71,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	  
 	  @Bean
 	    public JwtAccessTokenConverter jwtAccessTokenConverter() {
-	        if (jwtAccessTokenConverter != null) {
+	        if (jwtAccessTokenConverter == null) {
 	            return jwtAccessTokenConverter;
 	        }
 
@@ -99,7 +99,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	    @Override
 	    public void configure(final AuthorizationServerSecurityConfigurer oauthServer) {
 	        oauthServer.passwordEncoder(this.passwordEncoder).tokenKeyAccess("permitAll()")
-	                .checkTokenAccess("isAuthenticated()");
+	        .allowFormAuthenticationForClients()       
+	        .checkTokenAccess("isAuthenticated()");
 	    }
 
 	    private KeyPair keyPair(ApiSecurityAuthorizationServerProperties.JwtProperties jwtProperties, KeyStoreKeyFactory keyStoreKeyFactory) {

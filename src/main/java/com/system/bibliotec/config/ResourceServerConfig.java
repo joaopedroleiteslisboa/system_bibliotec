@@ -70,14 +70,17 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 	    @Bean
 	    public JwtAccessTokenConverter jwtAccessTokenConverter() {
 	        JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-	        converter.setVerifierKey(getPublicKeyAsString());
+	     	        
+	        converter.setSigningKey("@admin@");
+	        //converter.setVerifierKey(getPublicKeyAsString());
 	        return converter;
 	    }
 	    
 	    
-
+	    
 	    private String getPublicKeyAsString() {
 	        try {
+	              	
 	            return IOUtils.toString(securityProperties.getJwt().getPublicKey().getInputStream(), UTF_8);
 	        } catch (IOException e) {
 	            throw new RuntimeException(e);

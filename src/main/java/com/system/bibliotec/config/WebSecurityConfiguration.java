@@ -1,7 +1,6 @@
 package com.system.bibliotec.config;
 
-import javax.sql.DataSource;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -9,8 +8,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.system.bibliotec.security.AppUserDetailsService;
@@ -20,14 +17,10 @@ import com.system.bibliotec.security.AppUserDetailsService;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-	private final DataSource dataSource;
 
+	
     private PasswordEncoder passwordEncoder;
-    private UserDetailsService userDetailsService;
 
-    public WebSecurityConfiguration(final DataSource dataSource) {
-        this.dataSource = dataSource;
-    }
 
     @Override
     protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
@@ -40,15 +33,15 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
-
+    
     @Bean
     public PasswordEncoder passwordEncoder() {
         if (passwordEncoder == null) {
-            passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+            passwordEncoder = DefaultPasswordEncoderFactories.createDelegatingPasswordEncoder();
         }
         return passwordEncoder;
+    
     }
-
 //    @Bean
 //    public UserDetailsService userDetailsService() {
 //        if (userDetailsService == null) {

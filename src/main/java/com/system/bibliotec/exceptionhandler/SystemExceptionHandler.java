@@ -165,10 +165,9 @@ public class SystemExceptionHandler extends ResponseEntityExceptionHandler {
 
 	}
 	
-	@ExceptionHandler({ UsernameNotFoundException.class })
+	@ExceptionHandler({ UsuarioNaoEncontrado.class })
 	public ResponseEntity<Object> usernameNotFoundException(RuntimeException ex, WebRequest request) {
-		String mensagemUsuario = messageSource.getMessage("user.not.found", null,
-				LocaleContextHolder.getLocale());
+		String mensagemUsuario = messageSource.getMessage("usuario.nao.encontrado", null, LocaleContextHolder.getLocale());
 		String mensagemDesenvolvedor = ex.toString();
 		List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));
 		return handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);

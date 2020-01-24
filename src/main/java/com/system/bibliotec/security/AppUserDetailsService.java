@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.system.bibliotec.exception.UsuarioNaoEncontrado;
 import com.system.bibliotec.model.Usuario;
 import com.system.bibliotec.repository.UsuarioRepository;
 
@@ -28,7 +29,7 @@ public class AppUserDetailsService implements UserDetailsService{
 		// TODO Auto-generated method stub
 
 		Optional<Usuario> usuarioOptional = usuarioRepository.findUsuarioByEmail(email);
-		Usuario usuario = usuarioOptional.orElseThrow(() -> new UsernameNotFoundException("Usuário e/ou senha incorretos"));
+		Usuario usuario = usuarioOptional.orElseThrow(() -> new UsuarioNaoEncontrado("Usuario ou senha incorreto"));
 		return new UserSystem(usuario, getPermissoes(usuario));
 	}
 

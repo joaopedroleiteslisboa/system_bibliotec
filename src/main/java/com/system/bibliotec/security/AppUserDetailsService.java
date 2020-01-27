@@ -2,7 +2,6 @@ package com.system.bibliotec.security;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +27,12 @@ public class AppUserDetailsService implements UserDetailsService{
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		// TODO Auto-generated method stub
 
-		Optional<Usuario> usuarioOptional = usuarioRepository.findUsuarioByEmail(email);
-		Usuario usuario = usuarioOptional.orElseThrow(() -> new UsuarioNaoEncontrado("Usuario ou senha incorreto"));
-		return new UserSystem(usuario, getPermissoes(usuario));
+		System.out.println();
+		Usuario user = usuarioRepository.findOneByEmail(email);
+		
+		if(user != null) {	return new UserSystem(user, getPermissoes(user));	}
+		else {throw new UsuarioNaoEncontrado("Usuario ou senha invalido");}
+		
 	}
 
 	

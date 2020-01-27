@@ -135,12 +135,12 @@ public class OperacaoClienteImpl implements IOperacaoCliente {
 			throw new CpfInvalidoException("Cpf Invalido Ou Inexistente. Informe um Cpf Valido");
 		}
 		log.info("Find Cliente CPF: " + cpf);
-		Optional<Cliente> cliente = clienteRepository.findOneByCpf(cpf);
+		Cliente cliente = clienteRepository.findOneByCpf(cpf);
 
-		if (!cliente.isPresent()) {
+		if (cliente == null) {
 			throw new ClienteInexistenteException("Cliente invalido ou iexistente. Informe outro Cliente.");
 		}
-		return cliente.get();
+		return cliente;
 	}
 
 	@Override

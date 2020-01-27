@@ -43,21 +43,28 @@ public class ClienteResource {
 	private ApplicationEventPublisher publisher;
 
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public Page<Cliente> pesquisar(ClienteFilter clienteFilter,Pageable page) {
+	public Page<Cliente> pesquisar(ClienteFilter clienteFilter, Pageable page) {
 		return clienteRepository.filtrar(clienteFilter, page);
 	}
 
 	@ResponseStatus(code = HttpStatus.OK)
-	@RequestMapping(method = RequestMethod.GET, params =  "cpf", value = "/find/doc")
+	@RequestMapping(method = RequestMethod.GET, params = "cpf", value = "/find/doc")
 	public ResponseEntity<Cliente> findOneByCpfIgnoreCase(@RequestParam(required = true, name = "cpf") String cpf) {
-		if(!CpfUtilsValidator.isCPF(cpf)) {throw new CpfInvalidoException("Cpf invalido. Informe outro CPF valido");}
-			Optional<Cliente> cliente = clienteRepository.findOneByCpf(cpf);
-		return cliente.isPresent() ? ResponseEntity.ok(cliente.get()) : ResponseEntity.notFound().build();
+		if (!CpfUtilsValidator.isCPF(cpf)) {
+			throw new CpfInvalidoException("Cpf invalido. Informe outro CPF valido");
+		}
+		Cliente c = clienteRepository.findOneByCpf(cpf);
+		if (c != null) {
+			return ResponseEntity.ok(c);
+		} else {
+			return ResponseEntity.notFound().build();
+		}
+
 	}
-	
+
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	@RequestMapping(method = RequestMethod.GET, value = "/{id}")
-	public ResponseEntity<Cliente> findById(@PathVariable(required = true) Long id){
+	public ResponseEntity<Cliente> findById(@PathVariable(required = true) Long id) {
 		Optional<Cliente> cliente = clienteRepository.findById(id);
 		return cliente.isPresent() ? ResponseEntity.ok(cliente.get()) : ResponseEntity.notFound().build();
 	}
@@ -69,7 +76,6 @@ public class ClienteResource {
 		return ResponseEntity.status(HttpStatus.CREATED).body(clienteSalvo);
 	}
 
-
 	@RequestMapping(method = RequestMethod.PUT, params = "cpf")
 	public ResponseEntity<Cliente> update(@RequestParam(required = true) String cpf,
 			@Valid @RequestBody Cliente cliente) {
@@ -77,15 +83,17 @@ public class ClienteResource {
 		return ResponseEntity.ok(clienteAtualizado);
 	}
 
-	@RequestMapping(method = RequestMethod.PUT, value = "/end" , params = "cpf")
+	@RequestMapping(method = RequestMethod.PUT, value = "/end", params = "cpf")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void updatePropertyEndereco(@RequestParam(required = true) String cpf, @Valid @RequestBody Endereco endereco) {
+	public void updatePropertyEndereco(@RequestParam(required = true) String cpf,
+			@Valid @RequestBody Endereco endereco) {
 		clienteService.updatePropertyEndereco(cpf, endereco);
 	}
 
-	@RequestMapping(method = RequestMethod.PUT,  value = "{idCliente}/doc")
+	@RequestMapping(method = RequestMethod.PUT, value = "{idCliente}/doc")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void updatePropertyCpf(@PathVariable(required = true) Long idCliente, @Valid @RequestBody(required = true) String cpf) {
+	public void updatePropertyCpf(@PathVariable(required = true) Long idCliente,
+			@Valid @RequestBody(required = true) String cpf) {
 		clienteService.updatePropertyCpf(idCliente, cpf);
 	}
 

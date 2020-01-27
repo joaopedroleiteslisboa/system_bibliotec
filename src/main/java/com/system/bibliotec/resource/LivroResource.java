@@ -20,10 +20,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.system.bibliotec.event.RecursoCriadorEvent;
 import com.system.bibliotec.model.Livro;
+import com.system.bibliotec.model.Usuario;
 import com.system.bibliotec.model.enums.StatusLivro;
 import com.system.bibliotec.repository.LivroRepository;
+import com.system.bibliotec.repository.UsuarioRepository;
 import com.system.bibliotec.repository.dto.projection.ResumoLivro;
 import com.system.bibliotec.repository.filter.LivroFilter;
+import com.system.bibliotec.security.SecurityUtils;
 import com.system.bibliotec.service.LivroService;
 
 @RestController
@@ -39,9 +42,19 @@ public class LivroResource {
 	@Autowired
 	private ApplicationEventPublisher publisher;
 	
-   @PreAuthorize("hasRole('ROLE_PESQUISAR_LIVRO')")
+	@Autowired
+	private UsuarioRepository uRepos;
+		
+   @PreAuthorize("hasAuthority('ROLE_PESQUISAR_LIVRO') and #oauth2.hasScope('write')")
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public Page<Livro> pesquisar(LivroFilter livroFilter, Pageable page) {
+	   
+	   System.out.println();
+	   System.out.println();
+	   Usuario s = uRepos.findOneByEmail(SecurityUtils.getCurrentUserLogin().get());
+	   
+	   System.out.println();
+	   
 		return livroRepository.filtrar(livroFilter, page);
 	}
 	

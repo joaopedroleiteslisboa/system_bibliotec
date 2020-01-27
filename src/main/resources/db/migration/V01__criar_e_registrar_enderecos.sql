@@ -1,5 +1,5 @@
 SET FOREIGN_KEY_CHECKS = 0; 
-CREATE TABLE enderecos(
+CREATE TABLE IF NOT EXISTS enderecos(
                          id BIGINT  primary key AUTO_INCREMENT,
                          cep VARCHAR(10),
                          logradouro VARCHAR(200) NOT NULL,

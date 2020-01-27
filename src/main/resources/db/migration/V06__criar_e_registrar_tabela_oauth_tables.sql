@@ -1,6 +1,6 @@
-create table oauth_client_details (
+CREATE TABLE IF NOT EXISTS oauth_client_details (
   client_id VARCHAR(255) PRIMARY KEY,
-  resource_ids VARCHAR(255),
+  resource_ids VARCHAR(255) UNIQUE,
   client_secret VARCHAR(255),
   scope VARCHAR(255),
   authorized_grant_types VARCHAR(255),
@@ -13,15 +13,15 @@ create table oauth_client_details (
 );
 
 
-create table oauth_client_token (
-  token_id VARCHAR(255),
+CREATE TABLE IF NOT EXISTS oauth_client_token (
+  token_id VARCHAR(255) UNIQUE,
   token LONG VARBINARY,
   authentication_id VARCHAR(255) PRIMARY KEY,
   user_name VARCHAR(255),
   client_id VARCHAR(255)
 );
 
-create table oauth_access_token (
+CREATE TABLE IF NOT EXISTS oauth_access_token (
   token_id VARCHAR(255),
   token LONG VARBINARY,
   authentication_id VARCHAR(255) PRIMARY KEY,
@@ -32,20 +32,20 @@ create table oauth_access_token (
 );
 
 
-create table oauth_refresh_token (
+CREATE TABLE IF NOT EXISTS oauth_refresh_token (
   token_id VARCHAR(255),
   token LONG VARBINARY,
   authentication LONG VARBINARY
 );
 
 
-create table oauth_code (
+CREATE TABLE IF NOT EXISTS oauth_code (
   code VARCHAR(255), 
   authentication LONG VARBINARY
 );
 
-create table oauth_approvals (
-    userId VARCHAR(255),
+CREATE TABLE IF NOT EXISTS oauth_approvals (
+    userId VARCHAR(255) UNIQUE,
     clientId VARCHAR(255),
     scope VARCHAR(255),
     status VARCHAR(10),
@@ -54,7 +54,7 @@ create table oauth_approvals (
 );
 
 
-create table ClientDetails (
+CREATE TABLE IF NOT EXISTS ClientDetails (
   appId VARCHAR(255) PRIMARY KEY,
   resourceIds VARCHAR(255),
   appSecret VARCHAR(255),
@@ -69,24 +69,32 @@ create table ClientDetails (
 );
 
 
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
 	id BIGINT(20) PRIMARY KEY,
 	nome VARCHAR(50) NOT NULL,
-	email VARCHAR(50) NOT NULL,
-	senha VARCHAR(150) NOT NULL,
-	ativo BOOLEAN NOT NULL
+	email VARCHAR(50) NOT NULL UNIQUE,
+	senha VARCHAR(150) NOT NULL UNIQUE,
+	ativo BOOLEAN NOT NULL,
+	tipo BIGINT NOT NULL,
+	id_cliente BIGINT,
+	id_funcionario BIGINT,
+	
+	FOREIGN KEY (tipo) REFERENCES tipoUsuarioVO(id),
+	FOREIGN KEY (id_cliente) REFERENCES clientes(id),
+	FOREIGN KEY (id_funcionario) REFERENCES funcionarios(id)
+
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 auto_increment=1000;
 
 
 
-CREATE TABLE permissao (
+CREATE TABLE IF NOT EXISTS permissao (
 	id BIGINT(20) PRIMARY KEY,
 	descricao VARCHAR(50) NOT NULL
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 auto_increment=1000;
 
 
 
-CREATE TABLE usuarios_permissao (
+CREATE TABLE IF NOT EXISTS usuarios_permissao (
 	id_usuario BIGINT(20) NOT NULL,
 	id_permissao BIGINT(20) NOT NULL,
 	PRIMARY KEY (id_usuario, id_permissao),
@@ -95,3 +103,7 @@ CREATE TABLE usuarios_permissao (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
+CREATE TABLE IF NOT EXISTS tipoUsuarioVO (
+	id BIGINT(20) PRIMARY KEY,
+	tipo VARCHAR(100) NOT NULL UNIQUE
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 auto_increment=1000;

@@ -1,4 +1,4 @@
-CREATE TABLE locacoes(
+CREATE TABLE IF NOT EXISTS locacoes(
 
       id BIGINT PRIMARY KEY AUTO_INCREMENT,
       statusLocacao VARCHAR(20),

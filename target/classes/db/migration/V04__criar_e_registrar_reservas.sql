@@ -1,4 +1,4 @@
-CREATE TABLE reservas(
+CREATE TABLE IF NOT EXISTS reservas(
 
         id BIGINT PRIMARY KEY AUTO_INCREMENT,
         statusReserva VARCHAR(10) NOT NULL,

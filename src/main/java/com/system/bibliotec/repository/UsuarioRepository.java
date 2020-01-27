@@ -8,13 +8,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.system.bibliotec.model.Cliente;
 import com.system.bibliotec.model.Usuario;
+import com.system.bibliotec.repository.usuario.UsuarioRepositoryQueryEmail;
 
 @Repository
-public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
-
-	//@Query(value = "select u from Usuario u where u.email =:email")
-	public Optional<Usuario> findUsuarioByEmail(String email);
+public interface UsuarioRepository extends JpaRepository<Usuario, Long>, UsuarioRepositoryQueryEmail {
+		 
+	
 
 	public List<Usuario> findByPermissoesDescricao(String permissaoDescricao);
 

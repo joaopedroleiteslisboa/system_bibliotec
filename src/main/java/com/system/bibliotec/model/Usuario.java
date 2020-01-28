@@ -32,52 +32,43 @@ import lombok.ToString;
 @Table(name = "users")
 public class Usuario {
 
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	@EqualsAndHashCode.Include
 	private Long id;
-	
+
 	@Column(name = "ativo")
 	private boolean ativo;
-	
-	
+
 	@Column(name = "nome")
 	private String nome;
-	
+
 	@Column(name = "email")
 	private String email;
-	
+
 	@Column(name = "senha")
 	private String senha;
-	
-	
-	
 
+	@JoinColumn(name = "tipo")
 	@OneToOne
 	private TipoUsuarioVO tipo;
+
 		
-		
+	@JoinColumn(name = "id_cliente")
 	@OneToOne
 	private Cliente cliente;
-	
-		
-	@OneToOne(fetch = FetchType.EAGER)
-	private Funcionario funcionario;
-	
 
+	@JoinColumn(name = "id_funcionario")
+	@OneToOne
+	private Funcionario funcionario;
 
 	public boolean isAtivo() {
 		return ativo;
 	}
 
-	
 	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "usuarios_permissao", joinColumns = @JoinColumn(name = "id_usuario")
-		, inverseJoinColumns = @JoinColumn(name = "id_permissao"))
+	@JoinTable(name = "usuarios_permissao", joinColumns = @JoinColumn(name = "id_usuario"), inverseJoinColumns = @JoinColumn(name = "id_permissao"))
 	private List<Permissao> permissoes;
-	
-	
-	
+
 }

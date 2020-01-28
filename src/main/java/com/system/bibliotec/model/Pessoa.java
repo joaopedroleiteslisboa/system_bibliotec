@@ -42,7 +42,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @EqualsAndHashCode
 @MappedSuperclass
-public class Pessoa {
+public abstract class Pessoa {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")

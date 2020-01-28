@@ -217,10 +217,10 @@
   	-- insert usuarios 
 
 		-- senha @joao
-	INSERT INTO users (id, nome, email, senha, ativo, id_cliente, id_funcionario, tipo) values (1000, 'João Admin', 'joaopedroleite@bibliotec.com', '{bcrypt}$2a$10$2DRDf6cgsKV43M.b4oDKyuY6FknXu1doaHwyXNJIsvJpQsA6D5qQ.' ,true, null ,1009, 1000);
+	INSERT INTO users (id, nome, email, senha, ativo, id_cliente, id_funcionario, tipo) values (1000, 'João Admin', 'joaopedroleite@bibliotec.com', '{bcrypt}$2a$10$2DRDf6cgsKV43M.b4oDKyuY6FknXu1doaHwyXNJIsvJpQsA6D5qQ.' ,true, 0 ,1000, 1000);
 	
 		-- senha @pedroleite
-	INSERT INTO users (id, nome, email, senha, ativo, id_cliente, id_funcionario, tipo) values (1002, 'Pedro Leite', 'fintech@techpay.com', '{bcrypt}$2a$10$2SHpCCtRDytgQwH0JFhOX.NNcJo1E6fTUJNEkdvru3nfkevoDMhqy' ,true, 1000, null , 1003);
+	INSERT INTO users (id, nome, email, senha, ativo, id_cliente, id_funcionario, tipo) values (1002, 'Pedro Leite', 'fintech@techpay.com', '{bcrypt}$2a$10$2SHpCCtRDytgQwH0JFhOX.NNcJo1E6fTUJNEkdvru3nfkevoDMhqy' ,true, 1000, 0 , 1003);
 	
 		-- senha @joaopedro
 	INSERT INTO users (id, nome, email, senha, ativo, id_cliente, id_funcionario, tipo) values (1001, 'João Pedro Leite Soares Lisboa', 'joaopedroleite.s.lisboa@outlook.com', '{bcrypt}$2a$10$kwVHdYPjQUpHpPgxNVtGkuTgkIv4USQvZaBnQ0wYNWBrwvFwTYn22' ,true, 1001, null, 1003);

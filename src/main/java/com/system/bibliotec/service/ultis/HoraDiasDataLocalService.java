@@ -1,12 +1,16 @@
 package com.system.bibliotec.service.ultis;
 
 import java.time.DayOfWeek;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-
+import java.time.temporal.ChronoUnit;
 
 public class HoraDiasDataLocalService {
+
+	private static long DEFAULT_QUANTIDADE_DIAS_MAXIMO_PARA_ANALISE_ATIVACAO_USUARIO = 2;
 
 	public static LocalTime horaLocal() {
 
@@ -105,12 +109,19 @@ public class HoraDiasDataLocalService {
 		return dataAgendada;
 
 	}
-	
-	private static boolean isvalidaCancelamentoLocacao(LocalDate dataCancelamento) {
-		
-		
-		
-		return (Boolean) null;
+
+	public static boolean processoAtivacaoUsuarioEAtivo(Instant inst) {
+
+		LocalDate dataProcessoAtivacaoUsuario = inst.atZone(ZoneId.of("America/Sao_Paulo")).toLocalDate();
+
+		if (dataProcessoAtivacaoUsuario.isBefore(LocalDate.now())) {
+			long diasPassados = ChronoUnit.DAYS.between(dataProcessoAtivacaoUsuario, LocalDate.now());
+			if (diasPassados > DEFAULT_QUANTIDADE_DIAS_MAXIMO_PARA_ANALISE_ATIVACAO_USUARIO) {
+				return true;
+			}
+		}
+		return false;
+
 	}
 
 }

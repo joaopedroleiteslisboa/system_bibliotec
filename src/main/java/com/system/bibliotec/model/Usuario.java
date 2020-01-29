@@ -1,5 +1,6 @@
 package com.system.bibliotec.model;
 
+import java.time.Instant;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -67,9 +68,12 @@ public class Usuario extends AbstractAuditingEntity {
 	private String chaveAtivacao;
 
 	@Size(max = 20)
-	@Column(name = "chaveRenovacao", length = 20)
+	@Column(name = "chave_renovacao", length = 20)
 	@JsonIgnore
 	private String chaveRenovacao;
+	
+	@Column(name = "data_reset")
+    private Instant resetDate = null;
 
 	@JoinColumn(name = "tipo")
 	@OneToOne

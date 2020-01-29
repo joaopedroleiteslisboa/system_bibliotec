@@ -23,11 +23,11 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long>, Usuario
 
 	String USERS_BY_EMAIL_CACHE = "usersByEmail";
 
-	Optional<Usuario> findOneByActivationKey(String activationKey);
+	Optional<Usuario> findOneByChaveAtivacao(String chaveAtivacao);
 
 	List<Usuario> findAllByActivatedIsFalseAndActivationKeyIsNotNullAndCreatedDateBefore(Instant dateTime);
 
-	Optional<Usuario> findOneByResetKey(String resetKey);
+	Optional<Usuario> findOneByChaveRenovacao(String resetKey);
 
 	Optional<Usuario> findOneByEmailIgnoreCase(String email);
 

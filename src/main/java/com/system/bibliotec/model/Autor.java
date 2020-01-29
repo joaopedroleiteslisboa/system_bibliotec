@@ -13,17 +13,17 @@ import java.util.List;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
 @Entity
 @Table(name = "autores")
-public class Autor {
+public class Autor extends AbstractAuditingEntity{
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	@EqualsAndHashCode.Include
-	private Long id;
 	
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2294635258767344611L;
+
 	@NotBlank(message = "O nome é Obrigatorio")
 	@Size(min = 3, max = 60)
 	@Column(name = "nome")

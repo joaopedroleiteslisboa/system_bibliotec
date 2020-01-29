@@ -1,6 +1,10 @@
 SET FOREIGN_KEY_CHECKS = 0; 
 CREATE TABLE IF NOT EXISTS enderecos(
                          id BIGINT  primary key AUTO_INCREMENT,
+                         created_by VARCHAR(70) NOT NULL,
+                         created_date DATE,
+                         last_modified_by VARCHAR(70),
+                         last_modified_date DATE,
                          cep VARCHAR(10),
                          logradouro VARCHAR(200) NOT NULL,
                          numero VARCHAR(20) NOT NULL,

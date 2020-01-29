@@ -11,16 +11,9 @@ import javax.validation.constraints.Size;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
 @Entity
 @Table(name = "enderecos")
 public class Endereco {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	@EqualsAndHashCode.Include
-	private Long id;
 
 	@Column(name = "cep")
 	@Size(min = 8, max = 10)

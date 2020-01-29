@@ -70,7 +70,11 @@ CREATE TABLE IF NOT EXISTS ClientDetails (
 
 
 CREATE TABLE IF NOT EXISTS users (
-	id BIGINT(20) PRIMARY KEY,
+	id BIGINT  primary key AUTO_INCREMENT,
+    created_by VARCHAR(70) NOT NULL,
+    created_date DATE,
+    last_modified_by VARCHAR(70),
+    last_modified_date DATE,
 	nome VARCHAR(50) NOT NULL,
 	email VARCHAR(50) NOT NULL UNIQUE,
 	senha VARCHAR(150) NOT NULL UNIQUE,
@@ -104,6 +108,10 @@ CREATE TABLE IF NOT EXISTS usuarios_permissao (
 
 
 CREATE TABLE IF NOT EXISTS tipoUsuarioVO (
-	id BIGINT(20) PRIMARY KEY,
+	id BIGINT  primary key AUTO_INCREMENT,
+    created_by VARCHAR(70) NOT NULL,
+    created_date DATE,
+    last_modified_by VARCHAR(70),
+   	last_modified_date DATE,
 	tipo VARCHAR(100) NOT NULL UNIQUE
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 auto_increment=1000;

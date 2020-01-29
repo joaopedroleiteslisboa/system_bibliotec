@@ -1,6 +1,10 @@
 CREATE TABLE IF NOT EXISTS locacoes(
 
-      id BIGINT PRIMARY KEY AUTO_INCREMENT,
+      id BIGINT  primary key AUTO_INCREMENT,
+      created_by VARCHAR(70) NOT NULL,
+      created_date DATE,
+      last_modified_by VARCHAR(70),
+      last_modified_date DATE,
       statusLocacao VARCHAR(20),
       quantidadeDeRenovacao INT NOT NULL,
       horaLocacao TIME NOT NULL,

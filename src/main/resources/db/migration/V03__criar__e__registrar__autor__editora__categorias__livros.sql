@@ -1,6 +1,10 @@
 CREATE TABLE livros(
 
-        id BIGINT PRIMARY KEY AUTO_INCREMENT,
+       id BIGINT  primary key AUTO_INCREMENT,
+       created_by VARCHAR(70) NOT NULL,
+       created_date DATE,
+       last_modified_by VARCHAR(70),
+       last_modified_date DATE,
         codBarras VARCHAR(20) NOT NULL,
         imagenUrl varchar(2048),
         nome VARCHAR(200) NOT NULL,
@@ -23,7 +27,11 @@ CREATE TABLE livros(
 
 CREATE TABLE autores(
 
-        id BIGINT PRIMARY KEY AUTO_INCREMENT,
+        id BIGINT  primary key AUTO_INCREMENT,
+       	created_by VARCHAR(70) NOT NULL,
+        created_date DATE,
+        last_modified_by VARCHAR(70),
+        last_modified_date DATE,
         nome VARCHAR(50) NOT NULL,
         descricao MEDIUMTEXT NOT NULL
        
@@ -60,7 +68,11 @@ CREATE TABLE livro_has_categorias (
 
 CREATE TABLE IF NOT EXISTS editoras(
 
-        id BIGINT PRIMARY KEY AUTO_INCREMENT,
+        id BIGINT  primary key AUTO_INCREMENT,
+        created_by VARCHAR(70) NOT NULL,
+        created_date DATE,
+        last_modified_by VARCHAR(70),
+        last_modified_date DATE,
         nome VARCHAR(50) NOT NULL UNIQUE,
         descricao MEDIUMTEXT NOT NULL
 

@@ -12,14 +12,10 @@ import java.util.List;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
 @Entity
 @Table(name = "categorias")
-public class Categoria {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@EqualsAndHashCode.Include
-	private Long id;
+public class Categoria extends AbstractAuditingEntity {
+
 		
 	@NotBlank(message = "Este campo não pode ficar em branco")
 	@Column(name = "nome", unique = true, length = 40)

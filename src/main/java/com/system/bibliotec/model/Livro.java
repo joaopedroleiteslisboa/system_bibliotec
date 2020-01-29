@@ -20,16 +20,11 @@ import java.util.Set;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
 @Entity
 @Table(name = "livros")
-public class Livro {
+public class Livro extends AbstractAuditingEntity {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	@EqualsAndHashCode.Include
-	private Long id;
+
 	
 	//TODO: Mudar em ambiente de produção
 	@JsonProperty(access = JsonProperty.Access.READ_ONLY)

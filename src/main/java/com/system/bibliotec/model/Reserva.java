@@ -15,17 +15,16 @@ import java.time.LocalTime;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
 @Entity
 @Table(name = "reservas")
-public class Reserva {
+public class Reserva extends AbstractAuditingEntity{
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	@EqualsAndHashCode.Include
-	private Long id;
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4258702459699708485L;
+
 	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	@Enumerated(EnumType.STRING)
 	@Column(name = "statusReserva")

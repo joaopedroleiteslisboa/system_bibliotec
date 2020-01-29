@@ -1,6 +1,10 @@
 
 CREATE TABLE IF NOT EXISTS clientes(
                          id BIGINT  primary key AUTO_INCREMENT,
+                         created_by VARCHAR(70) NOT NULL,
+                         created_date DATE,
+                         last_modified_by VARCHAR(70),
+                         last_modified_date DATE,
                          ativo BOOLEAN NOT NULL,
                          StatusCliente VARCHAR(13) NOT NULL,
                          nome VARCHAR(200) NOT NULL,
@@ -25,6 +29,10 @@ CREATE TABLE IF NOT EXISTS clientes(
 CREATE TABLE IF NOT EXISTS funcionarios(
 
                          id BIGINT  primary key AUTO_INCREMENT,
+                         created_by VARCHAR(70) NOT NULL,
+                         created_date DATE,
+                         last_modified_by VARCHAR(70),
+                         last_modified_date DATE,
                          ativo BOOLEAN NOT NULL,
                          matricula VARCHAR(100) NOT NULL UNIQUE,
                          nome VARCHAR(200) NOT NULL,
@@ -47,7 +55,11 @@ CREATE TABLE IF NOT EXISTS funcionarios(
 
 
 CREATE TABLE IF NOT EXISTS cargos (
-    id BIGINT  primary key AUTO_INCREMENT,
+   						 id BIGINT  primary key AUTO_INCREMENT,
+                         created_by VARCHAR(70) NOT NULL,
+                         created_date DATE,
+                         last_modified_by VARCHAR(70),
+                         last_modified_date DATE,
     codigo VARCHAR(20) NOT NULL UNIQUE,
     nome VARCHAR(80) CHARACTER SET utf8 UNIQUE
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 auto_increment=1000;

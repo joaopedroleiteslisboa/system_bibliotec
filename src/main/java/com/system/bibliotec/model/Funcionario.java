@@ -24,6 +24,11 @@ import lombok.ToString;
 public class Funcionario extends Pessoa{
 	
 		
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2281797851333807897L;
+
 	@Column(name = "matricula", unique = true, nullable = false)
 	private String matricula;
 	

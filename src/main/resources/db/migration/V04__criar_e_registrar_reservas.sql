@@ -1,6 +1,10 @@
 CREATE TABLE IF NOT EXISTS reservas(
 
-        id BIGINT PRIMARY KEY AUTO_INCREMENT,
+       id BIGINT  primary key AUTO_INCREMENT,
+  	   created_by VARCHAR(70) NOT NULL,
+       created_date DATE,
+       last_modified_by VARCHAR(70),
+       last_modified_date DATE,
         statusReserva VARCHAR(10) NOT NULL,
         horaReserva TIME NOT NULL,
         dataReserva DATE NOT NULL,

@@ -40,14 +40,14 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
 @MappedSuperclass
-public abstract class Pessoa {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	@EqualsAndHashCode.Include
-	private Long id;
+public abstract class Pessoa extends AbstractAuditingEntity {
+	
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5293427550465463236L;
 
 	@NotBlank(message = "O nome é Obrigatorio")
 	@Size(min = 3, max = 60)

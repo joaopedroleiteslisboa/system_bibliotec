@@ -14,15 +14,10 @@ import java.util.List;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
 @Entity
 @Table(name = "editoras")
 public class Editora {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	@EqualsAndHashCode.Include
-	private Long id;
+
 	
 	@NotBlank(message = "O nome é Obrigatorio")
 	@Size(min = 3, max = 60)

@@ -249,6 +249,9 @@
 	INSERT INTO permissao (created_by, last_modified_by, id, descricao) VALUES ('system', 'system', 1012, 'ROLE_CADASTRAR_CLIENT_APP');
 	INSERT INTO permissao (created_by, last_modified_by, id, descricao) VALUES ('system', 'system', 1013, 'ROLE_REMOVER_CLIENT_APP');
 	INSERT INTO permissao (created_by, last_modified_by, id, descricao) VALUES ('system', 'system', 1014, 'ROLE_PESQUISAR_CLIENT_APP');
+	INSERT INTO permissao (created_by, last_modified_by, id, descricao) VALUES ('system', 'system', 1015, 'ROLE_ADMIN');
+	INSERT INTO permissao (created_by, last_modified_by, id, descricao) VALUES ('system', 'system', 1016, 'ROLE_USER_ANONIMO');
+	INSERT INTO permissao (created_by, last_modified_by, id, descricao) VALUES ('system', 'system', 1017, 'ROLE_USER_SYSTEM');
 	
 		
 -- EM CASO DE NECESSIDDE PODE-SE CRIAR ROLES PARA CADASTRO DE CATEGORIAS, EDITORAS E AUTORES... CONTUDO O AUTOR ACHU DESNECESSARIO TAL PROCESSO DEVIDO O LIVRO CONTER COMO PRIPRIEDADES ESSENCIAS ESSES SUPRACITADOS ATRIBUTOS....

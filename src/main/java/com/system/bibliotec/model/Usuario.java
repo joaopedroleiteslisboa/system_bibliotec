@@ -1,7 +1,9 @@
 package com.system.bibliotec.model;
 
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -93,6 +95,6 @@ public class Usuario extends AbstractAuditingEntity {
 
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "usuarios_permissao", joinColumns = @JoinColumn(name = "id_usuario"), inverseJoinColumns = @JoinColumn(name = "id_permissao"))
-	private List<Permissao> permissoes;
+	private Set<Permissao> permissoes = new HashSet<>();
 
 }

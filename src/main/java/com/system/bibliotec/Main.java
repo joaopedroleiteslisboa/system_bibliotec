@@ -7,18 +7,23 @@ import java.time.ZoneOffset;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import com.system.bibliotec.security.AuthoritiesConstants;
+
 public class Main {
 	
 	public static void main(String[] args) {
 	
-		String ss = "joao pedro";
-		
-		System.out.println(ss.length());
-		
-		Instant s = Instant.now();
+		AuthoritiesConstants c = new AuthoritiesConstants();
 		
 		
-		System.out.println(LocalDateTime.ofInstant(s, ZoneOffset.UTC));
+		//String ss = "joao pedro";
+	//	
+		//System.out.println(ss.length());
+		
+		//Instant s = Instant.now();
+		
+		
+		//System.out.println(LocalDateTime.ofInstant(s, ZoneOffset.UTC));
 		
 		//BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 //	System.out.println(encoder.encode("@pedroleite"));

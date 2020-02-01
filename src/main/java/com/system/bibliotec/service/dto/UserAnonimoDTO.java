@@ -1,14 +1,10 @@
 package com.system.bibliotec.service.dto;
 
+import static com.system.bibliotec.config.ConstantsUtils.DEFAULT_LANGUAGE;
+
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
-
-import com.system.bibliotec.config.ConstantsUtils;
 import com.system.bibliotec.model.Permissao;
 import com.system.bibliotec.model.Usuario;
 
@@ -17,8 +13,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
-import static com.system.bibliotec.config.ConstantsUtils.DEFAULT_LANGUAGE;
 
 @Getter
 @Setter

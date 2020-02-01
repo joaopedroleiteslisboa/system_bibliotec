@@ -7,38 +7,46 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.system.bibliotec.model.Usuario;
+import com.system.bibliotec.service.dto.UserAnonimoDTO;
 import com.system.bibliotec.service.dto.UserSystemDTO;
 
 public class UserMapper {
 
 	
 	
-	 public List<UserSystemDTO> usersToUserDTOs(List<Usuario> users) {
+	 public List<UserSystemDTO> usersToUserSystemDTOs(List<Usuario> users) {
 	        return users.stream()
 	            .filter(Objects::nonNull)
-	            .map(this::userToUserDTO)
+	            .map(this::userToUserSystemDTO)
+	            .collect(Collectors.toList());
+	    }
+	 
+	 
+	 public List<UserAnonimoDTO> usersToUserAnonimosDTOs(List<Usuario> users) {
+	        return users.stream()
+	            .filter(Objects::nonNull)
+	            .map(this::userToUserAnonimoDTO)
 	            .collect(Collectors.toList());
 	    }
 
-	    public UserSystemDTO userToUserDTO(Usuario user) {
+	    public UserSystemDTO userToUserSystemDTO(Usuario user) {
 	        return new UserSystemDTO(user);
 	    }
 
-	    public List<User> userDTOsToUsers(List<UserDTO> userDTOs) {
-	        return userDTOs.stream()
-	            .filter(Objects::nonNull)
-	            .map(this::userDTOToUser)
-	            .collect(Collectors.toList());
+	    public UserAnonimoDTO userToUserAnonimoDTO(Usuario user) {
+	        return new UserAnonimoDTO(user);
 	    }
+	    
 
-	    public User userDTOToUser(UserDTO userDTO) {
+	    public Usuario userDTOToUser(UserSystemDTO userDTO) {
 	        if (userDTO == null) {
 	            return null;
 	        } else {
-	            User user = new User();
-	            user.setId(userDTO.getId());
-	            user.setLogin(userDTO.getLogin());
-	            user.setFirstName(userDTO.getFirstName());
+	        	
+	        	Usuario user = new Usuario();
+
+	            user.setEmail(userDTO.getEmail());
+	            user.nome(userDTO.getNome()());
 	            user.setLastName(userDTO.getLastName());
 	            user.setEmail(userDTO.getEmail());
 	            user.setImageUrl(userDTO.getImageUrl());

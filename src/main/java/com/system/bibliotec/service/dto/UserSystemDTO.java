@@ -2,7 +2,6 @@ package com.system.bibliotec.service.dto;
 
 import java.time.Instant;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -10,9 +9,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import com.system.bibliotec.config.ConstantsUtils;
-import com.system.bibliotec.model.Permissao;
 import com.system.bibliotec.model.TipoUsuarioVO;
-import com.system.bibliotec.model.Usuario;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -21,8 +18,9 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class UserDTO {
-
+public class UserSystemDTO extends PessoaSystemDTO{
+	
+	
 	private Long id;
 
 	@NotBlank
@@ -51,12 +49,9 @@ public class UserDTO {
 	private Instant lastModifiedDate;
 
 	private Set<String> permissoes;
-	
+
 	private String tipoUsuario;
-
-	public UserDTO() {
-		// Empty constructor needed for Jackson.
-	}
-
+	
+	
 
 }

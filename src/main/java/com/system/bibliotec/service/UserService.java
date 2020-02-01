@@ -14,14 +14,19 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 import com.system.bibliotec.exception.EmailAlreadyUsedException;
 import com.system.bibliotec.exception.UsernameAlreadyUsedException;
 import com.system.bibliotec.model.Permissao;
+import com.system.bibliotec.model.TipoUsuarioVO;
 import com.system.bibliotec.model.Usuario;
 import com.system.bibliotec.repository.PermissoesRepositorio;
+import com.system.bibliotec.repository.TipoUsuarioVORepository;
 import com.system.bibliotec.repository.UsuarioRepository;
-import com.system.bibliotec.security.AuthoritiesConstants;
+
+import com.system.bibliotec.security.AuthoritiesConstantsUltis;
 import com.system.bibliotec.service.dto.UserDTO;
+import com.system.bibliotec.service.dto.UserSystemDTO;
 import com.system.bibliotec.service.ultis.HoraDiasDataLocalService;
 import com.system.bibliotec.service.ultis.RandomUtils;
 
@@ -31,16 +36,21 @@ import com.system.bibliotec.service.ultis.RandomUtils;
 @Transactional
 public class UserService {
 
-	private static boolean DEFAULT_ATIVO = true;
+	private final Logger log = LoggerFactory.getLogger(UserService.class);
+	
+	private static final boolean DEFAULT_ATIVO = true;
 
-	private static boolean DEFAULT_CRIACAO_USUARIO_INATIVO = false;
+	private static final boolean DEFAULT_CRIACAO_USUARIO_INATIVO = false;
 
 	private static String DEFAULT_CHAVE_ATIVACAO = null;
+	
+	private static final String DEFAULT_LANGUAGE = "pt-br";
 
 	private static Instant DEFAULT_INSTANTE_TIME = Instant.now().minusSeconds(86400);
 
-	private final Logger log = LoggerFactory.getLogger(UserService.class);
+	private static final String DEFAULT_TIPO_USUARIO = "ANONIMO";
 
+	
 	@Autowired
 	private UsuarioRepository userRepository;
 
@@ -49,7 +59,13 @@ public class UserService {
 
 	@Autowired
 	private PermissoesRepositorio permissaoRepositorio;
+	
+	@Autowired
+	private TipoUsuarioVORepository tipoUsuarioVORepository;
+	
+	
 
+	
 	public Optional<Usuario> activateRegistration(String key) {
 		log.debug("Ativação do usuario por chave de ativação key {}", key);
 		return userRepository.findOneByChaveAtivacao(key).map(user -> {
@@ -97,30 +113,41 @@ public class UserService {
 		});
 
 		Usuario novoUsuario = new Usuario();
+		
 		String senhaCriptografada = passwordEncoder.encode(password);
 
 		// new user gets initially a generated password
 		novoUsuario.setSenha(senhaCriptografada);
 		novoUsuario.setNome(userDTO.getNome());
+		
+		if(userDTO.getTipoUsuario() == null) {
+			tipoUsuarioVORepository.findOneByTipoIgnoreCase(DEFAULT_TIPO_USUARIO).ifPresent(novoUsuario::setTipo);
+		}else {
+			tipoUsuarioVORepository.
+					findOneByTipoIgnoreCase(userDTO.getTipoUsuario().toUpperCase()).ifPresent(novoUsuario::setTipo);
+		}
 
 		if (userDTO.getEmail() != null && new EmailValidator().isValid(userDTO.getEmail(), null)) {
 			novoUsuario.setEmail(userDTO.getEmail().toLowerCase());
 		}
 		novoUsuario.setImageUrl(userDTO.getImageUrl());
-
-		novoUsuario.setLangKey(userDTO.getLangKey());
+		if(userDTO.getLangKey() == null) {
+			novoUsuario.setLangKey(DEFAULT_LANGUAGE);
+		}else {
+			novoUsuario.setLangKey(userDTO.getLangKey());
+		}
+		
 
 		novoUsuario.setAtivo(DEFAULT_CRIACAO_USUARIO_INATIVO);
 
-		// Chave de ativação de novo usuario
 
 		novoUsuario.setChaveAtivacao(RandomUtils.generateActivationKey());
 
 		Set<Permissao> permissoes = new HashSet<>();
 
-		// RESTAR IMPLEMENTAR ESSA FUNCIONABILIDADE....
-		permissaoRepositorio.findById(AuthoritiesConstants.ROLE_USER_ANONIMO).ifPresent(permissoes::add);
-
+		permissaoRepositorio.findById(AuthoritiesConstantsUltis.ROLE_USER_ANONIMO).ifPresent(permissoes::add);
+		
+		
 		novoUsuario.setPermissoes(permissoes);
 		userRepository.save(novoUsuario);
 
@@ -146,35 +173,93 @@ public class UserService {
 	
 	 public Usuario createUser(UserDTO userDTO) {
 		 	Usuario user = new Usuario();
-	        user.setLogin(userDTO.getEmail().toLowerCase());
-	        user.set(userDTO.getFirstName());
-	        user.setLastName(userDTO.getLastName());
-	        if (userDTO.getEmail() != null) {
+	        user.setEmail(userDTO.getEmail().toLowerCase());
+	        user.setNome(userDTO.getNome().toLowerCase());
+	        
+	    	if(userDTO.getTipoUsuario() == null) {
+				tipoUsuarioVORepository.findOneByTipoIgnoreCase(DEFAULT_TIPO_USUARIO).ifPresent(user::setTipo);
+			}else {
+				tipoUsuarioVORepository.
+						findOneByTipoIgnoreCase(userDTO.getTipoUsuario().toUpperCase()).ifPresent(user::setTipo);
+			}
+	        
+	        if (userDTO.getEmail() != null && new EmailValidator().isValid(userDTO.getEmail(), null)) {
 	            user.setEmail(userDTO.getEmail().toLowerCase());
 	        }
 	        user.setImageUrl(userDTO.getImageUrl());
 	        if (userDTO.getLangKey() == null) {
-	            user.setLangKey(Constants.DEFAULT_LANGUAGE); // default language
+	            user.setLangKey(DEFAULT_LANGUAGE); // default language
 	        } else {
 	            user.setLangKey(userDTO.getLangKey());
 	        }
-	        String encryptedPassword = passwordEncoder.encode(RandomUtil.generatePassword());
-	        user.setPassword(encryptedPassword);
-	        user.setResetKey(RandomUtil.generateResetKey());
+	        String encryptedPassword = passwordEncoder.encode(RandomUtils.generatePassword());
+	        user.setSenha(encryptedPassword);
+	        user.setChaveRenovacao(RandomUtils.generateResetKey());
 	        user.setResetDate(Instant.now());
-	        user.setActivated(true);
-	        if (userDTO.getAuthorities() != null) {
-	            Set<Authority> authorities = userDTO.getAuthorities().stream()
-	                .map(authorityRepository::findById)
+	        user.setAtivo(DEFAULT_ATIVO);	        
+	        if (userDTO.getPermissoes() != null) {
+	            Set<Permissao> permissoes = userDTO.getPermissoes().stream()
+	                .map(permissaoRepositorio::findById)
 	                .filter(Optional::isPresent)
 	                .map(Optional::get)
 	                .collect(Collectors.toSet());
-	            user.setAuthorities(authorities);
+	            user.setPermissoes(permissoes);
+	            //DEFAULT SYSTEM - USER CREATE
+	            permissaoRepositorio.findById(AuthoritiesConstantsUltis.ROLE_USER_ANONIMO).ifPresent(permissoes::add);
+	            
 	        }
 	        userRepository.save(user);
-	        this.clearUserCaches(user);
-	        log.debug("Created Information for User: {}", user);
+	        
+	        log.debug("Criando Novo Usuario user: {}", user);
 	        return user;
 	    }
+	 
+	 public Usuario createUserSystem(UserSystemDTO userDTO) {
+		 	Usuario user = new Usuario();
+	        user.setEmail(userDTO.getEmail().toLowerCase());
+	        user.setNome(userDTO.getNome().toLowerCase());
+	        
+	        if(userDTO.getTipoUsuario() == null) {
+				tipoUsuarioVORepository.findOneByTipoIgnoreCase(DEFAULT_TIPO_USUARIO).ifPresent(user::setTipo);
+			}else {
+				tipoUsuarioVORepository.
+						findOneByTipoIgnoreCase(userDTO.getTipoUsuario().toUpperCase()).ifPresent(user::setTipo);
+			}
+	        
+	        
+	        if (userDTO.getEmail() != null && new EmailValidator().isValid(userDTO.getEmail(), null)) {
+	            user.setEmail(userDTO.getEmail().toLowerCase());
+	        }
+	        user.setImageUrl(userDTO.getImageUrl());
+	        if (userDTO.getLangKey() == null) {
+	            user.setLangKey(DEFAULT_LANGUAGE); // default language
+	        } else {
+	            user.setLangKey(userDTO.getLangKey());
+	        }
+	        String encryptedPassword = passwordEncoder.encode(RandomUtils.generatePassword());
+	        user.setSenha(encryptedPassword);
+	        user.setChaveRenovacao(RandomUtils.generateResetKey());
+	        user.setResetDate(Instant.now());
+	        user.setAtivo(DEFAULT_ATIVO);	        
+	        if (userDTO.getPermissoes() != null) {
+	            Set<Permissao> permissoes = userDTO.getPermissoes().stream()
+	                .map(permissaoRepositorio::findById)
+	                .filter(Optional::isPresent)
+	                .map(Optional::get)
+	                .collect(Collectors.toSet());
+	            user.setPermissoes(permissoes);
+	            //DEFAULT SYSTEM - USER CREATE
+	            permissaoRepositorio.findById(AuthoritiesConstantsUltis.ROLE_USER_ANONIMO).ifPresent(permissoes::add);
+	            
+	        }
+	        userRepository.save(user);
+	        
+	        log.debug("Criando Novo Usuario de sistema user: {}", user);
+	        return user;
+	    }
+	 
+	 
+	 
+	 
 
 }

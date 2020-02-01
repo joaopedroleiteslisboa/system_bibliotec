@@ -12,8 +12,7 @@ public final class ConstantsUtils {
 
 	public static final String SYSTEM_ACCOUNT = "system";
 	
-	public static final String DEFAULT_LANGUAGE = "pt-br";
-	
+		
 	public static final String ANONYMOUS_USER = "anonymoususer";
 	
 	public  static final StatusCliente DEFAULT_VALUE_STATUSCLIENTE = StatusCliente.ADIMPLENTE;

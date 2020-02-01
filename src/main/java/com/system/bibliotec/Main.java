@@ -1,19 +1,10 @@
 package com.system.bibliotec;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
-import com.system.bibliotec.security.AuthoritiesConstants;
-
 public class Main {
 	
 	public static void main(String[] args) {
 	
-		AuthoritiesConstants c = new AuthoritiesConstants();
+		
 		
 		
 		//String ss = "joao pedro";

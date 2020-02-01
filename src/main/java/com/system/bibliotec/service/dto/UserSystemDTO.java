@@ -43,10 +43,7 @@ public class UserSystemDTO extends PessoaDTO {
 		this.imageUrl = user.getImageUrl();
 		this.langKey = user.getLangKey();
 		this.permissoes.addAll(user.getPermissoes().stream().map(Permissao::getDescricao).collect(Collectors.toList()));
-		this.matricula = (user.getFuncionario() != null && user.getFuncionario().getMatricula() != null)
-				? user.getFuncionario().getMatricula()
-				: MESSAGEM_ERRO_CADASTRO_USUARIO;
-
+		
 		this.matricula = (user.getFuncionario() != null && user.getFuncionario().getMatricula() != null
 				&& !user.getFuncionario().getMatricula().isEmpty()) ? user.getFuncionario().getMatricula()
 						: MESSAGEM_ERRO_CADASTRO_USUARIO;

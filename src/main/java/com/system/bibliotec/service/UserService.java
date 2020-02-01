@@ -25,7 +25,7 @@ import com.system.bibliotec.repository.TipoUsuarioVORepository;
 import com.system.bibliotec.repository.UsuarioRepository;
 
 import com.system.bibliotec.security.AuthoritiesConstantsUltis;
-import com.system.bibliotec.service.dto.UserDTO;
+import com.system.bibliotec.service.dto.UserAnonimoDTO;
 import com.system.bibliotec.service.dto.UserSystemDTO;
 import com.system.bibliotec.service.ultis.HoraDiasDataLocalService;
 import com.system.bibliotec.service.ultis.RandomUtils;
@@ -96,8 +96,9 @@ public class UserService {
 		});
 	}
 
-	public Usuario registerUser(UserDTO userDTO, String password) {
-
+	public Usuario registerUser(UserAnonimoDTO userDTO, String password) {
+			
+		
 		userRepository.findOneByLogin(userDTO.getEmail().toLowerCase()).ifPresent(existingUser -> {
 
 			boolean removed = removeNonActivatedUser(existingUser);
@@ -171,7 +172,7 @@ public class UserService {
 	}
 	
 	
-	 public Usuario createUser(UserDTO userDTO) {
+	 public Usuario createUser(UserAnonimoDTO userDTO) {
 		 	Usuario user = new Usuario();
 	        user.setEmail(userDTO.getEmail().toLowerCase());
 	        user.setNome(userDTO.getNome().toLowerCase());

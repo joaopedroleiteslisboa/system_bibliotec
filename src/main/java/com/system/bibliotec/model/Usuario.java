@@ -48,7 +48,7 @@ public class Usuario extends AbstractAuditingEntity {
 	private String nome;
 
 	@NotNull
-	@Pattern(regexp = ConstantsUtils.LOGIN_REGEX)
+	@Pattern(regexp = ConstantsUtils.REGEX_EMAIL)
 	@Size(min = 1, max = 50)
 	@Column(length = 50, unique = true, nullable = false)
 	private String email;
@@ -97,4 +97,9 @@ public class Usuario extends AbstractAuditingEntity {
 	@JoinTable(name = "usuarios_permissao", joinColumns = @JoinColumn(name = "id_usuario"), inverseJoinColumns = @JoinColumn(name = "id_permissao"))
 	private Set<Permissao> permissoes = new HashSet<>();
 
+
+
+	
+	
+	
 }

@@ -7,7 +7,10 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+
+import com.system.bibliotec.config.ConstantsUtils;
 
 @Getter
 @Setter
@@ -23,11 +26,11 @@ public class Contato {
 	@Column(name = "telefoneResidencial")
 	private String telefoneResidencial;
 
-	@Email
+	@Pattern(regexp = ConstantsUtils.REGEX_EMAIL)
 	@Column(name = "email_1")
 	private String email_1;
 
-	@Email
+	@Pattern(regexp = ConstantsUtils.REGEX_EMAIL)
 	@Column(name = "email_2")
 	private String email_2;
 }

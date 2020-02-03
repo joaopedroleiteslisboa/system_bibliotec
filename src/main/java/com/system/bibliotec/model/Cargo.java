@@ -23,6 +23,10 @@ import lombok.ToString;
 public class Cargo extends AbstractAuditingEntity{
 
 	
+	@NotBlank(message = "Um codigo do Ministerio do trabalho é necessario")
+	@Size(max = 80)
+	@Column(name = "codigo")
+	private String codigo;
 	
 	@NotBlank(message = "Um nome é necessario")
 	@Size(max = 80, min = 3)

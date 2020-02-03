@@ -210,6 +210,7 @@
 	INSERT INTO tipoUsuarioVO (created_by, last_modified_by, id, tipo) VALUES ('system', 'system', 1002,'VENDEDOR');
 	INSERT INTO tipoUsuarioVO (created_by, last_modified_by, id, tipo) VALUES ('system', 'system', 1003,'CLIENTE');
 	INSERT INTO tipoUsuarioVO (created_by, last_modified_by, id, tipo) VALUES ('system', 'system', 1004,'ANONIMO');
+	INSERT INTO tipoUsuarioVO (created_by, last_modified_by, id, tipo) VALUES ('system', 'system', 1005,'FUNCIONARIO-GERAL');
   	
   	
   	-- insert usuarios 

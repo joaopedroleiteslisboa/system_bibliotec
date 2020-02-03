@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
@@ -23,6 +22,9 @@ public abstract class PessoaDTO {
 	@Pattern(regexp = ConstantsUtils.REGEX_EMAIL)
 	@Size(min = 1, max = 50)
 	protected String nome;
+
+	@Size(max = 50)
+	protected String sobreNome;
 
 	@NotNull(message = "O nome da Rua é Obrigatorio")
 	@Size(max = 100)
@@ -66,14 +68,6 @@ public abstract class PessoaDTO {
 
 	public void setNome(String nome) {
 		this.nome = nome;
-	}
-
-	public String getNomeRua() {
-		return nomeRua;
-	}
-
-	public void setNomeRua(String nomeRua) {
-		this.nomeRua = nomeRua;
 	}
 
 	public String getCelular() {
@@ -147,5 +141,21 @@ public abstract class PessoaDTO {
 	public void setUf(String uf) {
 		this.uf = uf;
 	}
-	
+
+	public String getSobreNome() {
+		return sobreNome;
+	}
+
+	public void setSobreNome(String sobreNome) {
+		this.sobreNome = sobreNome;
+	}
+
+	public String getRua() {
+		return rua;
+	}
+
+	public void setRua(String rua) {
+		this.rua = rua;
+	}
+
 }

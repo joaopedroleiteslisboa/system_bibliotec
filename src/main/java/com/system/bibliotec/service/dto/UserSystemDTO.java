@@ -1,5 +1,6 @@
 package com.system.bibliotec.service.dto;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,6 +18,8 @@ public class UserSystemDTO extends PessoaDTO {
 
 	private static final String MESSAGEM_ERRO_CADASTRO_USUARIO = "DETECTAMOS INCONSISTENCIA DE INFORMAÇÕES EM SEU CADASTRO. COMUNICAR EQUIPE ADMINISTRADORA DO SISTEMA COM URGENCIA";
 
+	private String dataNascimento;
+	
 	private String matricula;
 
 	private String cargo;
@@ -36,9 +39,12 @@ public class UserSystemDTO extends PessoaDTO {
 	private String tipoUsuario;
 
 	public UserSystemDTO(Usuario user) {
-
+		
+		this.dataNascimento = (user.getFuncionario() != null && user.getFuncionario().getDataNascimento() != null)?
+					user.getFuncionario().getDataNascimento().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")).toString() : MESSAGEM_ERRO_CADASTRO_USUARIO;
 		this.email = (!user.getEmail().isEmpty()) ? user.getEmail() : MESSAGEM_ERRO_CADASTRO_USUARIO;
 		this.nome = (!user.getNome().isEmpty()) ? user.getNome() : MESSAGEM_ERRO_CADASTRO_USUARIO;
+		this.nome = (user.getFuncionario() != null && !user.getFuncionario().getSobreNome().isEmpty()) ? user.getFuncionario().getSobreNome() : "";
 		this.ativo = user.isAtivo();
 		this.imageUrl = user.getImageUrl();
 		this.langKey = user.getLangKey();

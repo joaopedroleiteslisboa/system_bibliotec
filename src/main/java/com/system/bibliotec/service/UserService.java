@@ -38,9 +38,7 @@ public class UserService {
 
 	private final Logger log = LoggerFactory.getLogger(UserService.class);
 	
-	private static final boolean DEFAULT_ATIVO = true;
-
-	private static final boolean DEFAULT_CRIACAO_USUARIO_INATIVO = false;
+	
 
 	private static String DEFAULT_CHAVE_ATIVACAO = null;
 	

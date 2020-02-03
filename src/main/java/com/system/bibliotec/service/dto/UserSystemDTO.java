@@ -18,6 +18,8 @@ public class UserSystemDTO extends PessoaDTO {
 
 	private static final String MESSAGEM_ERRO_CADASTRO_USUARIO = "DETECTAMOS INCONSISTENCIA DE INFORMAÇÕES EM SEU CADASTRO. COMUNICAR EQUIPE ADMINISTRADORA DO SISTEMA COM URGENCIA";
 
+	
+	
 	private String dataNascimento;
 	
 	private String matricula;
@@ -27,7 +29,9 @@ public class UserSystemDTO extends PessoaDTO {
 	private String statusFuncionario;
 
 	private String email;
-
+	
+	private String pass;
+	
 	private String imageUrl;
 
 	private boolean ativo;

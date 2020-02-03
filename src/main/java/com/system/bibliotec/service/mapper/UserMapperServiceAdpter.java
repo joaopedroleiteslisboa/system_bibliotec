@@ -14,9 +14,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.system.bibliotec.exception.CargoInexistenteException;
+import com.system.bibliotec.model.Cliente;
 import com.system.bibliotec.model.Funcionario;
 import com.system.bibliotec.model.Permissao;
 import com.system.bibliotec.model.Usuario;
+import com.system.bibliotec.model.enums.TipoCliente;
 import com.system.bibliotec.repository.CargoRepository;
 import com.system.bibliotec.repository.PermissoesRepositorio;
 import com.system.bibliotec.repository.TipoUsuarioVORepository;
@@ -67,59 +69,118 @@ public class UserMapperServiceAdpter {
 		return new UserAnonimoDTO(user);
 	}
 
-	public Usuario userSystemDTOToUser(UserSystemDTO userDTO) {
-	        if (userDTO == null) {
-	            return null;
-	        } else {
-	        	
-	        	Usuario user = new Usuario();
-	        	
-	        	Funcionario func = new Funcionario();
-	        	
-	        	user.setImageUrl(userDTO.getImageUrl());
-	            user.setEmail(userDTO.getEmail());
-	            user.setAtivo(false);
-	            user.setLangKey((userDTO.getLangKey() !=null && !userDTO.getLangKey().isEmpty())? userDTO.getLangKey(): null);
-	            String senhaCriptografada = passwordEncoder.encode(userDTO.getPass());
-	            user.setSenha(senhaCriptografada);
-	            if (userDTO.getPermissoes() != null) {
-		            Set<Permissao> permissoes = userDTO.getPermissoes().stream()
-		                .map(permissaoRepositorio::findOneByDescricaoIgnoreCase)
-		                .filter(Optional::isPresent)
-		                .map(Optional::get)
-		                .collect(Collectors.toSet());
-		            user.setPermissoes(permissoes);
-	            }else {
-	            	 
-	 		            Set<Permissao> permissoes = DEFAULT_PERMISSOES_USUARIO_SISTEMA.stream()
-	 		                .map(permissaoRepositorio::findOneByDescricaoIgnoreCase)
-	 		                .filter(Optional::isPresent)
-	 		                .map(Optional::get)
-	 		                .collect(Collectors.toSet());
-	 		            user.setPermissoes(permissoes);
-	            }
-	            
-	            
-	        	if(userDTO.getTipoUsuario() == null) {
-	    			tipoUsuarioVORepository.findOneByTipoIgnoreCase(DEFAULT_TIPO_USUARIO_SISTEMA).ifPresent(user::setTipo);
-	    		}else {
-	    			tipoUsuarioVORepository.findOneByTipoIgnoreCase(userDTO.getTipoUsuario().toUpperCase()).ifPresent(user::setTipo);
-	    		}
-	        	
-	            
-	            func.setNome(userDTO.getNome() !=null && !userDTO.getNome().isEmpty() ? userDTO.getNome(): null);
-	            func.setSobreNome(userDTO.getSobreNome() != null && !userDTO.getSobreNome().isEmpty()? userDTO.getSobreNome(): null);
-	            func.setDataNascimento((userDTO.getDataNascimento() != null && !userDTO.getDataNascimento().isEmpty())? LocalDate.parse(userDTO.getDataNascimento(), DateTimeFormatter.ofPattern("dd/MM/yyyy")): null);
-	            func.setAtivo(true);	         
-	            func.setCargo(cargoRepository.findOneByNomeIgnoreCase(userDTO.getCargo()).orElse(cargoRepository.findOneByCodigoIgnoreCase(userDTO.getCargo()).orElseThrow(() ->  new CargoInexistenteException("Cargo Inexistente Informe um cargo existente"))));
-	                 
-	            user.setFuncionario(func);
-	            return user;
-	
-	        }
-	    
-	     
+	public Usuario criadorUsuarioAnonimoPorDTO(UserAnonimoDTO userDTO) {
+		if (userDTO == null) {
+			return null;
+		} else {
 
-	}   
-	   
+			Usuario user = new Usuario();
+
+			Cliente c = new Cliente();
+
+			user.setImageUrl(userDTO.getImageUrl());
+			user.setEmail(userDTO.getEmail());
+			user.setAtivo(false);
+			user.setLangKey(
+					(userDTO.getLangKey() != null && !userDTO.getLangKey().isEmpty()) ? userDTO.getLangKey() : null);
+			String senhaCriptografada = passwordEncoder.encode(userDTO.getPass());
+			user.setSenha(senhaCriptografada);
+			if (userDTO.getPermissoes() != null) {
+				Set<Permissao> permissoes = userDTO.getPermissoes().stream()
+						.map(permissaoRepositorio::findOneByDescricaoIgnoreCase).filter(Optional::isPresent)
+						.map(Optional::get).collect(Collectors.toSet());
+				user.setPermissoes(permissoes);
+			} else {
+
+				Set<Permissao> permissoes = DEFAULT_PERMISSOES_USUARIO_SISTEMA.stream()
+						.map(permissaoRepositorio::findOneByDescricaoIgnoreCase).filter(Optional::isPresent)
+						.map(Optional::get).collect(Collectors.toSet());
+				user.setPermissoes(permissoes);
+			}
+
+			if (userDTO.getTipoUsuario() == null) {
+				tipoUsuarioVORepository.findOneByTipoIgnoreCase(DEFAULT_TIPO_USUARIO_SISTEMA).ifPresent(user::setTipo);
+			} else {
+				tipoUsuarioVORepository.findOneByTipoIgnoreCase(userDTO.getTipoUsuario().toUpperCase())
+						.ifPresent(user::setTipo);
+			}
+
+			c.setNome(userDTO.getNome() != null && !userDTO.getNome().isEmpty() ? userDTO.getNome() : null);
+			c.setSobreNome(userDTO.getSobreNome() != null && !userDTO.getSobreNome().isEmpty() ? userDTO.getSobreNome()
+					: null);
+			c.setDataNascimento((userDTO.getDataNascimento() != null && !userDTO.getDataNascimento().isEmpty())
+					? LocalDate.parse(userDTO.getDataNascimento(), DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+					: null);
+			c.setAtivo(true);
+			if (userDTO.getTipoCliente() != null && !userDTO.getTipoCliente().isEmpty()) {
+				c.setTipoCliente((TipoCliente.fromValueString(userDTO.getTipoCliente()) != null)
+						? TipoCliente.fromValueString(userDTO.getTipoCliente())
+						: null);
+			} else {
+				c.setTipoCliente(TipoCliente.FISICA);
+			}
+
+			user.setCliente(c);
+
+			return user;
+
+		}
+
+	}
+
+	public Usuario criadorUsuarioSistemaPorDTO(UserSystemDTO userDTO) {
+		if (userDTO == null) {
+			return null;
+		} else {
+
+			Usuario user = new Usuario();
+
+			Funcionario func = new Funcionario();
+
+			user.setImageUrl(userDTO.getImageUrl());
+			user.setEmail(userDTO.getEmail());
+			user.setAtivo(false);
+			user.setLangKey(
+					(userDTO.getLangKey() != null && !userDTO.getLangKey().isEmpty()) ? userDTO.getLangKey() : null);
+			String senhaCriptografada = passwordEncoder.encode(userDTO.getPass());
+			user.setSenha(senhaCriptografada);
+			if (userDTO.getPermissoes() != null) {
+				Set<Permissao> permissoes = userDTO.getPermissoes().stream()
+						.map(permissaoRepositorio::findOneByDescricaoIgnoreCase).filter(Optional::isPresent)
+						.map(Optional::get).collect(Collectors.toSet());
+				user.setPermissoes(permissoes);
+			} else {
+
+				Set<Permissao> permissoes = DEFAULT_PERMISSOES_USUARIO_SISTEMA.stream()
+						.map(permissaoRepositorio::findOneByDescricaoIgnoreCase).filter(Optional::isPresent)
+						.map(Optional::get).collect(Collectors.toSet());
+				user.setPermissoes(permissoes);
+			}
+
+			if (userDTO.getTipoUsuario() == null) {
+				tipoUsuarioVORepository.findOneByTipoIgnoreCase(DEFAULT_TIPO_USUARIO_SISTEMA).ifPresent(user::setTipo);
+			} else {
+				tipoUsuarioVORepository.findOneByTipoIgnoreCase(userDTO.getTipoUsuario().toUpperCase())
+						.ifPresent(user::setTipo);
+			}
+
+			func.setNome(userDTO.getNome() != null && !userDTO.getNome().isEmpty() ? userDTO.getNome() : null);
+			func.setSobreNome(
+					userDTO.getSobreNome() != null && !userDTO.getSobreNome().isEmpty() ? userDTO.getSobreNome()
+							: null);
+			func.setDataNascimento((userDTO.getDataNascimento() != null && !userDTO.getDataNascimento().isEmpty())
+					? LocalDate.parse(userDTO.getDataNascimento(), DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+					: null);
+			func.setAtivo(true);
+			func.setCargo(cargoRepository.findOneByNomeIgnoreCase(userDTO.getCargo())
+					.orElse(cargoRepository.findOneByCodigoIgnoreCase(userDTO.getCargo()).orElseThrow(
+							() -> new CargoInexistenteException("Cargo Inexistente Informe um cargo existente"))));
+
+			user.setFuncionario(func);
+			return user;
+
+		}
+
+	}
+
 }

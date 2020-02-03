@@ -20,8 +20,7 @@ public class UserSystemDTO extends PessoaDTO {
 
 	
 	
-	private String dataNascimento;
-	
+		
 	private String matricula;
 
 	private String cargo;

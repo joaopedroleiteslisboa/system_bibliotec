@@ -45,7 +45,9 @@ public abstract class PessoaDTO {
 	protected String logradouro;
 
 	@NotBlank(message = "O Campo numero é obrigatorio")
-	protected String numero;
+	protected String numero;	
+	
+	protected String dataNascimento;
 
 	@Size(min = 1, max = 280)
 	protected String complemento;
@@ -157,5 +159,15 @@ public abstract class PessoaDTO {
 	public void setRua(String rua) {
 		this.rua = rua;
 	}
+
+	public String getDataNascimento() {
+		return dataNascimento;
+	}
+
+	public void setDataNascimento(String dataNascimento) {
+		this.dataNascimento = dataNascimento;
+	}
+	
+	
 
 }

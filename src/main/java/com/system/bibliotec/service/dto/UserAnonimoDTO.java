@@ -21,19 +21,16 @@ import lombok.ToString;
 @AllArgsConstructor
 public class UserAnonimoDTO extends PessoaDTO {
 
-
 	private static final String MESSAGEM_ERRO_CADASTRO_USUARIO = "DETECTAMOS INCONSISTENCIA DE INFORMAÇÕES EM SEU CADASTRO. COMUNICAR EQUIPE ADMINISTRADORA DO SISTEMA COM URGENCIA";
-	
 
-	
 	private String email;
 
-	
+	private String pass;
+
 	private String imageUrl;
 
 	private boolean ativo = false;
 
-	
 	private String langKey = DEFAULT_LANGUAGE;
 
 	private Set<String> permissoes;
@@ -42,6 +39,7 @@ public class UserAnonimoDTO extends PessoaDTO {
 
 	private String statusCliente;
 
+	private String tipoCliente;
 
 	public UserAnonimoDTO(Usuario user) {
 
@@ -52,12 +50,14 @@ public class UserAnonimoDTO extends PessoaDTO {
 		this.langKey = user.getLangKey();
 		this.permissoes.addAll(user.getPermissoes().stream().map(Permissao::getDescricao).collect(Collectors.toList()));
 
-
 		this.statusCliente = (user.getCliente() != null && user.getCliente().getStatusCliente() != null)
 				? user.getCliente().getStatusCliente().getstatusCliente()
 				: MESSAGEM_ERRO_CADASTRO_USUARIO;
 
-		
+		this.tipoCliente = (user.getCliente() != null && user.getCliente().getTipoCliente() != null)
+				? user.getCliente().getTipoCliente().gettipoCliente()
+				: MESSAGEM_ERRO_CADASTRO_USUARIO;
+
 		this.tipoUsuario = (user.getTipo() != null && user.getTipo().getTipo() != null
 				&& !user.getTipo().getTipo().isEmpty()) ? user.getTipo().getTipo() : MESSAGEM_ERRO_CADASTRO_USUARIO;
 
@@ -67,28 +67,23 @@ public class UserAnonimoDTO extends PessoaDTO {
 						: MESSAGEM_ERRO_CADASTRO_USUARIO;
 
 		this.bairro = (user.getCliente() != null && user.getCliente().getEndereco() != null
-				&& !user.getCliente().getEndereco().getBairro().isEmpty())
-						? user.getCliente().getEndereco().getBairro()
+				&& !user.getCliente().getEndereco().getBairro().isEmpty()) ? user.getCliente().getEndereco().getBairro()
 						: MESSAGEM_ERRO_CADASTRO_USUARIO;
 
 		this.cep = (user.getCliente() != null && user.getCliente().getEndereco() != null
-				&& !user.getCliente().getEndereco().getCep().isEmpty())
-						? user.getCliente().getEndereco().getCep()
+				&& !user.getCliente().getEndereco().getCep().isEmpty()) ? user.getCliente().getEndereco().getCep()
 						: MESSAGEM_ERRO_CADASTRO_USUARIO;
 
 		this.cidade = (user.getCliente() != null && user.getCliente().getEndereco() != null
-				&& !user.getCliente().getEndereco().getCidade().isEmpty())
-						? user.getCliente().getEndereco().getCidade()
+				&& !user.getCliente().getEndereco().getCidade().isEmpty()) ? user.getCliente().getEndereco().getCidade()
 						: MESSAGEM_ERRO_CADASTRO_USUARIO;
 
 		this.numero = (user.getCliente() != null && user.getCliente().getEndereco() != null
-				&& !user.getCliente().getEndereco().getNumero().isEmpty())
-						? user.getCliente().getEndereco().getNumero()
+				&& !user.getCliente().getEndereco().getNumero().isEmpty()) ? user.getCliente().getEndereco().getNumero()
 						: MESSAGEM_ERRO_CADASTRO_USUARIO;
 
 		this.uf = (user.getCliente() != null && user.getCliente().getEndereco() != null
-				&& !user.getCliente().getEndereco().getUf().isEmpty()) ? user.getCliente().getEndereco().getUf()
-						: " ";
+				&& !user.getCliente().getEndereco().getUf().isEmpty()) ? user.getCliente().getEndereco().getUf() : " ";
 
 		this.complemento = (user.getCliente() != null && user.getCliente().getEndereco() != null
 				&& !user.getCliente().getEndereco().getComplemento().isEmpty())
@@ -101,16 +96,13 @@ public class UserAnonimoDTO extends PessoaDTO {
 						: " ";
 
 		this.celular = (user.getCliente() != null && user.getCliente().getContato() != null
-				&& !user.getCliente().getContato().getCelular().isEmpty())
-						? user.getCliente().getContato().getCelular()
+				&& !user.getCliente().getContato().getCelular().isEmpty()) ? user.getCliente().getContato().getCelular()
 						: MESSAGEM_ERRO_CADASTRO_USUARIO;
 
 		this.celular = (user.getCliente() != null && user.getCliente().getContato() != null
-				&& !user.getCliente().getContato().getCelular().isEmpty())
-						? user.getCliente().getContato().getCelular()
+				&& !user.getCliente().getContato().getCelular().isEmpty()) ? user.getCliente().getContato().getCelular()
 						: MESSAGEM_ERRO_CADASTRO_USUARIO;
 
 	}
-	
 
 }

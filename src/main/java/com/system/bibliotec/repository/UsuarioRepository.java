@@ -19,31 +19,31 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long>, Usuario
 
 	public List<Usuario> findByPermissoesDescricao(String permissaoDescricao);
 
-	String USERS_BY_LOGIN_CACHE = "usersByLogin";
+	String USERS_BY_LOGIN_CACHE = "usersByEmail";
 
 	String USERS_BY_EMAIL_CACHE = "usersByEmail";
 
 	Optional<Usuario> findOneByChaveAtivacao(String chaveAtivacao);
 
-	List<Usuario> findAllByActivatedIsFalseAndActivationKeyIsNotNullAndCreatedDateBefore(Instant dateTime);
+	//List<Usuario> findAllByAtivoIsFalseAndAtivoKeyIsNotNullAndCreatedDateBefore(Instant dateTime);
 
 	Optional<Usuario> findOneByChaveRenovacao(String resetKey);
 
 	Optional<Usuario> findOneByEmailIgnoreCase(String email);
 
-	Optional<Usuario> findOneByLogin(String login);
+	//Optional<Usuario> findOneByLogin(String emil);
 
 	@EntityGraph(attributePaths = "permissao")
 	Optional<Usuario> findOneWithPermissoesById(Long id);
 
 	@EntityGraph(attributePaths = "permissao")
-	@Cacheable(cacheNames = USERS_BY_LOGIN_CACHE)
-	Optional<Usuario> findOneWithPermissoesByLogin(String login);
+	@Cacheable(cacheNames = USERS_BY_EMAIL_CACHE)
+	Optional<Usuario> findOneWithPermissaoByEmail(String email);
 
 	@EntityGraph(attributePaths = "permissao")
 	@Cacheable(cacheNames = USERS_BY_EMAIL_CACHE)
-	Optional<Usuario> findOneWithPermissoesByEmailIgnoreCase(String email);
+	Optional<Usuario> findOneWithPermissaoByEmailIgnoreCase(String email);
 
-	Page<Usuario> findAllByLoginNot(Pageable pageable, String login);
+	Page<Usuario> findAllByEmailNot(Pageable pageable, String email);
 
 }

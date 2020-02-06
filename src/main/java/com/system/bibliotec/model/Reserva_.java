@@ -9,7 +9,7 @@ import javax.persistence.metamodel.StaticMetamodel;
 
 @Generated(value = "org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor")
 @StaticMetamodel(Reserva.class)
-public abstract class Reserva_ {
+public abstract class Reserva_ extends com.system.bibliotec.model.AbstractAuditingEntity_ {
 
 	public static volatile SingularAttribute<Reserva, Cliente> cliente;
 	public static volatile SingularAttribute<Reserva, StatusReserva> statusReserva;
@@ -17,7 +17,6 @@ public abstract class Reserva_ {
 	public static volatile SingularAttribute<Reserva, Livro> livro;
 	public static volatile SingularAttribute<Reserva, LocalTime> horaReserva;
 	public static volatile SingularAttribute<Reserva, LocalDate> dataLimite;
-	public static volatile SingularAttribute<Reserva, Long> id;
 
 	public static final String CLIENTE = "cliente";
 	public static final String STATUS_RESERVA = "statusReserva";
@@ -25,7 +24,6 @@ public abstract class Reserva_ {
 	public static final String LIVRO = "livro";
 	public static final String HORA_RESERVA = "horaReserva";
 	public static final String DATA_LIMITE = "dataLimite";
-	public static final String ID = "id";
 
 }
 

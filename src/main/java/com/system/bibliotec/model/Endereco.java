@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @Entity
 @Table(name = "enderecos")
-public class Endereco {
+public class Endereco extends AbstractAuditingEntity{
 
 	@Column(name = "cep")
 	@Size(min = 8, max = 10)

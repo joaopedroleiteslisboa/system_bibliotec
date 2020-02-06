@@ -16,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "editoras")
-public class Editora {
+public class Editora extends AbstractAuditingEntity {
 
 	
 	@NotBlank(message = "O nome é Obrigatorio")

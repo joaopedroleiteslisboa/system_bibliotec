@@ -97,7 +97,11 @@ CREATE TABLE IF NOT EXISTS users (
 
 
 CREATE TABLE IF NOT EXISTS permissao (
-	id BIGINT(20) PRIMARY KEY,
+	id BIGINT  primary key AUTO_INCREMENT,
+    created_by VARCHAR(70) NOT NULL,
+    created_date DATE,
+    last_modified_by VARCHAR(70),
+   	last_modified_date DATE,
 	descricao VARCHAR(50) NOT NULL
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 auto_increment=1000;
 

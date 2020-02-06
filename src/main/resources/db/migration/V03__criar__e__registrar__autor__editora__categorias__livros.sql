@@ -50,7 +50,11 @@ CREATE TABLE livro_has_autores (
 
 CREATE TABLE IF NOT EXISTS categorias(
 
-        id BIGINT PRIMARY KEY AUTO_INCREMENT,
+		id BIGINT  primary key AUTO_INCREMENT,
+        created_by VARCHAR(70) NOT NULL,
+        created_date DATE,
+        last_modified_by VARCHAR(70),
+        last_modified_date DATE,
         nome VARCHAR(40) NOT NULL UNIQUE
 
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1000;

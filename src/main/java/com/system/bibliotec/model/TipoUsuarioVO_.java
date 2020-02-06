@@ -5,12 +5,12 @@ import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
 @Generated(value = "org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor")
-@StaticMetamodel(Permissao.class)
-public abstract class Permissao_ extends com.system.bibliotec.model.AbstractAuditingEntity_ {
+@StaticMetamodel(TipoUsuarioVO.class)
+public abstract class TipoUsuarioVO_ extends com.system.bibliotec.model.AbstractAuditingEntity_ {
 
-	public static volatile SingularAttribute<Permissao, String> descricao;
+	public static volatile SingularAttribute<TipoUsuarioVO, String> tipo;
 
-	public static final String DESCRICAO = "descricao";
+	public static final String TIPO = "tipo";
 
 }
 

@@ -40,13 +40,13 @@ public class AppUserDetailsService implements UserDetailsService{
 	        log.debug("Authenticating {}", login);
 
 	        if (new EmailValidator().isValid(login, null)) {
-	            return usuarioRepository.findOneWithPermissoesByEmailIgnoreCase(login)
+	            return usuarioRepository.findOneByEmailIgnoreCase(login)
 	                .map(user -> createSpringSecurityUser(login, user))
 	                .orElseThrow(() -> new UsernameNotFoundException("Email " + login + " nao encontrado em nossa base de dados"));
 	        }
 
 	        String lowercaseLogin = login.toLowerCase(new Locale("pt", "BR"));  // << Ja ta na hora do Brasil ter o seu
-	        return usuarioRepository.findOneWithPermissoesByEmailIgnoreCase(lowercaseLogin)
+	        return usuarioRepository.findOneByEmailIgnoreCase(lowercaseLogin)
 	            .map(user -> createSpringSecurityUser(lowercaseLogin, user))
 	            .orElseThrow(() -> new UsernameNotFoundException("Usuario " + lowercaseLogin + " nao encontrado em nossa base de dados"));
 

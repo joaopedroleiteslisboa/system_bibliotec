@@ -1,4 +1,3 @@
-
 CREATE TABLE IF NOT EXISTS clientes(
                          id BIGINT  primary key AUTO_INCREMENT,
                          created_by VARCHAR(70) NOT NULL,

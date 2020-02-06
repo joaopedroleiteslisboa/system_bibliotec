@@ -1,6 +1,8 @@
 package com.system.bibliotec.repository.dto.projection;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.system.bibliotec.model.AbstractAuditingEntity;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,10 +16,11 @@ import java.time.LocalDate;
 @Setter
 @ToString
 @AllArgsConstructor
-public class ResumoLivro {
+public class ResumoLivro{
 	
-	private Long id;
 
+	private Long id;
+	
 	private String nome;
 
 	private String edicao;

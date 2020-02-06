@@ -6,7 +6,7 @@ import javax.persistence.metamodel.StaticMetamodel;
 
 @Generated(value = "org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor")
 @StaticMetamodel(Endereco.class)
-public abstract class Endereco_ {
+public abstract class Endereco_ extends com.system.bibliotec.model.AbstractAuditingEntity_ {
 
 	public static volatile SingularAttribute<Endereco, String> uf;
 	public static volatile SingularAttribute<Endereco, String> cidade;
@@ -15,7 +15,6 @@ public abstract class Endereco_ {
 	public static volatile SingularAttribute<Endereco, String> logradouro;
 	public static volatile SingularAttribute<Endereco, String> bairro;
 	public static volatile SingularAttribute<Endereco, String> ibge;
-	public static volatile SingularAttribute<Endereco, Long> id;
 	public static volatile SingularAttribute<Endereco, String> cep;
 
 	public static final String UF = "uf";
@@ -25,7 +24,6 @@ public abstract class Endereco_ {
 	public static final String LOGRADOURO = "logradouro";
 	public static final String BAIRRO = "bairro";
 	public static final String IBGE = "ibge";
-	public static final String ID = "id";
 	public static final String CEP = "cep";
 
 }

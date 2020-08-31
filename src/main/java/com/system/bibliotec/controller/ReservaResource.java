@@ -1,16 +1,12 @@
-package com.system.bibliotec.resource;
+package com.system.bibliotec.controller;
 
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
-import com.system.bibliotec.service.dto.CancelamentoReservaDTO;
-import com.system.bibliotec.service.vm.ReservaCanceladaVM;
-import com.system.bibliotec.service.vm.ReservaVM;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,19 +16,19 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.system.bibliotec.controller.util.EndPointUtil;
 import com.system.bibliotec.event.RecursoCriadorEvent;
-
-import com.system.bibliotec.model.Reservas;
 import com.system.bibliotec.repository.ReservaRepository;
-import com.system.bibliotec.resource.util.EndPointUtil;
 import com.system.bibliotec.service.ReservaService;
+import com.system.bibliotec.service.dto.CancelamentoReservaDTO;
 import com.system.bibliotec.service.dto.ReservaDTO;
+import com.system.bibliotec.service.vm.ReservaCanceladaVM;
+import com.system.bibliotec.service.vm.ReservaVM;
 
 @RestController
 @RequestMapping(value = "/reserva", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

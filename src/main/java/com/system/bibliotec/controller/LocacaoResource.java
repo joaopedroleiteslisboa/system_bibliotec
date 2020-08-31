@@ -1,4 +1,4 @@
-package com.system.bibliotec.resource;
+package com.system.bibliotec.controller;
 
 import java.util.List;
 

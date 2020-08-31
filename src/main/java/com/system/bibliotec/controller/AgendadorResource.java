@@ -1,12 +1,7 @@
-package com.system.bibliotec.resource;
+package com.system.bibliotec.controller;
 
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.text.WordUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -18,9 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.system.bibliotec.service.AgendadorService;
 import com.system.bibliotec.service.automacao.QuartzService;
-import com.system.bibliotec.service.automacao.trabalhos.CronJob;
-import com.system.bibliotec.service.automacao.trabalhos.SimpleJob;
-import com.system.bibliotec.service.ultis.AgendadorResponseCodeUtils;
 import com.system.bibliotec.service.vm.AgendamentoVM;
 
 @RestController

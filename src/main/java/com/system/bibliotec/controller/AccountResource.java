@@ -1,4 +1,4 @@
-package com.system.bibliotec.resource;
+package com.system.bibliotec.controller;
 
 import java.util.Optional;
 
@@ -21,12 +21,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.system.bibliotec.config.ConstantsUtilsEndPoint;
+import com.system.bibliotec.controller.util.EndPointUtil;
 import com.system.bibliotec.exception.EmailInvalidoException;
 import com.system.bibliotec.exception.SenhaInvalidaException;
 import com.system.bibliotec.exception.UsuarioNaoEncontrado;
 import com.system.bibliotec.model.Usuario;
 import com.system.bibliotec.repository.UsuarioRepository;
-import com.system.bibliotec.resource.util.EndPointUtil;
 import com.system.bibliotec.service.MailService;
 import com.system.bibliotec.service.UserService;
 import com.system.bibliotec.service.dto.KeyAndPasswordDTO;

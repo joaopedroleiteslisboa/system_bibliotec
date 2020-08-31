@@ -1,9 +1,8 @@
-package com.system.bibliotec.resource;
+package com.system.bibliotec.controller;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
@@ -22,14 +21,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.system.bibliotec.event.RecursoCriadorEvent;
 import com.system.bibliotec.model.Livro;
 import com.system.bibliotec.repository.LivroRepository;
-import com.system.bibliotec.repository.LocacaoRepository;
 import com.system.bibliotec.repository.UsuarioRepository;
 import com.system.bibliotec.repository.dto.projection.ResumoLivro;
 import com.system.bibliotec.repository.filter.LivroFilter;
 import com.system.bibliotec.service.LivroService;
 import com.system.bibliotec.service.UserService;
-import com.system.bibliotec.service.mapper.MapeadorLocacao;
-import com.system.bibliotec.service.operacoes.IOperacaoLocacao;
 
 @RestController
 @RequestMapping("/livros")

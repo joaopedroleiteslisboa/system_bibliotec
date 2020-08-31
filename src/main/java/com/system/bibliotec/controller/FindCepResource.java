@@ -1,17 +1,12 @@
-package com.system.bibliotec.resource;
+package com.system.bibliotec.controller;
 
-import com.system.bibliotec.model.Endereco;
-import com.system.bibliotec.repository.LivroRepository;
-import com.system.bibliotec.repository.UsuarioRepository;
-import com.system.bibliotec.service.LivroService;
-import com.system.bibliotec.service.UserService;
-import com.system.bibliotec.service.resttemplate.RestTemplateService;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpEntity;
@@ -29,8 +24,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.system.bibliotec.model.Endereco;
+import com.system.bibliotec.service.resttemplate.RestTemplateService;
 
 @DependsOn("rest_template_factory_bean")
 @RestController

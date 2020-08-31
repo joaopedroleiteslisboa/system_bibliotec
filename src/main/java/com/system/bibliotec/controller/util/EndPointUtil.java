@@ -1,4 +1,4 @@
-package com.system.bibliotec.resource.util;
+package com.system.bibliotec.controller.util;
 
 import java.io.Serializable;
 import java.util.List;

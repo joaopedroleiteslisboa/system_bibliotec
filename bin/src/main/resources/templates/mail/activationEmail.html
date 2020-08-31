@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}" lang="pt-BR">
+<head>
+    <title th:text="#{email.activation.title}"></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="shortcut icon" th:href="@{|${baseUrl}/favicon.ico|}" />
+</head>
+<body>
+<p th:text="#{email.activation.greeting(${usuario.nome})}">
+    
+</p>
+<p th:text="#{email.activation.text1}">
+    
+</p>
+<p>
+    <a th:with="url=(@{|${baseUrl}?key=${usuario.chaveAtivacao}|})" th:href="${url}"
+       th:text="${url}">Activation link</a>
+</p>
+<p>
+    <span th:text="#{email.activation.text2}"> </span>
+    <br/>
+    <em th:text="#{email.signature}"></em>
+</p>
+</body>
+</html>

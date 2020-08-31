@@ -1,0 +1,1 @@
+ALTER TABLE systemErrors add column idUser VARCHAR(10);

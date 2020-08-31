@@ -1,0 +1,1 @@
+ALTER TABLE persistent_audit_event CHANGE event_date event_date DATETIME;

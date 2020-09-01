@@ -2,7 +2,7 @@
 
 
 ### Sistema - API Gestão de Livraria 
-Exemplo de uma APlicação para gerenciameno de Reservas e Locação de livros t
+Exemplo de uma Aplicação para gerenciameno de Reservas e Locação de livros
 
 
 ### Autor
@@ -15,4 +15,4 @@ Linkedin: http://bit.ly/linkedinjoaopedroleiteslisboa
 ### STATUS DE ANDAMENTO DO PROJETO.
 
 	   Em desenvolvimento...
-
+

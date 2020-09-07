@@ -33,7 +33,7 @@ public class RestTemplateServiceImpl implements RestTemplateService {
 		T t = null;
 		int retries = 1;
 		boolean done = false;
-		while (!done && retries <= 5) {
+		while (!done && retries <= 10) {
 			try {
 				t = restTemplate.getForObject(resourceUrl, responseType);
 				done = true;
@@ -41,7 +41,7 @@ public class RestTemplateServiceImpl implements RestTemplateService {
 				retries++;
 
 				try {
-					Thread.sleep(5000); // aguardar 5 segundos para fazer uma nova tentativa...
+					Thread.sleep(3000); // aguardar 3 segundos para fazer uma nova tentativa...
 				} catch (InterruptedException e1) {
 
 					e1.printStackTrace();
@@ -58,7 +58,7 @@ public class RestTemplateServiceImpl implements RestTemplateService {
 		T t = null;
 		int retries = 1;
 		boolean done = false;
-		while (!done && retries <= 5) {
+		while (!done && retries <= 10) {
 			try {
 				t = restTemplate.getForObject(resourceUrl, responseType, params);
 				done = true;
@@ -66,7 +66,7 @@ public class RestTemplateServiceImpl implements RestTemplateService {
 				retries++;
 
 				try {
-					Thread.sleep(5000); // aguardar 5 segundos para fazer uma nova tentativa...
+					Thread.sleep(3000); // aguardar 3 segundos para fazer uma nova tentativa...
 				} catch (InterruptedException e1) {
 
 					e1.printStackTrace();
@@ -83,7 +83,7 @@ public class RestTemplateServiceImpl implements RestTemplateService {
 		T t = null;
 		int retries = 1;
 		boolean done = false;
-		while (!done && retries <= 5) {
+		while (!done && retries <= 10) {
 			try {
 				t = (T) restTemplate.exchange(resourceUrl, method, requestEntity, responseType);
 				done = true;
@@ -91,7 +91,7 @@ public class RestTemplateServiceImpl implements RestTemplateService {
 				retries++;
 
 				try {
-					Thread.sleep(5000); // aguardar 5 segundos para fazer uma nova tentativa...
+					Thread.sleep(3000); // aguardar 3 segundos para fazer uma nova tentativa...
 				} catch (InterruptedException e1) {
 
 					e1.printStackTrace();
@@ -107,7 +107,7 @@ public class RestTemplateServiceImpl implements RestTemplateService {
 		T t = null;
 		int retries = 1;
 		boolean done = false;
-		while (!done && retries <= 5) {
+		while (!done && retries <= 10) {
 			try {
 				t = (T) restTemplate.exchange(resourceUrl, method, requestEntity, responseType, params);
 				done = true;
@@ -115,7 +115,7 @@ public class RestTemplateServiceImpl implements RestTemplateService {
 				retries++;
 
 				try {
-					Thread.sleep(5000); // aguardar 5 segundos para fazer uma nova tentativa...
+					Thread.sleep(3000); // aguardar 3 segundos para fazer uma nova tentativa...
 				} catch (InterruptedException e1) {
 
 					e1.printStackTrace();

@@ -1,13 +1,11 @@
 package com.system.bibliotec.service.resttemplate;
 
-import java.security.UnrecoverableKeyException;
 import java.util.Collections;
 
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.client.BufferingClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -18,21 +16,14 @@ import lombok.extern.slf4j.Slf4j;
 @Component("rest_template_factory_bean")
 public class RestTemplateFactoryBean {
 
-	private RestTemplate restTemplateDefault;
-
+	
 	private static String OS = System.getProperty("os.name").toLowerCase();
 
+	
+	
+
 	@Bean(name = "restTemplateDefault")
-	public RestTemplate getSingletonRestTemplate() {
-
-		if (restTemplateDefault == null) {
-
-			restTemplateDefault = getRestTemplate();
-		}
-		return restTemplateDefault;
-	}
-
-	private RestTemplate getRestTemplate() {
+	public RestTemplate getRestTemplate() {
 		
 		RestTemplate restTemplate = null;
 
@@ -43,10 +34,9 @@ public class RestTemplateFactoryBean {
 		requestFactory.setConnectionRequestTimeout(10 * 180000); // 30 Minutos
 		requestFactory.setReadTimeout(10 * 180000); // 30 Minutos
 		requestFactory.setConnectTimeout(10 * 180000); // 30 Minutos
-
-		restTemplate = new RestTemplate(requestFactory);
-		//restTemplate.setInterceptors(
-				//Collections.singletonList(new RequestResponseLoggingInterceptorRestTemplate(checarPadraoSistemaOperacional())));
+		
+		restTemplate = new RestTemplate(new BufferingClientHttpRequestFactory(requestFactory));  // BufferingClientHttpRequestFactory Implementação dedicada para não fechar o fluxo de Stream para os logs e demais interceptadores para o Resttemplate
+		restTemplate.setInterceptors(Collections.singletonList(new RequestResponseLoggingInterceptorRestTemplate(checarPadraoSistemaOperacional()))); //RequestResponseLoggingInterceptorRestTemplate Logs Request e Response para RestTemplate
 
 		return restTemplate;
 

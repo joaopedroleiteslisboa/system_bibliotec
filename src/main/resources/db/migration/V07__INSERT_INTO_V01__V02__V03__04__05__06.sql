@@ -188,11 +188,13 @@
 	
  -- insert client_web_mobile Apps		
 	
+	-- senha @admin
 	
-	INSERT INTO oauth_client_details (client_id, client_secret, scope, authorized_grant_types, authorities, access_token_validity) VALUES ('angular', '{bcrypt}$2a$10$eEPHedaBm5onHbuHxQu3COtr8t7z4KqTIfLbNCaNhIShhJNuvvRJO', 'read,write', 'password,refresh_token,client_credentials', 'ROLE_CLIENT', 300);	
+	INSERT INTO oauth_client_details (client_id, client_secret, scope, authorized_grant_types, authorities, access_token_validity) VALUES ('angular', '{bcrypt}$2a$10$gETsZnBGjt.eHuU2AMetneRLJnhlQGAjoi6.zc0Cauj1erAregL2y', 'read,write', 'password,refresh_token,client_credentials', 'ROLE_CLIENT', 300);	
   
   
-  	INSERT INTO oauth_client_details (client_id, client_secret, scope, authorized_grant_types, authorities, access_token_validity) VALUES ('mobile', '{bcrypt}$2a$10$uyQJCv.8OMNpBUQB5hXHNuFped8lLqlhsH8uFwTQARDJBDMtlvQ7q', 'read,write', 'password,refresh_token,client_credentials', 'ROLE_CLIENT', 300);
+	-- senha @admin
+  	INSERT INTO oauth_client_details (client_id, client_secret, scope, authorized_grant_types, authorities, access_token_validity) VALUES ('mobile', '{bcrypt}$2a$10$VdnfB/wnzvDGeBN8I2tWtOx0Mv6Eu7EgXJ7IJ/EonQg/BJA8arYE2', 'read,write', 'password,refresh_token,client_credentials', 'ROLE_CLIENT', 300);
 	 
 
 -- insert tipo de usuarios

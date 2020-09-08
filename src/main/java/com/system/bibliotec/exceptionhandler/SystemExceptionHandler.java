@@ -9,6 +9,7 @@ import javax.validation.ConstraintViolationException;
 
 import com.system.bibliotec.exception.*;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -247,6 +248,15 @@ public class SystemExceptionHandler extends ResponseEntityExceptionHandler {
 		List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));
 		return handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
 	}
+	
+	@ExceptionHandler({ SchedulerException.class })
+	public ResponseEntity<Object> schedulerException(RuntimeException ex, WebRequest request) {
+		String mensagemUsuario = ExceptionUtils.getRootCauseMessage(ex);
+		String mensagemDesenvolvedor = ExceptionUtils.getRootCauseMessage(ex);
+		List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));
+		return handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+	}
+	
 /*	@ExceptionHandler({ HttpMessageNotReadableException.class })
 	public ResponseEntity<Object> httpMessageNotReadableException(RuntimeException ex, WebRequest request) {
 		String mensagemUsuario = messageSource.getMessage("error.servidor.falha.leitura", null,

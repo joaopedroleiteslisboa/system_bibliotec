@@ -12,175 +12,125 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.system.bibliotec.service.AgendadorService;
 import com.system.bibliotec.service.automacao.QuartzService;
 import com.system.bibliotec.service.mapper.MapeadorAgendamento;
 import com.system.bibliotec.service.vm.AgendamentoVM;
 
-@RestController@RequestMapping("/agendador")
+@RestController
+@RequestMapping("/agendador")
 public class AgendadorResource {
 
-  private final QuartzService apiQuartz;
+	private final QuartzService apiQuartz;
 
-  private final AgendadorService agendadorService;
+	public AgendadorResource(@Lazy QuartzService apiQuartz) {
 
-  public AgendadorResource(AgendadorService agendadorService, @Lazy QuartzService apiQuartz) {
-    this.agendadorService = agendadorService;
-    this.apiQuartz = apiQuartz;
-  }
+		this.apiQuartz = apiQuartz;
+	}
 
-  @RequestMapping("/scheduleDate")
-  public ResponseEntity < AgendamentoVM > scheduleDate(@RequestParam("jobName") String jobName,
+	@RequestMapping("/scheduleDate")
+	public ResponseEntity<AgendamentoVM> scheduleDate(@RequestParam("jobName") String jobName,
 
-  @RequestParam("jobScheduleTime")@DateTimeFormat(pattern = "yyyy/MM/dd HH:mm") Date jobScheduleTime)
-  throws SchedulerException {
+			@RequestParam("jobScheduleTime") @DateTimeFormat(pattern = "yyyy/MM/dd HH:mm") Date jobScheduleTime)
+			throws SchedulerException {
 
-    return apiQuartz.scheduleDate(jobName, jobScheduleTime);
+		return apiQuartz.scheduleDate(jobName, jobScheduleTime);
 
-  }
+	}
 
-  @RequestMapping("/scheduleCron")
-  public ResponseEntity < AgendamentoVM > scheduleCron(@RequestParam("jobName") String jobName,
+	@RequestMapping("/scheduleCron")
+	public ResponseEntity<AgendamentoVM> scheduleCron(@RequestParam("jobName") String jobName,
 
-  @RequestParam("jobScheduleTime")@DateTimeFormat(pattern = "yyyy/MM/dd HH:mm") Date jobScheduleTime,
+			@RequestParam("jobScheduleTime") @DateTimeFormat(pattern = "yyyy/MM/dd HH:mm") Date jobScheduleTime,
 
-  @RequestParam(name = "cronExpression", required = false) String cronExpression) throws SchedulerException {
+			@RequestParam(name = "cronExpression", required = false) String cronExpression) throws SchedulerException {
 
-    return apiQuartz.scheduleCron(jobName, jobScheduleTime, cronExpression);
+		return apiQuartz.scheduleCron(jobName, jobScheduleTime, cronExpression);
 
-  }
+	}
 
-  @ResponseStatus(HttpStatus.OK)@RequestMapping("/unschedule")
-  public void unschedule(@RequestParam("jobName") String jobName) {
+	@ResponseStatus(HttpStatus.OK)
+	@RequestMapping("/unschedule")
+	public void unschedule(@RequestParam("jobName") String jobName) {
 
-    apiQuartz.unScheduleJob(jobName);
-  }
+		apiQuartz.unScheduleJob(jobName);
+	}
 
-  @RequestMapping("/delete")
-  public ResponseEntity < AgendamentoVM > delete(@RequestParam("jobName") String jobName) throws SchedulerException {
+	@RequestMapping("/delete")
+	public ResponseEntity<AgendamentoVM> delete(@RequestParam("jobName") String jobName) throws SchedulerException {
+		return MapeadorAgendamento.mapperResponse(apiQuartz.deleteJob(jobName), HttpStatus.OK);
 
-    return apiQuartz.deleteJob(jobName);
-  }
+	}
 
-  @RequestMapping("/pause")
-  public ResponseEntity < AgendamentoVM > pause(@RequestParam("jobName") String jobName) throws SchedulerException {
+	@RequestMapping("/pause")
+	public ResponseEntity<AgendamentoVM> pause(@RequestParam("jobName") String jobName) throws SchedulerException {
 
-    return apiQuartz.pauseJob(jobName);
-  }
+		return apiQuartz.pauseJob(jobName);
+	}
 
-  @RequestMapping("/resume")
-  public ResponseEntity < AgendamentoVM > resume(@RequestParam("jobName") String jobName) throws SchedulerException {
-    return apiQuartz.resumeJob(jobName);
-  }
+	@RequestMapping("/resume")
+	public ResponseEntity<AgendamentoVM> resume(@RequestParam("jobName") String jobName) throws SchedulerException {
+		return apiQuartz.resumeJob(jobName);
+	}
 
-  @RequestMapping("update")
-  public ResponseEntity <AgendamentoVM>  updateJob(@RequestParam("jobName") String jobName, 
-			@RequestParam("jobScheduleTime") @DateTimeFormat(pattern = "yyyy/MM/dd HH:mm") Date jobScheduleTime, 
-			@RequestParam("cronExpression") String cronExpression) throws Exception{
-			
-			
-			if(cronExpression == null || cronExpression.trim().equals("")){
-				//Single Trigger
-				return apiQuartz.updateOneTimeJob(jobName, jobScheduleTime);
-				
-							
-			}else{
-				//Cron Trigger
-				return apiQuartz.updateCronJob(jobName, jobScheduleTime, cronExpression);
-								
-			}
+	@RequestMapping("update")
+	public ResponseEntity<AgendamentoVM> updateJob(@RequestParam("jobName") String jobName,
+			@RequestParam("jobScheduleTime") @DateTimeFormat(pattern = "yyyy/MM/dd HH:mm") Date jobScheduleTime,
+			@RequestParam("cronExpression") String cronExpression) throws Exception {
+
+		if (cronExpression == null || cronExpression.trim().equals("")) {
+			// Single Trigger
+			return apiQuartz.updateOneTimeJob(jobName, jobScheduleTime);
+
+		} else {
+			// Cron Trigger
+			return apiQuartz.updateCronJob(jobName, jobScheduleTime, cronExpression);
+
+		}
 	}
 
 	@RequestMapping("jobs")
-	public ResponseEntity <AgendamentoVM> getAllJobs() throws SchedulerException{
-		System.out.println("JobController.getAllJobs()");
+	public ResponseEntity<AgendamentoVM> getAllJobs() throws SchedulerException {
 
-		return apiQuartz.getAllJobs();		
+		return apiQuartz.getAllJobs();
 	}
 
 	@RequestMapping("checkJobName")
-	public ServerResponse checkJobName(@RequestParam("jobName") String jobName){
-		System.out.println("JobController.checkJobName()");
+	public ResponseEntity<AgendamentoVM> checkJobName(@RequestParam("jobName") String jobName)
+			throws SchedulerException {
 
-		//Job Name is mandatory
-		if(jobName == null || jobName.trim().equals("")){
-			return getServerResponse(ServerResponseCode.JOB_NAME_NOT_PRESENT, false);
-		}
-		
-		boolean status = jobService.isJobWithNamePresent(jobName);
-		return getServerResponse(ServerResponseCode.SUCCESS, status);
+		return apiQuartz.isJobWithNamePresent(jobName);
+
 	}
 
 	@RequestMapping("isJobRunning")
-	public ServerResponse isJobRunning(@RequestParam("jobName") String jobName) {
-		System.out.println("JobController.isJobRunning()");
+	public ResponseEntity<AgendamentoVM> isJobRunning(@RequestParam("jobName") String jobName)
+			throws SchedulerException {
 
-		boolean status = jobService.isJobRunning(jobName);
-		return getServerResponse(ServerResponseCode.SUCCESS, status);
+		return apiQuartz.isJobRunning(jobName);
+
 	}
 
 	@RequestMapping("jobState")
-	public ServerResponse getJobState(@RequestParam("jobName") String jobName) {
+	public ResponseEntity<AgendamentoVM> getJobState(@RequestParam("jobName") String jobName) {
 		System.out.println("JobController.getJobState()");
 
-		String jobState = jobService.getJobState(jobName);
-		return getServerResponse(ServerResponseCode.SUCCESS, jobState);
+		return MapeadorAgendamento.mapperResponse(apiQuartz.getJobState(jobName), HttpStatus.OK);
+
 	}
 
 	@RequestMapping("stop")
-	public ServerResponse stopJob(@RequestParam("jobName") String jobName) {
-		System.out.println("JobController.stopJob()");
+	public ResponseEntity<AgendamentoVM> stopJob(@RequestParam("jobName") String jobName) throws SchedulerException {
 
-		if(jobService.isJobWithNamePresent(jobName)){
+		return apiQuartz.stopJob(jobName);
 
-			if(jobService.isJobRunning(jobName)){
-				boolean status = jobService.stopJob(jobName);
-				if(status){
-					return getServerResponse(ServerResponseCode.SUCCESS, true);
-				}else{
-					//Server error
-					return getServerResponse(ServerResponseCode.ERROR, false);
-				}
-
-			}else{
-				//Job not in running state
-				return getServerResponse(ServerResponseCode.JOB_NOT_IN_RUNNING_STATE, false);
-			}
-
-		}else{
-			//Job doesn't exist
-			return getServerResponse(ServerResponseCode.JOB_DOESNT_EXIST, false);
-		}
 	}
 
 	@RequestMapping("start")
-	public ServerResponse startJobNow(@RequestParam("jobName") String jobName) {
-		System.out.println("JobController.startJobNow()");
+	public ResponseEntity<AgendamentoVM> startJobNow(@RequestParam("jobName") String jobName)
+			throws SchedulerException {
 
-		if(jobService.isJobWithNamePresent(jobName)){
+		return MapeadorAgendamento.mapperResponse(apiQuartz.startJobNow(jobName), HttpStatus.OK);
 
-			if(!jobService.isJobRunning(jobName)){
-				boolean status = jobService.startJobNow(jobName);
-
-				if(status){
-					//Success
-					return getServerResponse(ServerResponseCode.SUCCESS, true);
-
-				}else{
-					//Server error
-					return getServerResponse(ServerResponseCode.ERROR, false);
-				}
-
-			}else{
-				//Job already running
-				return getServerResponse(ServerResponseCode.JOB_ALREADY_IN_RUNNING_STATE, false);
-			}
-
-		}else{
-			//Job doesn't exist
-			return getServerResponse(ServerResponseCode.JOB_DOESNT_EXIST, false);
-		}
 	}
-
 
 }

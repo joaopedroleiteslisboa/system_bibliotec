@@ -17,7 +17,7 @@ public interface QuartzService {
 
 	public ResponseEntity<AgendamentoVM> scheduleCron(String jobName, Date jobScheduleTime, String cronExpression) throws SchedulerException;
 
-	public ResponseEntity<AgendamentoVM> deleteJob(String jobName) throws SchedulerException;
+	public boolean deleteJob(String jobName) throws SchedulerException;
 		
 	ResponseEntity<AgendamentoVM> updateOneTimeJob(String jobName, Date date) throws Exception;
 
@@ -29,15 +29,15 @@ public interface QuartzService {
 
 	ResponseEntity<AgendamentoVM> resumeJob(String jobName) throws SchedulerException;
 
-	boolean startJobNow(String jobName);
+	boolean startJobNow(String jobName) throws SchedulerException;
 
-	boolean isJobRunning(String jobName);
+	ResponseEntity<AgendamentoVM> isJobRunning(String jobName) throws SchedulerException;
 
 	ResponseEntity<AgendamentoVM> getAllJobs() throws SchedulerException;
 
-	boolean isJobWithNamePresent(String jobName);
+	ResponseEntity<AgendamentoVM> isJobWithNamePresent(String jobName) throws SchedulerException;
 
 	String getJobState(String jobName);
 
-	boolean stopJob(String jobName);
+	ResponseEntity<AgendamentoVM> stopJob(String jobName) throws SchedulerException;
 }

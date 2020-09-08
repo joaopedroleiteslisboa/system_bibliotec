@@ -8,6 +8,7 @@ import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.JobKey;
+import org.quartz.SchedulerException;
 import org.quartz.UnableToInterruptJobException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.quartz.QuartzJobBean;
@@ -28,8 +29,14 @@ public class SimpleJob extends QuartzJobBean implements InterruptableJob, IDateJ
 		System.out.println("Simple Job started with key :" + key.getName() + ", Group :"+key.getGroup() + " , Thread Name :"+Thread.currentThread().getName());
 		
 		System.out.println("======================================");
-		System.out.println("Accessing annotation example: "+jobService.getAllJobs());
-		List<Map<String, Object>> list = jobService.getAllJobs();
+		
+		List<Map<String, Object>> list = null;
+		try {
+			list = (List<Map<String, Object>>) jobService.getAllJobs();
+		} catch (SchedulerException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		System.out.println("Job list :"+list);
 		System.out.println("======================================");
 		

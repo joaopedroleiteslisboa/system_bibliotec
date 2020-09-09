@@ -127,7 +127,7 @@ public class QuartzServiceImpl implements QuartzService, IAuditorTokenDeUsuarioD
 		String groupKey = "SampleGroup";
 		String triggerKey = jobName;
 
-		JobDetail jobDetail = JobUtil.createJob(jobClass, false, context, jobKey, groupKey);
+		JobDetail jobDetail = JobUtil.createJob(jobClass, true, context, jobKey, groupKey);
 
 		Trigger cronTriggerBean = JobUtil.createSingleTrigger(triggerKey, date,
 				SimpleTrigger.MISFIRE_INSTRUCTION_FIRE_NOW);
@@ -482,9 +482,10 @@ public class QuartzServiceImpl implements QuartzService, IAuditorTokenDeUsuarioD
 
 					// get job's trigger
 					List<Trigger> triggers = (List<Trigger>) scheduler.getTriggersOfJob(jobKey);
-					Date scheduleTime = triggers.get(0).getStartTime();
-					Date nextFireTime = triggers.get(0).getNextFireTime();
-					Date lastFiredTime = triggers.get(0).getPreviousFireTime();
+					
+					Date scheduleTime = (triggers != null && triggers.size() > 0)?  triggers.get(0).getStartTime(): null;
+					Date nextFireTime = (triggers != null && triggers.size() > 0)?  triggers.get(0).getNextFireTime(): null;
+					Date lastFiredTime= (triggers != null && triggers.size() > 0)?  triggers.get(0).getPreviousFireTime(): null;
 
 					Map<String, Object> map = new HashMap<String, Object>();
 					map.put("jobName", jobName);
@@ -745,7 +746,7 @@ public class QuartzServiceImpl implements QuartzService, IAuditorTokenDeUsuarioD
 		boolean exist = false;
 
 		try {
-			if (Boolean.parseBoolean(isJobWithNamePresent(jobName).getBody().toString())) {
+			if (Boolean.parseBoolean(isJobWithNamePresent(jobName).getBody().getData().toString())) {
 				exist = true;
 			} else {
 				throw new TrabalhoInvalidoException("Trabalho invalido ou inexistente");
@@ -762,7 +763,7 @@ public class QuartzServiceImpl implements QuartzService, IAuditorTokenDeUsuarioD
 		boolean emExecucao = false;
 
 		try {
-			emExecucao = Boolean.parseBoolean(isJobRunning(jobName).getBody().toString());
+			emExecucao = Boolean.parseBoolean(isJobRunning(jobName).getBody().getData().toString());
 		} catch (SchedulerException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

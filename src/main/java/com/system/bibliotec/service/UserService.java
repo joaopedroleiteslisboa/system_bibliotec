@@ -74,4 +74,9 @@ public class UserService {
 		operacaoUsuario.bloqueadorDeAcesso(bool, motivo, username);
 	}
 
+	public Usuario findByIdCliente(Long id){
+
+		return operacaoUsuario.findById(id);
+	}
+
 }

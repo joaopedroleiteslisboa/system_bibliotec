@@ -103,13 +103,15 @@ public class OperacaoLocacaoImpl implements IOperacaoLocacao {
 	@Override
 	public LocacaoVM realizarLocacao(LocacaoDTO dto) {
 
-		Usuario u = userService.findOneByUsuarioContexto();
+		Usuario funcionario = userService.findOneByUsuarioContexto();
 
-		validadorCliente.validacaoFisicaEJuridica(u);
+		Usuario cliente = userService.findByIdCliente(dto.getIdUsuarioSolicitante());
+
+		validadorCliente.validacaoFisicaEJuridica(cliente);
 
 		Livro l = livroService.findByIdLivro(dto.getIdLivro());
 
-		log.info("Usuario " + u.getEmail() + " Iniciando Processo de Locação do livro: " + l.getNome());
+		log.info("Usuario " + cliente.getEmail() + " Iniciando Processo de Locação do livro: " + l.getNome());
 
 		validadorLivro.validaLivro(l);
 
@@ -117,7 +119,7 @@ public class OperacaoLocacaoImpl implements IOperacaoLocacao {
 				.withDataLocacao(HoraDiasDataLocalService.dataLocal())
 				.withDataPrevisaoTerminoLocacao(HoraDiasDataLocalService.dataLocacaoDevolucao())
 				.withStatus(ConstantsUtils.DEFAULT_VALUE_STATUSLOCACAO_ATIVA)
-				.withQuantidadeDeRenovacao(ConstantsUtils.DEFAULT_VALUE_QUANTIDADE_LOCACAO_INICIAL).withUsuario(u)
+				.withQuantidadeDeRenovacao(ConstantsUtils.DEFAULT_VALUE_QUANTIDADE_LOCACAO_INICIAL).withUsuario(cliente)
 				.withLivro(l)
 				.withObservacoesEntrega(
 						(dto.getObservacoesEntregaLivro() != null && !dto.getObservacoesEntregaLivro().isEmpty())
@@ -125,9 +127,9 @@ public class OperacaoLocacaoImpl implements IOperacaoLocacao {
 								: ConstantsUtils.N_A)
 				.build();
 
-		triagemInicialLocacao.triagemReservaELocacao(lo, l, l.getId(), u);
+		triagemInicialLocacao.triagemReservaELocacao(lo, l, l.getId(), cliente);     
 
-		if (!isReservado(dto.getIdLivro())) {
+		if (!isReservado(dto.getIdLivro(), dto.getIdUsuarioSolicitante())) {
 			livroService.decrescentarEstoque(dto.getIdLivro(),
 					ConstantsUtils.DEFAULT_VALUE_DESCRESCENTAR_QUANTIDADE_LIVRO);
 		}
@@ -146,7 +148,7 @@ public class OperacaoLocacaoImpl implements IOperacaoLocacao {
 	@Override
 	public LocacaoCancelamentoVM cancelarLocacao(CancelamentoLocacaoDTO dto) {
 
-		return Optional.of(findByIdLocacaoAtivaParaUsuarioContexto(dto.getIdLocacao()))
+		return Optional.of(findByIdLocacaoAtivaParaUsuarioContexto(dto.getIdLocacao(),dto.getIdUsuario()))
 		.map((Function<? super Locacoes, ? extends LocacaoCancelamentoVM>) l -> {
 			log.info("Iniciando Cancelamento da Locação: " + l);
 
@@ -166,17 +168,16 @@ public class OperacaoLocacaoImpl implements IOperacaoLocacao {
 			//saveAndFlush para user, livro e locacao...
 			return mapper.locacaoParaLocacaoCanceladaVM(locacaoRepository.saveAndFlush(l));
 
-		}).orElseThrow(() -> new CancelamentoOperacaoLocacaoInvalida("Não foi possivel cancelar a Locação "
-				+ dto.getIdLocacao() + "Usuario " + obterUsuarioDoContextoPeloToken()));
+		}).orElseThrow(() -> new CancelamentoOperacaoLocacaoInvalida("Operação não realizada. Não foi possivel cancelar a Locação."));
 			
-}
+	}
 	
 
 	@Transactional
 	@Override
 	public LocacaoDevolucaoVM encerramento(DevolucaoLocacaoDTO dto) {
 
-		return Optional.of(findByIdLocacaoAtivaParaUsuarioContexto(dto.getIdLocacao()))
+		return Optional.of(findByIdLocacaoAtivaParaUsuarioContexto(dto.getIdLocacao(), dto.getIdUsuario()))
 			.map((Function<? super Locacoes, ? extends LocacaoDevolucaoVM>) l -> {
 					log.info("Iniciando Encerramento da Locação: " + l);
 
@@ -218,13 +219,13 @@ public class OperacaoLocacaoImpl implements IOperacaoLocacao {
 	}
 
 	@Transactional
-	private boolean isReservado(Long idLivro) {
+	private boolean isReservado(Long idLivro, long idCliente) {
 		boolean isReservado = false;
 
 		if (reservaRepository.isAtivaToUserContextAndlivro(idLivro) >= 1) {
 			isReservado = true;
 
-			reservaRepository.findOneGenericObjectAtivoToUserAndLivro(idLivro)
+			reservaRepository.findOneGenericObjectAtivoToUserAndLivro(idLivro, idCliente)
 					.map((Function<? super Reservas, ? extends Reservas>) r -> {
 						r.setStatus(ConstantsUtils.DEFAULT_VALUE_STATUSRESERVA_FINALIZADA);
 
@@ -244,7 +245,7 @@ public class OperacaoLocacaoImpl implements IOperacaoLocacao {
 	@Override
 	public void renovarLocacao(Long id) {
 
-		Locacoes locacaoSalva = findByIdLocacaoAtivaParaUsuarioContexto(id);
+		Locacoes locacaoSalva = findByIdLocacaoAtivaParaUsuarioContexto(id); //anonymous user online
 
 		log.info("Iniciando Processo de Renovação de Locação de livro:" + locacaoSalva);
 
@@ -254,12 +255,12 @@ public class OperacaoLocacaoImpl implements IOperacaoLocacao {
 
 		int quantidadeRenovada = locacaoSalva.getQuantidadeDeRenovacao();
 
-		if (quantidadeRenovada >= ConstantsUtils.DEFAULT_VALUE_QUANTIDADE_RENOVACAO_MAXIMA_LOCACAO) {
+		if (quantidadeRenovada >= ConstantsUtils.DEFAULT_VALUE_QUANTIDADE_RENOVACAO_MAXIMA_LOCACAO) {  //maximo renovação 3
 			throw new QuantidadeRenovacaoLocacaoLimiteException(
 					"Quantidade de Renovação maxima atingida. Operação não realizada");
 		}
 
-		locacaoSalva.setQuantidadeDeRenovacao(quantidadeRenovada + ConstantsUtils.DEFAULT_VALUE_QUANTIDADE_LOCACAO);
+		locacaoSalva.setQuantidadeDeRenovacao(quantidadeRenovada + 1);
 
 		locacaoSalva.setDataPrevisaoTermino(
 				HoraDiasDataLocalService.dataRenovacaoLocacao(locacaoSalva.getDataPrevisaoTermino()));
@@ -285,10 +286,19 @@ public class OperacaoLocacaoImpl implements IOperacaoLocacao {
 
 	}
 
-	
-	public Locacoes findByIdLocacaoAtivaParaUsuarioContexto(Long id) {
+
+	private Locacoes findByIdLocacaoAtivaParaUsuarioContexto(Long id) {
 
 		return locacaoRepository.findOneGenericObjectAtivoToUser(id)
+				.orElseThrow(() -> new LocacaoInvalidaOuInexistenteException(
+						"Locação não localizada ou Já Cancelada em sua Base de dados"));
+
+	}
+
+	
+	private Locacoes findByIdLocacaoAtivaParaUsuarioContexto(Long id, long idUsuario) {
+
+		return locacaoRepository.findOneGenericObjectAtivoToUser(id, idUsuario)
 				.orElseThrow(() -> new LocacaoInvalidaOuInexistenteException(
 						"Locação não localizada ou Já Cancelada em sua Base de dados"));
 

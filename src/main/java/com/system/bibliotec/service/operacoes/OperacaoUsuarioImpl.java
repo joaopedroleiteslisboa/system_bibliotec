@@ -290,4 +290,13 @@ public class OperacaoUsuarioImpl implements IOperacaoUsuario {
 				});
 	}
 
+	@Override
+	public Usuario findById(Long id) {
+
+		return userRepository.findById(id)
+		.orElseThrow(() -> new AccountResourceException("Solicitação invalida. Usuario não encontrado na base de dados do Sistema"));
+
+		
+	}
+
 }

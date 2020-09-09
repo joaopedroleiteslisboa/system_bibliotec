@@ -13,6 +13,9 @@ public class DevolucaoLocacaoDTO {
 	private Long idLocacao;
 	
 	private String observacoesDevolucao;
+
+	@NotNull(message = "É necessario informar o codigo do Usuario Solicitante")
+	private Long idUsuario;
 	
 }
 

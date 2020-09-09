@@ -3,10 +3,15 @@ package com.system.bibliotec.controller;
 import java.util.Date;
 
 import org.quartz.SchedulerException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -17,17 +22,18 @@ import com.system.bibliotec.service.mapper.MapeadorAgendamento;
 import com.system.bibliotec.service.vm.AgendamentoVM;
 
 @RestController
-@RequestMapping("/agendador")
+@RequestMapping("/schedule")
 public class AgendadorResource {
 
 	private final QuartzService apiQuartz;
 
+	@Autowired
 	public AgendadorResource(@Lazy QuartzService apiQuartz) {
 
 		this.apiQuartz = apiQuartz;
 	}
 
-	@RequestMapping("/scheduleDate")
+	@PostMapping("/scheduleDate")
 	public ResponseEntity<AgendamentoVM> scheduleDate(@RequestParam("jobName") String jobName,
 
 			@RequestParam("jobScheduleTime") @DateTimeFormat(pattern = "yyyy/MM/dd HH:mm") Date jobScheduleTime)
@@ -37,7 +43,7 @@ public class AgendadorResource {
 
 	}
 
-	@RequestMapping("/scheduleCron")
+	@PostMapping("/scheduleCron")
 	public ResponseEntity<AgendamentoVM> scheduleCron(@RequestParam("jobName") String jobName,
 
 			@RequestParam("jobScheduleTime") @DateTimeFormat(pattern = "yyyy/MM/dd HH:mm") Date jobScheduleTime,
@@ -49,30 +55,30 @@ public class AgendadorResource {
 	}
 
 	@ResponseStatus(HttpStatus.OK)
-	@RequestMapping("/unschedule")
+	@PutMapping("/unschedule")
 	public void unschedule(@RequestParam("jobName") String jobName) {
 
 		apiQuartz.unScheduleJob(jobName);
 	}
 
-	@RequestMapping("/delete")
+	@DeleteMapping("/delete")
 	public ResponseEntity<AgendamentoVM> delete(@RequestParam("jobName") String jobName) throws SchedulerException {
 		return MapeadorAgendamento.mapperResponse(apiQuartz.deleteJob(jobName), HttpStatus.OK);
 
 	}
 
-	@RequestMapping("/pause")
+	@PutMapping("/pause")
 	public ResponseEntity<AgendamentoVM> pause(@RequestParam("jobName") String jobName) throws SchedulerException {
 
 		return apiQuartz.pauseJob(jobName);
 	}
 
-	@RequestMapping("/resume")
+	@PutMapping("/resume")
 	public ResponseEntity<AgendamentoVM> resume(@RequestParam("jobName") String jobName) throws SchedulerException {
 		return apiQuartz.resumeJob(jobName);
 	}
 
-	@RequestMapping("update")
+	@PutMapping("update")
 	public ResponseEntity<AgendamentoVM> updateJob(@RequestParam("jobName") String jobName,
 			@RequestParam("jobScheduleTime") @DateTimeFormat(pattern = "yyyy/MM/dd HH:mm") Date jobScheduleTime,
 			@RequestParam("cronExpression") String cronExpression) throws Exception {
@@ -88,13 +94,13 @@ public class AgendadorResource {
 		}
 	}
 
-	@RequestMapping("jobs")
+	@GetMapping("jobs")
 	public ResponseEntity<AgendamentoVM> getAllJobs() throws SchedulerException {
 
 		return apiQuartz.getAllJobs();
 	}
 
-	@RequestMapping("checkJobName")
+	@GetMapping("checkJobName")
 	public ResponseEntity<AgendamentoVM> checkJobName(@RequestParam("jobName") String jobName)
 			throws SchedulerException {
 
@@ -102,7 +108,7 @@ public class AgendadorResource {
 
 	}
 
-	@RequestMapping("isJobRunning")
+	@GetMapping("isJobRunning")
 	public ResponseEntity<AgendamentoVM> isJobRunning(@RequestParam("jobName") String jobName)
 			throws SchedulerException {
 
@@ -110,7 +116,7 @@ public class AgendadorResource {
 
 	}
 
-	@RequestMapping("jobState")
+	@GetMapping("jobState")
 	public ResponseEntity<AgendamentoVM> getJobState(@RequestParam("jobName") String jobName) {
 		System.out.println("JobController.getJobState()");
 
@@ -118,14 +124,14 @@ public class AgendadorResource {
 
 	}
 
-	@RequestMapping("stop")
+	@PutMapping("stop")
 	public ResponseEntity<AgendamentoVM> stopJob(@RequestParam("jobName") String jobName) throws SchedulerException {
 
 		return apiQuartz.stopJob(jobName);
 
 	}
 
-	@RequestMapping("start")
+	@PutMapping("start")
 	public ResponseEntity<AgendamentoVM> startJobNow(@RequestParam("jobName") String jobName)
 			throws SchedulerException {
 

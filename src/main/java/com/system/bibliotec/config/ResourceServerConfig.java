@@ -38,8 +38,9 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 	private static final String ROOT_PATTERN_LIVROS = "/livros";
 	private static final String ROOT_PATTERN_OFERTAS = "/ofertas";
 	private static final String ROOT_PATTERN_BUSCAR_CEP = "/endereco/findcep/**";
-	private static final String ROOT_PATTERN_SWAGGER = "/swagger-ui.html#/";
-
+	private static final String ROOT_PATTERN_SWAGGER = "/swagger-ui.html#/**";
+	private static final String ROOT_PATTERN_API_DOCS = "/v2/api-docs/**";
+	
 
 
 	private final ApiSecurityResourceServerProperties securityProperties;
@@ -74,16 +75,33 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 				.and()
 				.authorizeRequests()
 					//Todo: verificar a questão de como será definido no swagger a politica de segurança
-					//.antMatchers(HttpMethod.GET, ROOT_PATTERN_SWAGGER).permitAll()
-					//.antMatchers(HttpMethod.POST, ROOT_PATTERN_SWAGGER).permitAll()
+					
 					.antMatchers(HttpMethod.POST, ROOT_PATTERN_AGENDADOR).permitAll()
+
 					.antMatchers(HttpMethod.GET, ROOT_PATTERN_LIVROS).permitAll()
+
 					.antMatchers(HttpMethod.POST, ROOT_PATTERN_RESET_PASSWORD_INIT).anonymous()
+
 					.antMatchers(HttpMethod.POST, ROOT_PATTERN_RESET_PASSWORD_FINISH).anonymous()
+
 					.antMatchers(HttpMethod.POST, ROOT_PATTERN_REGISTER).anonymous()
+
 					.antMatchers(HttpMethod.GET, ROOT_PATTERN_ACTIVATE).anonymous()
+
 					.antMatchers(HttpMethod.GET, ROOT_PATTERN_OFERTAS).anonymous()
-					.antMatchers(HttpMethod.GET, ROOT_PATTERN_BUSCAR_CEP).anonymous()					
+					
+					.antMatchers(HttpMethod.GET, ROOT_PATTERN_BUSCAR_CEP).anonymous()	
+					
+					//SWAGGER
+					.antMatchers(HttpMethod.GET, ROOT_PATTERN_SWAGGER).permitAll()
+					.antMatchers(HttpMethod.POST, ROOT_PATTERN_SWAGGER).permitAll()
+					.antMatchers(HttpMethod.PUT, ROOT_PATTERN_SWAGGER).permitAll()
+//					
+					.antMatchers(HttpMethod.GET, ROOT_PATTERN_API_DOCS).permitAll()
+					.antMatchers(HttpMethod.POST, ROOT_PATTERN_API_DOCS).permitAll()
+					.antMatchers(HttpMethod.PUT, ROOT_PATTERN_API_DOCS).permitAll()
+
+
 					.antMatchers(HttpMethod.GET, ROOT_PATTERN).access("#oauth2.hasScope('read')")
 					.antMatchers(HttpMethod.POST, ROOT_PATTERN).access("#oauth2.hasScope('write')")
 					.antMatchers(HttpMethod.PATCH, ROOT_PATTERN).access("#oauth2.hasScope('write')")

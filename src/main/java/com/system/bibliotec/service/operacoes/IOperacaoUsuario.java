@@ -35,6 +35,8 @@ public interface IOperacaoUsuario extends IAuditorTokenDeUsuarioDoContexto{
 	public void changePassword(String currentClearTextPassword, String newPassword);
 
 	public Usuario findOneByUsuarioContexto();
+
+	public Usuario findById(Long id);
     
 	public void removeNotActivatedUsers();
 	

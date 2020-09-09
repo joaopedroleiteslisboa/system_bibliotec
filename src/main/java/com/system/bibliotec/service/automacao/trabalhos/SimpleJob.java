@@ -30,14 +30,15 @@ public class SimpleJob extends QuartzJobBean implements InterruptableJob, IDateJ
 		
 		System.out.println("======================================");
 		
-		List<Map<String, Object>> list = null;
+		
+
 		try {
-			list = (List<Map<String, Object>>) jobService.getAllJobs();
+			System.out.println("Job list :"+  jobService.getAllJobs().getBody().toString());
 		} catch (SchedulerException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		System.out.println("Job list :"+list);
+		
 		System.out.println("======================================");
 		
 		//*********** For retrieving stored key-value pairs ***********/

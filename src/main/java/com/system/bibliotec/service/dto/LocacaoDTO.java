@@ -14,9 +14,12 @@ import lombok.ToString;
 public class LocacaoDTO {
 
 	
-	@NotNull(message = "Campo livro necessario para realizar uma locação")
+	@NotNull(message = "Campo livro necessario para realizar o despacho da  locação")
 	private Long idLivro;
-	
+
+	@NotNull(message = "Codigo do usuario necessario para registrar em sua tabela de historico")
+	private Long idUsuarioSolicitante;	
+
 	@Size(max = 255)
 	private String observacoesEntregaLivro;
 	

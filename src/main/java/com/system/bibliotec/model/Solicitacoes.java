@@ -31,6 +31,11 @@ import lombok.Setter;
 @Table(name = "solicitacoes")
 public class Solicitacoes extends AbstractAuditingEntity {
 
+    
+	@NotNull
+	@Column(name = "idCliente")
+	protected Long idCliente;
+    
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo")

@@ -7,6 +7,7 @@ import com.system.bibliotec.model.Solicitacoes;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 /**
  * Interface de Repositorio das solicitações 
@@ -15,8 +16,8 @@ import org.springframework.data.jpa.repository.Query;
  * @since 10.09.2020
  * @see .. sql file > jpa-named-queries.properties
  */
-public interface SolicitacaoRepository extends JpaRepository<Solicitacoes, Long>,
-                                                     GenericRepository<Solicitacoes, Long> {
+@Repository
+public interface SolicitacaoRepository extends JpaRepository<Solicitacoes, Long> {
     
 
 

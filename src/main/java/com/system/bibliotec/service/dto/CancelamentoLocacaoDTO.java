@@ -13,8 +13,8 @@ public class CancelamentoLocacaoDTO {
 	private Long idLocacao;
 
 
-	@NotNull(message = "É necessario informar o codigo do Usuario solicitante")
-	private Long idUsuario;
+	@NotNull(message = "É necessario informar o codigo do Cliente solicitante")
+	private Long idClienteSolicitante;
 
 	
 

@@ -119,7 +119,7 @@ public class OperacaoLocacaoImpl implements IOperacaoLocacao {
 		
 		Usuario funcionario = userService.findOneByUsuarioContexto();
 
-		Usuario cliente = userService.findByIdCliente(dto.getIdUsuarioSolicitante());
+		Usuario cliente = userService.findByIdCliente(dto.getIdClienteSolicitante());
 
 		Solicitacoes solicitacaoUsuario = solicitacaoService.findByIdSolicitacao(dto.getIdSolicitacao());
 
@@ -171,9 +171,11 @@ public class OperacaoLocacaoImpl implements IOperacaoLocacao {
 		  
 
 
-		if (!isReservado(dto.getIdLivro(), dto.getIdUsuarioSolicitante())) {
+		if (!isReservado(dto.getIdLivro(), dto.getIdClienteSolicitante())) {
 			livroService.decrescentarEstoque(dto.getIdLivro(), 1);
 		}
+
+		solicitacaoService.updateStatus(Status.HOMOLOGADA, dto.getIdSolicitacao());  // Atualizando que a solicitação foi deferida
 
 		locacaoRepository.save(lo);
 		locacaoRepository.flush();
@@ -189,7 +191,7 @@ public class OperacaoLocacaoImpl implements IOperacaoLocacao {
 	@Override
 	public LocacaoCancelamentoVM cancelarLocacao(CancelamentoLocacaoDTO dto) {
 
-		return Optional.of(findByIdLocacaoAtivaParaUsuarioContexto(dto.getIdLocacao(),dto.getIdUsuario()))
+		return Optional.of(findByIdLocacaoAtivaParaUsuarioContexto(dto.getIdLocacao(),dto.getIdClienteSolicitante()))
 		.map((Function<? super Locacoes, ? extends LocacaoCancelamentoVM>) l -> {
 			log.info("Iniciando Cancelamento da Locação: " + l);
 
@@ -218,7 +220,7 @@ public class OperacaoLocacaoImpl implements IOperacaoLocacao {
 	@Override
 	public LocacaoDevolucaoVM encerramento(DevolucaoLocacaoDTO dto) {
 
-		return Optional.of(findByIdLocacaoAtivaParaUsuarioContexto(dto.getIdLocacao(), dto.getIdUsuario()))
+		return Optional.of(findByIdLocacaoAtivaParaUsuarioContexto(dto.getIdLocacao(), dto.getIdClienteSolicitante()))
 			.map((Function<? super Locacoes, ? extends LocacaoDevolucaoVM>) l -> {
 					log.info("Iniciando Encerramento da Locação: " + l);
 
@@ -228,7 +230,7 @@ public class OperacaoLocacaoImpl implements IOperacaoLocacao {
 	
 							Optional.of(l.getUsuario()).map((Function<? super Usuario, ? extends Usuario>)
 							
-								u -> {	//user - cliente
+								u -> {	//user - cliente da locacão
 									
 									if(!u.isFuncionario()) {
 										u.setStatusPessoa(ConstantsUtils.DEFAULT_VALUE_STATUS_USUARIO_INADIMPLENTE);
@@ -289,7 +291,7 @@ public class OperacaoLocacaoImpl implements IOperacaoLocacao {
 	@Override
 	public void renovarLocacao(Long id) {
 
-		Locacoes locacaoSalva = findByIdLocacaoAtivaParaUsuarioContexto(id); //anonymous user online
+		Locacoes locacaoSalva = findByIdLocacaoAtivaParaUsuarioContexto(id); //anonymous user online (web)
 
 		log.info("Iniciando Processo de Renovação da Locação do livro:" + locacaoSalva.getLivro().getNome());
 

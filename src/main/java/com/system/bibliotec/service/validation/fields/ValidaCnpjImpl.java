@@ -17,7 +17,7 @@ public class ValidaCnpjImpl implements IvalidaCnpj{
 		// TODO Auto-generated method stub
 		
 		if(!utils.isCNPJ(cnpj)) {
-			throw new CnpjInvalidoException("Cnpj Invalido");
+			throw new CnpjInvalidoException("Operação Não realizada. Cnpj do Cliente Invalido");
 		}
 	}
 

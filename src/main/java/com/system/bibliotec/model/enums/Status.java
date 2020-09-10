@@ -2,7 +2,9 @@ package com.system.bibliotec.model.enums;
 
 public enum Status {
 
-    ATRASADA("Atrasada"), ATIVA("Ativa"), CANCELADA("Cancelada"), FINALIZADA("Finalizada");
+    ATRASADA("Atrasada"), ATIVA("Ativa"), CANCELADA("Cancelada"), 
+            FINALIZADA("Finalizada"), HOMOLOGADA("Homologada"),         
+                    RECUSADA("Recusada"), EM_ANALISE("Em Analise");
 
 
     private String status;

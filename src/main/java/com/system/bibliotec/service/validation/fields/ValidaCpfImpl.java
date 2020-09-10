@@ -16,7 +16,7 @@ public class ValidaCpfImpl implements IValidaCpf {
 		// TODO Auto-generated method stub
 		
 		if(!utils.isCPF(cpf)) {
-			throw new CpfInvalidoException("CPF invalido.");
+			throw new CpfInvalidoException("Operação não realizada. CPF do Cliente invalido.");
 		}
 		
 	}

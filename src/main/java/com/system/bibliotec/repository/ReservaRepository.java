@@ -7,7 +7,13 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-
+/**
+ * Interface de Repositorio das reservas 
+ * 
+ * @author João Pedro
+ * @since 10.09.2020
+ * @see .. sql file > jpa-named-queries.properties
+ */
 @Repository
 public interface ReservaRepository extends JpaRepository<Reservas, Long>, GenericRepository<Reservas, Long>{
 

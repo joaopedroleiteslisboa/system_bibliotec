@@ -1,6 +1,7 @@
 package com.system.bibliotec.service.operacoes;
 
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 
 import lombok.RequiredArgsConstructor;
@@ -10,22 +11,28 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.mysql.cj.exceptions.OperationCancelledException;
 import com.system.bibliotec.config.ConstantsUtils;
 import com.system.bibliotec.exception.CancelamentoLocacaoException;
 import com.system.bibliotec.exception.CancelamentoOperacaoLocacaoInvalida;
+import com.system.bibliotec.exception.EncerramentoOperacaoLocacaoException;
 import com.system.bibliotec.exception.LocacaoInvalidaOuInexistenteException;
 import com.system.bibliotec.exception.LocacaoUpdateException;
+import com.system.bibliotec.exception.OperacaoCanceladaException;
 import com.system.bibliotec.exception.QuantidadeRenovacaoLocacaoLimiteException;
 import com.system.bibliotec.model.Livro;
 import com.system.bibliotec.model.Locacoes;
 import com.system.bibliotec.model.Reservas;
+import com.system.bibliotec.model.Solicitacoes;
 import com.system.bibliotec.model.Usuario;
 import com.system.bibliotec.model.enums.Status;
 import com.system.bibliotec.repository.LivroRepository;
 import com.system.bibliotec.repository.LocacaoRepository;
 import com.system.bibliotec.repository.ReservaRepository;
+import com.system.bibliotec.repository.SolicitacaoRepository;
 import com.system.bibliotec.repository.UsuarioRepository;
 import com.system.bibliotec.service.LivroService;
+import com.system.bibliotec.service.SolicitacaoService;
 import com.system.bibliotec.service.UserService;
 import com.system.bibliotec.service.dto.CancelamentoLocacaoDTO;
 import com.system.bibliotec.service.dto.DevolucaoLocacaoDTO;
@@ -55,6 +62,7 @@ public class OperacaoLocacaoImpl implements IOperacaoLocacao {
 
 	private final LivroService livroService;
 
+
 	private final LivroRepository livroRepository;
 
 
@@ -62,6 +70,7 @@ public class OperacaoLocacaoImpl implements IOperacaoLocacao {
 
 
 	private final LocacaoRepository locacaoRepository;
+
 
 	private final UserService userService;
 
@@ -76,6 +85,9 @@ public class OperacaoLocacaoImpl implements IOperacaoLocacao {
 
 
 	private final ReservaRepository reservaRepository;
+
+
+	private final SolicitacaoService solicitacaoService;
 	
 	
 	@Autowired
@@ -83,7 +95,7 @@ public class OperacaoLocacaoImpl implements IOperacaoLocacao {
 			ITriagemReservaELocacao<Locacoes, Livro, Long, Usuario> triagemInicialLocacao, LivroService livroService,
 			LivroRepository livroRepository, IValidaLivro validadorLivro, LocacaoRepository locacaoRepository,
 			UserService userService, UsuarioRepository userRepository, IValidaPessoa validadorCliente,
-			MapeadorLocacao mapper, ReservaRepository reservaRepository) {
+			MapeadorLocacao mapper, ReservaRepository reservaRepository, SolicitacaoService solicitacaoService) {
 		
 		this.validaUsuarioPessoa = validaUsuarioPessoa;
 		this.triagemInicialLocacao = triagemInicialLocacao;
@@ -96,6 +108,7 @@ public class OperacaoLocacaoImpl implements IOperacaoLocacao {
 		this.validadorCliente = validadorCliente;
 		this.mapper = mapper;
 		this.reservaRepository = reservaRepository;
+		this.solicitacaoService = solicitacaoService;
 	}
 
 
@@ -103,17 +116,39 @@ public class OperacaoLocacaoImpl implements IOperacaoLocacao {
 	@Override
 	public LocacaoVM realizarLocacao(LocacaoDTO dto) {
 
+		
 		Usuario funcionario = userService.findOneByUsuarioContexto();
 
 		Usuario cliente = userService.findByIdCliente(dto.getIdUsuarioSolicitante());
 
-		validadorCliente.validacaoFisicaEJuridica(cliente);
+		Solicitacoes solicitacaoUsuario = solicitacaoService.findByIdSolicitacao(dto.getIdSolicitacao());
 
 		Livro l = livroService.findByIdLivro(dto.getIdLivro());
 
+		
+		try{
+			validadorCliente.validacaoFisicaEJuridica(cliente);
+		}catch(Exception ex)	{
+		//Encerrando processo de locação por conter inconsistência no cadastro do Cliente
+		solicitacaoService.updateStatusAndDescricao(Status.RECUSADA, dto.getIdSolicitacao(), ex.getMessage(), true);
+		
+		throw new OperacaoCanceladaException("Operação não permitida. Foi detectado inconsistência em seus dados. "+ ex.getMessage());
+		}
+			
+
+		
+
 		log.info("Usuario " + cliente.getEmail() + " Iniciando Processo de Locação do livro: " + l.getNome());
 
-		validadorLivro.validaLivro(l);
+		try {
+			validadorLivro.validaLivro(l);
+		} catch (Exception ex) {
+			
+			solicitacaoService.updateStatusAndDescricao(Status.RECUSADA, dto.getIdSolicitacao(), ex.getMessage(), true);
+			throw new OperacaoCanceladaException("Operação não realizada. "+ ex.getMessage());
+		}
+		
+
 
 		Locacoes lo = new Locacoes().builder().withHoraLocacao(HoraDiasDataLocalService.horaLocal())
 				.withDataLocacao(HoraDiasDataLocalService.dataLocal())
@@ -127,17 +162,23 @@ public class OperacaoLocacaoImpl implements IOperacaoLocacao {
 								: ConstantsUtils.N_A)
 				.build();
 
-		triagemInicialLocacao.triagemReservaELocacao(lo, l, l.getId(), cliente);     
+		try {
+			triagemInicialLocacao.triagemReservaELocacao(lo, l, l.getId(), cliente);   
+		} catch (Exception ex) {
+			solicitacaoService.updateStatusAndDescricao(Status.RECUSADA, dto.getIdSolicitacao(), ex.getMessage(), true);
+			throw new OperacaoCanceladaException("Operação não realizada. "+ ex.getMessage());
+		}
+		  
+
 
 		if (!isReservado(dto.getIdLivro(), dto.getIdUsuarioSolicitante())) {
-			livroService.decrescentarEstoque(dto.getIdLivro(),
-					ConstantsUtils.DEFAULT_VALUE_DESCRESCENTAR_QUANTIDADE_LIVRO);
+			livroService.decrescentarEstoque(dto.getIdLivro(), 1);
 		}
 
 		locacaoRepository.save(lo);
 		locacaoRepository.flush();
 
-		log.info("Operação realizada com sucesso: " + lo.toString());
+		log.info("Operação realizada com sucesso: ");
 
 		return mapper.locacaoParaLocacaoVM(lo);
 
@@ -187,7 +228,7 @@ public class OperacaoLocacaoImpl implements IOperacaoLocacao {
 	
 							Optional.of(l.getUsuario()).map((Function<? super Usuario, ? extends Usuario>)
 							
-								u -> {	
+								u -> {	//user - cliente
 									
 									if(!u.isFuncionario()) {
 										u.setStatusPessoa(ConstantsUtils.DEFAULT_VALUE_STATUS_USUARIO_INADIMPLENTE);
@@ -208,13 +249,12 @@ public class OperacaoLocacaoImpl implements IOperacaoLocacao {
 					l.setHoraEncerramento(HoraDiasDataLocalService.horaLocal());
 					l.setDataEncerramento(HoraDiasDataLocalService.dataLocal());
 
-					livroService.acrescentarEstoque(l.getLivro().getId(),
-							ConstantsUtils.DEFAULT_VALUE_ACRESCENTAR_QUANTIDADE_LIVRO);
+					livroService.acrescentarEstoque(l.getLivro().getId(), 1);
+
 					//saveAndFlush para user, livro e locacao...
 					return mapper.locacaoParaLocacaoDevolucaoVM(locacaoRepository.saveAndFlush(l));
 
-			}).orElseThrow(() -> new CancelamentoLocacaoException("Não foi possivel cancelar a Locação "
-						+ dto.getIdLocacao() + " do Usuario " + obterUsuarioDoContextoPeloToken()));
+			}).orElseThrow(() -> new EncerramentoOperacaoLocacaoException("Não foi possivel Encerrar  a Locação "));
 
 	}
 
@@ -222,16 +262,20 @@ public class OperacaoLocacaoImpl implements IOperacaoLocacao {
 	private boolean isReservado(Long idLivro, long idCliente) {
 		boolean isReservado = false;
 
-		if (reservaRepository.isAtivaToUserContextAndlivro(idLivro) >= 1) {
+		if (reservaRepository.isAtivaToUserContextAndlivro(idLivro, idCliente) >= 1) {
+			
 			isReservado = true;
 
 			reservaRepository.findOneGenericObjectAtivoToUserAndLivro(idLivro, idCliente)
 					.map((Function<? super Reservas, ? extends Reservas>) r -> {
+
+						//Finalizando Reserva para Iniciar Processo de Locação do Exemplar
+
 						r.setStatus(ConstantsUtils.DEFAULT_VALUE_STATUSRESERVA_FINALIZADA);
 
 						log.debug(r.toString() + " Finalizando para Iniciar Processo de locação");
 
-						return reservaRepository.save(r);
+						return reservaRepository.saveAndFlush(r); //flush
 					}).orElse(null);
 
 		} else {
@@ -247,7 +291,7 @@ public class OperacaoLocacaoImpl implements IOperacaoLocacao {
 
 		Locacoes locacaoSalva = findByIdLocacaoAtivaParaUsuarioContexto(id); //anonymous user online
 
-		log.info("Iniciando Processo de Renovação de Locação de livro:" + locacaoSalva);
+		log.info("Iniciando Processo de Renovação da Locação do livro:" + locacaoSalva.getLivro().getNome());
 
 		validaDataLimiteLocacao(locacaoSalva);
 
@@ -267,7 +311,7 @@ public class OperacaoLocacaoImpl implements IOperacaoLocacao {
 
 		locacaoRepository.save(locacaoSalva);
 
-		log.info("Processo de Renovação de Locação de livro realizada:" + locacaoSalva);
+		log.info("Processo de Renovação de Locação de livro realizada:");
 	}
 	
 
@@ -277,12 +321,12 @@ public class OperacaoLocacaoImpl implements IOperacaoLocacao {
 
 		Optional.of(findByIdLocacaoAtivaParaUsuarioContexto(idLocacao))
 				.map((Function<? super Locacoes, ? extends Locacoes>) l -> {
-					log.info("Iniciando Processo de atualização de Status da locação:" + l);
+					log.info("Iniciando Processo de atualização de Status da locação:" );
 					validaDataLimiteLocacao(l);
 					l.setStatus(statusLocacao);
 					return locacaoRepository.save(l);
 				}).orElseThrow(
-						() -> new LocacaoUpdateException("Não foi possivel atualizar o Status da Locação" + idLocacao));
+						() -> new LocacaoUpdateException("Não foi possivel atualizar o Status da Locação"));
 
 	}
 

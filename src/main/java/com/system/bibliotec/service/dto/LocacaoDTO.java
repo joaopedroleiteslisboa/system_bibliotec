@@ -20,6 +20,9 @@ public class LocacaoDTO {
 	@NotNull(message = "Codigo do usuario necessario para registrar em sua tabela de historico")
 	private Long idUsuarioSolicitante;	
 
+	@NotNull(message = "Codigo da Solicitacao do usuario necessario para registrar esta operação")
+	private Long idSolicitacao;	
+
 	@Size(max = 255)
 	private String observacoesEntregaLivro;
 	

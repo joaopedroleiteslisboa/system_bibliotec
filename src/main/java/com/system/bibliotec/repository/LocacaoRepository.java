@@ -2,6 +2,7 @@ package com.system.bibliotec.repository;
 
 import com.system.bibliotec.model.Locacoes;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -15,7 +16,8 @@ import java.util.Optional;
  * @see .. sql file > jpa-named-queries.properties
  */
 @Repository
-public interface LocacaoRepository extends JpaRepository<Locacoes, Long>, GenericRepository<Locacoes, Long>{
+public interface LocacaoRepository extends JpaRepository<Locacoes, Long>, GenericRepository<Locacoes, Long>, 
+																				JpaSpecificationExecutor<Locacoes>{
 
 	Optional<Locacoes> findById(Long id);
 

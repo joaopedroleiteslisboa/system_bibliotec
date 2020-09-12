@@ -18,45 +18,61 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.system.bibliotec.controller.util.EndPointUtil;
 import com.system.bibliotec.event.RecursoCriadorEvent;
 import com.system.bibliotec.repository.ReservaRepository;
+import com.system.bibliotec.repository.filter.ReservaFilter;
 import com.system.bibliotec.service.ReservaService;
 import com.system.bibliotec.service.dto.CancelamentoReservaDTO;
-import com.system.bibliotec.service.dto.ReservaDTO;
+
+import com.system.bibliotec.service.dto.SolicitacaoReservaDTO;
 import com.system.bibliotec.service.vm.ReservaCanceladaVM;
 import com.system.bibliotec.service.vm.ReservaVM;
 
 @RestController
-@RequestMapping(value = "/reserva", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+@RequestMapping(value = "atendimento/reserva", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class ReservaResource {
 
-	@Autowired
-	private ReservaRepository reservaRepository;
+	
+	private final ReservaRepository reservaRepository;
+
+	
+	private final ReservaService reservaService;
+
+	
+	private final ApplicationEventPublisher publisher;
+
+	
+	private final EndPointUtil endPointUtil;
 
 	@Autowired
-	private ReservaService reservaService;
+	public ReservaResource(ReservaRepository reservaRepository, ReservaService reservaService,
+			ApplicationEventPublisher publisher, EndPointUtil endPointUtil) {
+		this.reservaRepository = reservaRepository;
+		this.reservaService = reservaService;
+		this.publisher = publisher;
+		this.endPointUtil = endPointUtil;
+	}
 
-	@Autowired
-	private ApplicationEventPublisher publisher;
 
-	@Autowired
-	private EndPointUtil endPointUtil;
 
-	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER_SYSTEM', 'ROLE_PESQUISAR_RESERVA', 'ROLE_USER_ANONIMO') and #oauth2.hasScope('read')")
-	@GetMapping
-	public List<ReservaVM> pesquisar(Pageable pageable) {
 
-		return reservaService.findAllByReservaDoUsuario(pageable);
+	@PreAuthorize("hasAnyRole('ROLE_USER_ANONIMO','ROLE_ADMIN', 'ROLE_USER_SYSTEM') and #oauth2.hasScope('read')")
+	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public List<ReservaVM> pesquisar(ReservaFilter filter) {
+		
+		return reservaService.filterQuery(filter);
 
 	}
 
+
 	@PreAuthorize("hasAnyRole('ROLE_CADASTRAR_RESERVA','ROLE_ADMIN', 'ROLE_USER_SYSTEM', 'ROLE_USER_ANONIMO') and #oauth2.hasScope('write')")
 	@PostMapping
-	public ResponseEntity<ReservaVM> create(@Valid @RequestBody ReservaDTO reservaDTO, HttpServletResponse response) {
+	public ResponseEntity<ReservaVM> create(@Valid @RequestBody SolicitacaoReservaDTO reservaDTO, HttpServletResponse response) {
 
 		ReservaVM reservaSalved = reservaService.reservaLivro(reservaDTO);
 

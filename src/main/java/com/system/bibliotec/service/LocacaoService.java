@@ -1,17 +1,25 @@
 package com.system.bibliotec.service;
 
+import com.system.bibliotec.model.Locacoes;
 import com.system.bibliotec.model.enums.Status;
 import com.system.bibliotec.repository.LivroRepository;
 import com.system.bibliotec.repository.LocacaoRepository;
 import com.system.bibliotec.repository.UsuarioRepository;
+import com.system.bibliotec.repository.filter.LocacaoFilter;
+import com.system.bibliotec.repository.specification.LocacaoSpecification;
+import com.system.bibliotec.security.AuthoritiesConstantsUltis;
+import com.system.bibliotec.security.SecurityUtils;
 
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.system.bibliotec.exception.LocacaoInexistenteException;
@@ -27,18 +35,15 @@ import com.system.bibliotec.service.vm.LocacaoVM;
 @Service
 public class LocacaoService {
 
-
 	private final IOperacaoLocacao operacao;
 
 	private final MapeadorLocacao mapper;
 
 	private final LocacaoRepository locacaoRepository;
 
-	
-	
 	@Autowired
 	public LocacaoService(IOperacaoLocacao operacao, MapeadorLocacao mapper, LocacaoRepository locacaoRepository) {
-		
+
 		this.operacao = operacao;
 		this.mapper = mapper;
 		this.locacaoRepository = locacaoRepository;
@@ -81,7 +86,36 @@ public class LocacaoService {
 
 	}
 
+	public List<LocacaoVM> filterQuery(LocacaoFilter filter) {
 
+		Specification<Locacoes> query = Specification.where(
 
+				LocacaoSpecification.porID(filter.getIdLocacao()))
+
+				.and(LocacaoSpecification.porUsuarioContexto(filter.getCreatedBy())) // valor definido no construtor de
+																						// LocacaoFilter para deixar
+																						// esta consulta dinamica com
+																						// base no usuario
+
+				.and(LocacaoSpecification.porIntervaloDataCriacao(filter.getDataLocacaoInicio(),
+						filter.getDataLocacaoFim()))
+				.and(LocacaoSpecification.porIntervaloHoraCriacao(filter.getHoraLocacaoInicio(),
+						filter.getHoraLocacaoFim()))
+
+				.and(LocacaoSpecification.porIntervaloDataCancelamento(filter.getDataCancelamentoLocacaoInicio(),
+						filter.getDataCancelamentoLocacaoFim()))
+				.and(LocacaoSpecification.porIntervaloHoraCancelamento(filter.getHoraCancelamentoLocacaoInicio(),
+						filter.getHoraCancelamentoLocacaoFim()))
+
+				.and(LocacaoSpecification.porStatus(filter.getStatusLocacao()))
+
+				.and(LocacaoSpecification.porLivroId(filter.getIdExemplar()))
+
+				.and(LocacaoSpecification.porUsuarioId(filter.getIdUsuario()));
+		// fim query
+
+		return mapper.locacaoParaLocacaoVM(locacaoRepository.findAll(query));
+
+	}
 
 }

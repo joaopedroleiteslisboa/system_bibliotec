@@ -2,6 +2,9 @@ package com.system.bibliotec.repository.filter;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.system.bibliotec.model.enums.Status;
+import com.system.bibliotec.security.AuthoritiesConstantsUltis;
+import com.system.bibliotec.security.SecurityUtils;
+
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -13,25 +16,86 @@ import java.time.LocalTime;
 @Getter
 @Setter
 @ToString
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-@Data
 public class LocacaoFilter {
+
+
+	public LocacaoFilter(String createdBy, Long idLocacao, Long idExemplar, Long idUsuario, Status statusLocacao,
+			LocalTime horaLocacaoInicio, LocalTime horaLocacaoFim, LocalTime horaCancelamentoLocacaoInicio,
+			LocalTime horaCancelamentoLocacaoFim, LocalDate dataLocacaoInicio, LocalDate dataLocacaoFim,
+			LocalDate dataCancelamentoLocacaoInicio, LocalDate dataCancelamentoLocacaoFim) {
+		
+				//check type user in context...
+		this.createdBy = ( SecurityUtils.isCurrentUserInRole(AuthoritiesConstantsUltis.ROLE_ADMIN) || 
+		SecurityUtils.isCurrentUserInRole(AuthoritiesConstantsUltis.ROLE_USER_SYSTEM) )?  "": SecurityUtils.getCurrentUserLoginToOperacoes().orElse("");
+
+		this.idLocacao = idLocacao;
+		this.idExemplar = idExemplar;
+		this.idUsuario = idUsuario;
+		this.statusLocacao = statusLocacao;
+		this.horaLocacaoInicio = horaLocacaoInicio;
+		this.horaLocacaoFim = horaLocacaoFim;
+		this.horaCancelamentoLocacaoInicio = horaCancelamentoLocacaoInicio;
+		this.horaCancelamentoLocacaoFim = horaCancelamentoLocacaoFim;
+		this.dataLocacaoInicio = dataLocacaoInicio;
+		this.dataLocacaoFim = dataLocacaoFim;
+		this.dataCancelamentoLocacaoInicio = dataCancelamentoLocacaoInicio;
+		this.dataCancelamentoLocacaoFim = dataCancelamentoLocacaoFim;
+	}
+	
+
+
+	
+	private String createdBy;  // anonymous user online...
+
+	private Long idLocacao;
+
+	private Long idExemplar;
+
+	private Long idUsuario;
+	
 
 	@Enumerated(EnumType.STRING)
 	private Status statusLocacao;
 
 	@JsonFormat(pattern = "hh:mm:ss")
 	@DateTimeFormat(pattern = "hh:mm:ss")
-	private LocalTime horaLocacao;
+	private LocalTime horaLocacaoInicio;
 
-	@JsonFormat(pattern = "yyyy-MM-dd")
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private LocalDate dataLocacao;
+	@JsonFormat(pattern = "hh:mm:ss")
+	@DateTimeFormat(pattern = "hh:mm:ss")
+	private LocalTime horaLocacaoFim;
 
-	@JsonFormat(pattern = "yyyy-MM-dd")
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private LocalDate dataTerminoLocacao;
 	
+	@JsonFormat(pattern = "hh:mm:ss")
+	@DateTimeFormat(pattern = "hh:mm:ss")
+	private LocalTime horaCancelamentoLocacaoInicio;
+
+	@JsonFormat(pattern = "hh:mm:ss")
+	@DateTimeFormat(pattern = "hh:mm:ss")
+	private LocalTime horaCancelamentoLocacaoFim;
+
+
+	@JsonFormat(pattern = "yyyy-MM-dd")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private LocalDate dataLocacaoInicio;
+
+	@JsonFormat(pattern = "yyyy-MM-dd")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private LocalDate dataLocacaoFim;
+
+
+		
+	@JsonFormat(pattern = "yyyy-MM-dd")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private LocalDate dataCancelamentoLocacaoInicio;
+	
+	@JsonFormat(pattern = "yyyy-MM-dd")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private LocalDate dataCancelamentoLocacaoFim;
+
+
+
+
+	
+
 }

@@ -172,11 +172,18 @@
 	INSERT INTO editoras(created_by, last_modified_by, nome, descricao) VALUES ('system', 'system', 'LEFT JOIN TEST','O JOIN É  líder mundial em soluções de informação que vão desde a publicação de literatura científica, médica e técnica até os mais modernos sistemas e plataformas, que possibilitam melhorias no desenvolvimento da ciência, saúde e também na capacitação dos profissionais de tecnologia. Somos uma empresa internacional de publicação multimídia com mais de 20.000 produtos para a ciência educacional e profissional, além de comunidades de saúde em todo o mundo. Com isso, é possível a melhor tomada de decisão para oferecer atendimento de excelência e, por vezes, fazer descobertas inovadoras que avançam as fronteiras do conhecimento e do progresso humano.');
 	  	
         
+	-- insert solicitacoes
+	
+	INSERT INTO solicitacoes(id, created_by, last_modified_by, tipo, dataSolicitacao, horaSolicitacao, dataRetiradaExemplar,  horaRetiradaExemplar, idExemplar, status, rejeitado, idUsuario) VALUES (1000, 'adm@systembibliotec.com', 'adm@systembibliotec.com', 'RESERVA', '2019-08-13', '19:00:00', '2019-08-14',  '17:30:00',1001, 'HOMOLOGADA', false, 1000);
+
+	INSERT INTO solicitacoes(id, created_by, last_modified_by, tipo, dataSolicitacao, horaSolicitacao, dataRetiradaExemplar,  horaRetiradaExemplar, idExemplar, status, rejeitado, idUsuario) VALUES (1001, 'pedroleite@systembibliotec.com', 'pedroleite@systembibliotec.com', 'RESERVA', '2019-08-13', '19:00:00', '2019-08-14', '12:30:00',1000, 'HOMOLOGADA', false, 1001);
+
+
 	-- insert reservas
 	
-	INSERT INTO reservas(id, created_by, last_modified_by, status, horaReserva, dataReserva, dataPrevisaoTermino, idUsuario, idLivro) VALUES (1000, 'adm@systembibliotec.com', 'adm@systembibliotec.com', 'ATIVA', '19:00:00','2019-08-13','2019-08-15',1000,1001);
+	INSERT INTO reservas(id, created_by, last_modified_by, status, horaReserva, dataReserva, dataPrevisaoTermino, idUsuario, idLivro, horaRetiradaLivro, dataRetiradaLivro) VALUES (1000, 'adm@systembibliotec.com', 'adm@systembibliotec.com', 'ATIVA', '19:00:00','2019-08-13','2019-08-15',1000, 1001, '19:30:00', '2019-08-13');
 	
-	INSERT INTO reservas(id, created_by, last_modified_by, status, horaReserva, dataReserva, dataPrevisaoTermino, idUsuario, idLivro) VALUES (1001, 'pedroleite@systembibliotec.com', 'pedroleite@systembibliotec.com', 'ATIVA', '19:05:00','2019-08-13','2019-08-15',1001,1000);
+	INSERT INTO reservas(id, created_by, last_modified_by, status, horaReserva, dataReserva, dataPrevisaoTermino, idUsuario, idLivro, horaRetiradaLivro, dataRetiradaLivro) VALUES (1001, 'pedroleite@systembibliotec.com', 'pedroleite@systembibliotec.com', 'ATIVA', '19:05:00','2019-08-13','2019-08-15',1001, 1000, '19:35:00', '2019-08-13');
 	
 	-- insert locacoes
 	

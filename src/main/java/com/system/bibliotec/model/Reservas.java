@@ -49,6 +49,20 @@ public class Reservas extends AbstractAuditingEntity{
 	@Column(name = "dataPrevisaoTermino")
 	private LocalDate dataPrevisaoTermino;
 
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
+	@JsonFormat(pattern = "kk:mm:ss")
+	@DateTimeFormat(pattern = "kk:mm:ss")
+	@Column(name = "horaRetiradaLivro")
+	private LocalTime horaRetiradaLivro;
+
+
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
+	@JsonFormat(pattern = "yyyy-MM-dd")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@Column(name = "dataRetiradaLivro", nullable = false)
+	private LocalDate dataRetiradaLivro;
+
+
 	@OneToOne
 	@JoinColumn(name = "idUsuario")
 	private Usuario usuario;

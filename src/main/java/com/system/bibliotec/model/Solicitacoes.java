@@ -8,6 +8,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -15,6 +17,7 @@ import com.system.bibliotec.model.enums.Status;
 import com.system.bibliotec.model.enums.TipoSolicitacao;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -31,15 +34,15 @@ import lombok.Setter;
 @Table(name = "solicitacoes")
 public class Solicitacoes extends AbstractAuditingEntity {
 
-    
-	@NotNull
-	@Column(name = "idCliente")
-	protected Long idCliente;
+  
     
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo")
     private TipoSolicitacao tipo;
+
+    @Column(name = "horaSolicitacao")
+    private Instant horaSolicitacao = Instant.now();
 
     @Column(name = "dataSolicitacao")
     private Instant dataSolicitacao = Instant.now();
@@ -63,4 +66,9 @@ public class Solicitacoes extends AbstractAuditingEntity {
 
     @Column(name = "rejeitado")
     private boolean rejeitado = false;
+
+    @NotNull(message = "Solicitação Precisa ter um usuario vinculado")
+	@ManyToOne	
+	@JoinColumn(name = "idUsuario")
+	private Usuario usuario;
 }

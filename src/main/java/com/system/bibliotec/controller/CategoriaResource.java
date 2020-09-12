@@ -30,11 +30,17 @@ import com.system.bibliotec.repository.CategoriaRepository;
 @RequestMapping(value = "/categorias")
 public class CategoriaResource {
 
-	@Autowired
-	private CategoriaRepository repository;
+	
+	private final CategoriaRepository repository;
+
+	
+	private final ApplicationEventPublisher publisher;
 
 	@Autowired
-	private ApplicationEventPublisher publisher;
+	public CategoriaResource(CategoriaRepository repository, ApplicationEventPublisher publisher) {
+		this.repository = repository;
+		this.publisher = publisher;
+	}
 
 	@PreAuthorize("hasAnyRole('ROLE_PESQUISAR_LIVRO','ROLE_ADMIN', 'ROLE_USER_SYSTEM', 'ROLE_USER_ANONIMO') and #oauth2.hasScope('read')")
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -82,4 +88,6 @@ public class CategoriaResource {
 	public void delete(@PathVariable Long id) {
 		repository.deleteById(id);
 	}
+
+
 }

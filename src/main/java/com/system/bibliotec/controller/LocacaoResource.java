@@ -6,7 +6,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,6 +29,8 @@ import com.system.bibliotec.event.RecursoCriadorEvent;
 import com.system.bibliotec.model.Locacoes;
 import com.system.bibliotec.model.enums.Status;
 import com.system.bibliotec.repository.LocacaoRepository;
+import com.system.bibliotec.repository.filter.LocacaoFilter;
+
 import com.system.bibliotec.service.LocacaoService;
 import com.system.bibliotec.service.dto.CancelamentoLocacaoDTO;
 import com.system.bibliotec.service.dto.DevolucaoLocacaoDTO;
@@ -34,26 +40,37 @@ import com.system.bibliotec.service.vm.LocacaoDevolucaoVM;
 import com.system.bibliotec.service.vm.LocacaoVM;
 
 @RestController
-@RequestMapping(value = "/locacao")
+@RequestMapping(value = "atendimento/locacao")
 public class LocacaoResource {
 
-	@Autowired
-	private LocacaoRepository locacaoRepository;
+	
+	private final LocacaoRepository locacaoRepository;
 
-	@Autowired
-	private LocacaoService locacaoService;
+	
+	private final LocacaoService locacaoService;
 
-	@Autowired
-	private ApplicationEventPublisher publisher;
+	
+	private final ApplicationEventPublisher publisher;
 
-	@GetMapping
-	public List<Locacoes> pesquisar() {
+	
+		@Autowired
+		public LocacaoResource(LocacaoRepository locacaoRepository, LocacaoService locacaoService, ApplicationEventPublisher publisher ) {
+			this.locacaoRepository = locacaoRepository;
+			this.locacaoService = locacaoService;
+			this.publisher = publisher;
+		}
 
-		return locacaoRepository.findAll();
+
+	
+	@PreAuthorize("hasAnyRole('ROLE_USER_ANONIMO','ROLE_ADMIN', 'ROLE_USER_SYSTEM') and #oauth2.hasScope('read')")
+	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public List<LocacaoVM> pesquisar(LocacaoFilter filter) {
+
+		return locacaoService.filterQuery(filter);
 
 	}
 
-	@PreAuthorize("hasAnyRole('ROLE_CADASTRAR_LOCACAO','ROLE_ADMIN', 'ROLE_USER_SYSTEM', 'ROLE_USER_ANONIMO') and #oauth2.hasScope('write')")
+	@PreAuthorize("hasAnyRole('ROLE_CADASTRAR_LOCACAO','ROLE_ADMIN', 'ROLE_USER_SYSTEM') and #oauth2.hasScope('write')")
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseEntity<LocacaoVM> create(@Valid @RequestBody LocacaoDTO locacaoDTO, HttpServletResponse response) {
 		LocacaoVM locacaoSalva = locacaoService.realizarLocacao(locacaoDTO);
@@ -70,7 +87,7 @@ public class LocacaoResource {
 
 	}
 
-	@PreAuthorize("hasAnyRole('ROLE_CADASTRAR_LOCACAO','ROLE_ADMIN', 'ROLE_USER_SYSTEM', 'ROLE_USER_ANONIMO') and #oauth2.hasScope('read')")
+	@PreAuthorize("hasAnyRole('ROLE_CADASTRAR_LOCACAO','ROLE_ADMIN', 'ROLE_USER_SYSTEM') and #oauth2.hasScope('read')")
 	@DeleteMapping("/cancelar")
 	@ResponseStatus(HttpStatus.OK)
 	public LocacaoCancelamentoVM cancelarLocacao(CancelamentoLocacaoDTO dto) {
@@ -85,7 +102,6 @@ public class LocacaoResource {
 		return locacaoService.devolucaoLivro(dto);
 	}
 	
-
 
 	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER_SYSTEM') and #oauth2.hasScope('write')")
 	@PutMapping("/{id}/status")

@@ -8,6 +8,8 @@ CREATE TABLE IF NOT EXISTS reservas(
         status VARCHAR(10) NOT NULL,
         horaReserva TIME NOT NULL,
         dataReserva DATE NOT NULL,
+        horaRetiradaLivro TIME NOT NULL,
+        dataRetiradaLivro DATE NOT NULL,
         dataPrevisaoTermino DATE NOT NULL,
         idUsuario BIGINT NOT NULL,
         idLivro BIGINT NOT NULL,

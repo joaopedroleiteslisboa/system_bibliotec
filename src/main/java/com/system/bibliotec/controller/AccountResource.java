@@ -40,21 +40,31 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping(ConstantsUtilsEndPoint.END_POINT_RELATIVO_CONTA)
 public class AccountResource {
 
-	@Autowired
-	private MailService mailService;
+	
+	private final MailService mailService;
 
-	@Autowired
-	private UserService usuarioService;
+	
+	private final UserService usuarioService;
 
-	@Autowired
-	private UsuarioRepository usuarioRepository;
+	
+	private final UsuarioRepository usuarioRepository;
+	
+	
+	private final EndPointUtil endPointUtil;
+	
+	
+	private final ApplicationEventPublisher publisher;
+
 	
 	@Autowired
-	private EndPointUtil endPointUtil;
-	
-	@Autowired
-	private ApplicationEventPublisher publisher;
-
+	public AccountResource(MailService mailService, UserService usuarioService, UsuarioRepository usuarioRepository,
+	EndPointUtil endPointUtil, ApplicationEventPublisher publisher) {
+		this.mailService = mailService;
+		this.usuarioService = usuarioService;
+		this.usuarioRepository = usuarioRepository;
+		this.endPointUtil = endPointUtil;
+		this.publisher = publisher;
+}
 	
 	@GetMapping
 	public ResponseEntity<?> getAccount() {
@@ -133,5 +143,7 @@ public class AccountResource {
 	private String criarPathRelativo(String pathAcao) {		
 		return ServletUriComponentsBuilder.fromCurrentRequest().replacePath(pathAcao).toUriString();
 	}
+
+
 
 }

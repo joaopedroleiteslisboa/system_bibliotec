@@ -1,0 +1,38 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - AtividadeThulio",
+            "request": "launch",
+            "mainClass": "com.system.bibliotec.AtividadeThulio",
+            "projectName": "api"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - AtividadeThulio",
+            "request": "launch",
+            "mainClass": "com.AtividadeThulio",
+            "projectName": "api"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-SystemBibliotecApplication<api>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "mainClass": "com.system.bibliotec.SystemBibliotecApplication",
+            "projectName": "api",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-Main<api>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "mainClass": "com.system.bibliotec.Main",
+            "projectName": "api",
+            "args": ""
+        }
+    ]
+}

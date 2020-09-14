@@ -1,1 +1,0 @@
-ALTER TABLE systemErrors add column done boolean;

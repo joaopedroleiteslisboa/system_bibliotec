@@ -23,9 +23,10 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.system.bibliotec.exception.LocacaoInexistenteException;
+import com.system.bibliotec.service.dto.AtendimentoLocacaoDTO;
 import com.system.bibliotec.service.dto.CancelamentoLocacaoDTO;
 import com.system.bibliotec.service.dto.DevolucaoLocacaoDTO;
-import com.system.bibliotec.service.dto.LocacaoDTO;
+import com.system.bibliotec.service.dto.DespachoSolicitacaoLocacaoDTO;
 import com.system.bibliotec.service.mapper.MapeadorLocacao;
 import com.system.bibliotec.service.operacoes.IOperacaoLocacao;
 import com.system.bibliotec.service.vm.LocacaoCancelamentoVM;
@@ -49,9 +50,17 @@ public class LocacaoService {
 		this.locacaoRepository = locacaoRepository;
 	}
 
-	public LocacaoVM realizarLocacao(LocacaoDTO locacao) {
+	public LocacaoVM atenderLocacao(AtendimentoLocacaoDTO dto) {
 
-		return operacao.realizarLocacao(locacao);
+		return operacao.atenderLocacao(dto);
+
+	}
+
+
+
+	public LocacaoVM despacharLocacao(DespachoSolicitacaoLocacaoDTO locacao) {
+
+		return operacao.despacharPedidoLocacao(locacao);
 
 	}
 
@@ -111,7 +120,8 @@ public class LocacaoService {
 
 				.and(LocacaoSpecification.porLivroId(filter.getIdExemplar()))
 
-				.and(LocacaoSpecification.porUsuarioId(filter.getIdUsuario()));
+				.and(LocacaoSpecification.porUsuarioId(filter.getIdUsuario())
+				);
 		// fim query
 
 		return mapper.locacaoParaLocacaoVM(locacaoRepository.findAll(query));

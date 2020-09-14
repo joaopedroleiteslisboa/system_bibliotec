@@ -299,4 +299,14 @@ public class OperacaoUsuarioImpl implements IOperacaoUsuario {
 		
 	}
 
+	@Override
+	public Usuario findOneByEmailOrUsername(String emailOrUsername) {
+		
+		return userRepository.findOneByEmailIgnoreCase(emailOrUsername)
+				.orElseGet(()-> userRepository.findOneByUserName(emailOrUsername)
+				.orElseThrow(	() -> new UsuarioNaoEncontrado("Usuario não localizado em nossos Registros")));
+	}
+
+
+
 }

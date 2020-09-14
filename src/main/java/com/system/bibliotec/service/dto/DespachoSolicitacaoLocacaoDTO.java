@@ -11,7 +11,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class LocacaoDTO {
+public class DespachoSolicitacaoLocacaoDTO { // DTO Dedicado para atender a uma solicitação feita pelo cliente e não pelo Empregado do Estabelecimento
 
 	
 	@NotNull(message = "Campo livro necessario para realizar o despacho da  locação")

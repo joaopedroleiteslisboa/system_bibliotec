@@ -6,6 +6,7 @@ import java.util.Optional;
 import com.system.bibliotec.model.Solicitacoes;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -17,7 +18,7 @@ import org.springframework.stereotype.Repository;
  * @see .. sql file > jpa-named-queries.properties
  */
 @Repository
-public interface SolicitacaoRepository extends JpaRepository<Solicitacoes, Long> {
+public interface SolicitacaoRepository extends JpaRepository<Solicitacoes, Long>,  JpaSpecificationExecutor<Solicitacoes> {
     
 
 

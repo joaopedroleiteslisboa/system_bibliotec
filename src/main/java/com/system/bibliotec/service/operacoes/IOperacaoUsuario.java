@@ -37,6 +37,8 @@ public interface IOperacaoUsuario extends IAuditorTokenDeUsuarioDoContexto{
 	public Usuario findOneByUsuarioContexto();
 
 	public Usuario findById(Long id);
+
+	public Usuario findOneByEmailOrUsername(String emailOrUsername);
     
 	public void removeNotActivatedUsers();
 	

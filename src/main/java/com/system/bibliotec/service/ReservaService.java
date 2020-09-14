@@ -60,9 +60,9 @@ public class ReservaService {
 
 	public List<ReservaVM> filterQuery(ReservaFilter filter) {
 
-		Specification<Reservas> query = Specification.where(
+		
 
-				ReservaSpecification.porID(filter.getIdReserva()))
+		Specification<Reservas> query = Specification.where(ReservaSpecification.porID(filter.getIdReserva()))
 
 				.and(ReservaSpecification.porUsuarioContexto(filter.getCreatedBy())) // valor definido no construtor de
 																						// LocacaoFilter para deixar

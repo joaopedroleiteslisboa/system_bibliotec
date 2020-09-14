@@ -24,12 +24,17 @@ public class ReservaFilter {
 				LocalDate dataReservaFim, LocalDate dataPrevisaoTermino) {
 				
 					
-					//check type user in context...
-				this.createdBy = ( SecurityUtils.isCurrentUserInRole(AuthoritiesConstantsUltis.ROLE_ADMIN) || 
-					SecurityUtils.isCurrentUserInRole(AuthoritiesConstantsUltis.ROLE_USER_SYSTEM) )?  "testtando para apagar": SecurityUtils.getCurrentUserLoginToOperacoes().orElse("");
-
-				this.idReserva = idReserva;
-				this.idUsuario = idUsuario;
+				//check type user in context...
+				if(idUsuario == null){
+							
+					this.createdBy = ( !SecurityUtils.isCurrentUserInRole(AuthoritiesConstantsUltis.ROLE_ADMIN) || 
+					
+								!SecurityUtils.isCurrentUserInRole(AuthoritiesConstantsUltis.ROLE_USER_SYSTEM) )?  SecurityUtils.getCurrentUserLogin().get() : null; // null para funcionario...
+				}else{
+					this.idUsuario = idUsuario;
+				}
+						
+				this.idReserva = idReserva;				
 				this.idExemplar = idExemplar;				
 				this.status = status;
 				this.horaReservaInicio = horaReservaInicio;
@@ -37,7 +42,7 @@ public class ReservaFilter {
 				this.dataReservaInicio = dataReservaInicio;
 				this.dataReservaFim = dataReservaFim;
 				this.dataPrevisaoTermino = dataPrevisaoTermino;
-}
+		}
 
 
 

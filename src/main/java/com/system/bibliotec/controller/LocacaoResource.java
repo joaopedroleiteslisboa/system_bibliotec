@@ -32,9 +32,10 @@ import com.system.bibliotec.repository.LocacaoRepository;
 import com.system.bibliotec.repository.filter.LocacaoFilter;
 
 import com.system.bibliotec.service.LocacaoService;
+import com.system.bibliotec.service.dto.AtendimentoLocacaoDTO;
 import com.system.bibliotec.service.dto.CancelamentoLocacaoDTO;
 import com.system.bibliotec.service.dto.DevolucaoLocacaoDTO;
-import com.system.bibliotec.service.dto.LocacaoDTO;
+import com.system.bibliotec.service.dto.DespachoSolicitacaoLocacaoDTO;
 import com.system.bibliotec.service.vm.LocacaoCancelamentoVM;
 import com.system.bibliotec.service.vm.LocacaoDevolucaoVM;
 import com.system.bibliotec.service.vm.LocacaoVM;
@@ -71,9 +72,18 @@ public class LocacaoResource {
 	}
 
 	@PreAuthorize("hasAnyRole('ROLE_CADASTRAR_LOCACAO','ROLE_ADMIN', 'ROLE_USER_SYSTEM') and #oauth2.hasScope('write')")
-	@PostMapping(consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public ResponseEntity<LocacaoVM> create(@Valid @RequestBody LocacaoDTO locacaoDTO, HttpServletResponse response) {
-		LocacaoVM locacaoSalva = locacaoService.realizarLocacao(locacaoDTO);
+	@PostMapping(consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)  // atender uma solicitação de locação existente
+	public ResponseEntity<LocacaoVM> create(@Valid @RequestBody AtendimentoLocacaoDTO dto, HttpServletResponse response) {
+		LocacaoVM locacaoSalva = locacaoService.atenderLocacao(dto);
+		publisher.publishEvent(new RecursoCriadorEvent(this, response, locacaoSalva.getCodigo()));
+		return ResponseEntity.status(HttpStatus.CREATED).body(locacaoSalva);
+
+	}
+
+	@PreAuthorize("hasAnyRole('ROLE_CADASTRAR_LOCACAO','ROLE_ADMIN', 'ROLE_USER_SYSTEM') and #oauth2.hasScope('write')")
+	@PostMapping(consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,  value = "/despachar")  // atender uma solicitação de locação existente
+	public ResponseEntity<LocacaoVM> despachar(@Valid @RequestBody DespachoSolicitacaoLocacaoDTO locacaoDTO, HttpServletResponse response) {
+		LocacaoVM locacaoSalva = locacaoService.despacharLocacao(locacaoDTO);
 		publisher.publishEvent(new RecursoCriadorEvent(this, response, locacaoSalva.getCodigo()));
 		return ResponseEntity.status(HttpStatus.CREATED).body(locacaoSalva);
 

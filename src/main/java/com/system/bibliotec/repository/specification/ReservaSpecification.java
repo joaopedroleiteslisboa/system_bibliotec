@@ -9,6 +9,7 @@ import com.system.bibliotec.model.AbstractAuditingEntity_;
 import com.system.bibliotec.model.Livro_;
 import com.system.bibliotec.model.Reservas;
 import com.system.bibliotec.model.Reservas_;
+import com.system.bibliotec.model.Usuario_;
 import com.system.bibliotec.model.enums.Status;
 
 import org.springframework.data.jpa.domain.Specification;
@@ -94,7 +95,7 @@ public class ReservaSpecification {
 		} else {
 			return (root, query, cb) -> {
 				Join<Object, Object> join = root.join(Reservas_.USUARIO);
-				return cb.equal(join.get(AbstractAuditingEntity_.CREATED_BY), userName);
+				return cb.equal(join.get(Usuario_.EMAIL), userName);
 			};
 		}
 	}

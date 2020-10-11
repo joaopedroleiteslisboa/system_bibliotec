@@ -12,7 +12,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.data.repository.query.SecurityEvaluationContextExtension;
-
+import org.springframework.http.HttpMethod;
 import com.system.bibliotec.security.AppUserDetailsService;
 
 
@@ -60,7 +60,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         return new AppUserDetailsService();
     }
 
-   @Override
+
+    @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers("/v2/api-docs", "/configuration/**", "/swagger-resources/**",  "/swagger-ui.html", "/webjars/**", "/api-docs/**");
     }

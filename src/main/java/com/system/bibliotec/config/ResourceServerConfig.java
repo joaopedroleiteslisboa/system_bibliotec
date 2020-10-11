@@ -38,8 +38,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 	private static final String ROOT_PATTERN_LIVROS = "/livros";
 	private static final String ROOT_PATTERN_OFERTAS = "/ofertas";
 	private static final String ROOT_PATTERN_BUSCAR_CEP = "/endereco/findcep/**";
-	private static final String ROOT_PATTERN_SWAGGER = "/swagger-ui.html#/**";
-	private static final String ROOT_PATTERN_API_DOCS = "/v2/api-docs/**";
+	private static final String ROOT_PATTERN_SWAGGER = "/swagger-ui.html";
+	private static final String ROOT_PATTERN_API_DOCS = "/v2/api-docs/";
 	
 
 
@@ -96,12 +96,13 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 					.antMatchers(HttpMethod.GET, ROOT_PATTERN_SWAGGER).permitAll()
 					.antMatchers(HttpMethod.POST, ROOT_PATTERN_SWAGGER).permitAll()
 					.antMatchers(HttpMethod.PUT, ROOT_PATTERN_SWAGGER).permitAll()
+					.antMatchers(HttpMethod.DELETE, ROOT_PATTERN_SWAGGER).permitAll()
 //					
 					.antMatchers(HttpMethod.GET, ROOT_PATTERN_API_DOCS).permitAll()
 					.antMatchers(HttpMethod.POST, ROOT_PATTERN_API_DOCS).permitAll()
 					.antMatchers(HttpMethod.PUT, ROOT_PATTERN_API_DOCS).permitAll()
 
-
+				
 					.antMatchers(HttpMethod.GET, ROOT_PATTERN).access("#oauth2.hasScope('read')")
 					.antMatchers(HttpMethod.POST, ROOT_PATTERN).access("#oauth2.hasScope('write')")
 					.antMatchers(HttpMethod.PATCH, ROOT_PATTERN).access("#oauth2.hasScope('write')")

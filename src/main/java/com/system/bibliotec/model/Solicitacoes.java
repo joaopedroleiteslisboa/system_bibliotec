@@ -14,6 +14,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import com.system.bibliotec.model.enums.Status;
+import com.system.bibliotec.model.enums.StatusProcessamento;
 import com.system.bibliotec.model.enums.TipoSolicitacao;
 
 import lombok.AllArgsConstructor;
@@ -66,6 +67,9 @@ public class Solicitacoes extends AbstractAuditingEntity {
 
     @Column(name = "rejeitado")
     private boolean rejeitado = false;
+
+    @Column(name = "statusProcessamento")
+    private StatusProcessamento statusProcessamento;
 
     @NotNull(message = "Solicitação Precisa ter um usuario vinculado")
 	@ManyToOne	

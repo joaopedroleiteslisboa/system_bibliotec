@@ -4,18 +4,23 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
+import com.system.bibliotec.exception.OperacaoCanceladaException;
 import com.system.bibliotec.exception.RecursoNaoEncontradoException;
 import com.system.bibliotec.model.Solicitacoes;
 import com.system.bibliotec.model.enums.Status;
+import com.system.bibliotec.model.enums.StatusProcessamento;
 import com.system.bibliotec.model.enums.TipoPessoa;
 import com.system.bibliotec.model.enums.TipoSolicitacao;
 import com.system.bibliotec.repository.SolicitacaoRepository;
 import com.system.bibliotec.repository.filter.SolicitacaoFilter;
 import com.system.bibliotec.repository.specification.SolicitacaoSpecification;
+import com.system.bibliotec.service.dto.FormCancelamentoSolicitacaoLocacao;
+import com.system.bibliotec.service.dto.SolicitacaoLocacaoDTO;
 import com.system.bibliotec.service.mapper.MapeadorSolicitacao;
 import com.system.bibliotec.service.vm.SolicitacaoVM;
 
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,8 +41,33 @@ public class SolicitacaoService {
     public Solicitacoes findByIdSolicitacao(Long id) {
 
         return repository.findById(id).orElseThrow(() -> new RecursoNaoEncontradoException(
-                "Operação Não realizada. Solicitação do Cliente não foi Localizada"));
+                "Solicitação não foi Localizada em nossos registros"));
     }
+
+
+    @Transactional
+    public SolicitacaoVM solicitarLocacao(SolicitacaoLocacaoDTO dto){
+
+        Solicitacoes entity = mapper.dtoLocacaoParaEntidade(dto);
+
+        return mapper.entytiParaEntidadeVM(repository.saveAndFlush(entity));
+    }
+
+
+    @Transactional
+    public SolicitacaoVM solicitarCancelamentoDeSolicitacaoLocacao(FormCancelamentoSolicitacaoLocacao dto){
+
+        Solicitacoes entity = findByIdSolicitacao(dto.getIdSolicitacao());
+
+        triagemCancelamentoSolicitacaoLocacao(entity);
+      
+        entity.setStatus(Status.CANCELADA);
+
+        entity.setDescricao(dto.getMotivoCancelamento());
+
+        return mapper.entytiParaEntidadeVM(repository.saveAndFlush(entity));
+    }
+
 
     @Transactional
     public void gravarHistorico(Solicitacoes entity) {
@@ -53,7 +83,7 @@ public class SolicitacaoService {
 
         contexto.setStatus(status);
 
-        repository.save(contexto); // flush
+        repository.save(contexto); 
 
     }
 
@@ -64,7 +94,7 @@ public class SolicitacaoService {
 
         contexto.setStatus(status);
         contexto.setDescricao(descricao);
-        repository.saveAndFlush(contexto); // flush
+        repository.saveAndFlush(contexto); 
 
     }
 
@@ -73,7 +103,7 @@ public class SolicitacaoService {
 
         entityContext.setStatus(status);
         entityContext.setRejeitado(isRejeitado);
-        repository.saveAndFlush(entityContext); // flush
+        repository.saveAndFlush(entityContext);
 
     }
 
@@ -85,7 +115,7 @@ public class SolicitacaoService {
         entityContext.setDescricao(descricao);
         entityContext.setRejeitado(isRejeitado);
 
-        repository.saveAndFlush(entityContext); // flush
+        repository.saveAndFlush(entityContext); 
 
     }
 
@@ -97,10 +127,11 @@ public class SolicitacaoService {
         contexto.setStatus(status);
         contexto.setDescricao(descricao);
         contexto.setRejeitado(isRejeitado);
-        repository.saveAndFlush(contexto); // flush
+        repository.saveAndFlush(contexto); 
 
     }
 
+   
 
     public List<SolicitacaoVM> filterQuery(SolicitacaoFilter filter) {
 
@@ -134,6 +165,19 @@ public class SolicitacaoService {
 
 
 
+    private void triagemCancelamentoSolicitacaoLocacao(Solicitacoes entity){
+
+        if(entity.getStatus() == Status.CANCELADA){
+
+            throw new OperacaoCanceladaException("Operação não permitida. Esta Solicitação já se encontra em estado de Cancelamento");
+        }
+
+        if(entity.getStatusProcessamento() == StatusProcessamento.EM_PROCESSAMENTO){
+
+            throw new OperacaoCanceladaException("Operação não permitida. Esta  Solicitação já se encontra em Processamento para homologação. Aguarde mais alguns instantes que poderá cancelar a Locação em sequida");
+        }
+        
+    }
 
 
 

@@ -8,7 +8,10 @@ import lombok.Setter;
 @Getter
 public enum TipoSolicitacao {
 
-    RESERVA("Reserva"), LOCACAO("Locacao");
+    RESERVA("Reserva"),
+     LOCACAO("Locacao"),
+      MUDANCA_DOCUMENTO("Mudancao_Documento"), 
+      OUTROS("Outros");
 
 
     private String tipoSolicitacao;

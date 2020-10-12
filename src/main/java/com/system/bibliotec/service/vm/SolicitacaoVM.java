@@ -2,9 +2,14 @@ package com.system.bibliotec.service.vm;
 
 import com.system.bibliotec.model.Solicitacoes;
 
+import lombok.Data;
+import lombok.ToString;
+
 /**
  * SolicitacaoVM
  */
+@Data
+@ToString
 public class SolicitacaoVM {
 
     
@@ -39,6 +44,7 @@ public class SolicitacaoVM {
 
 
     private String nomeCliente;
+
 
 
 

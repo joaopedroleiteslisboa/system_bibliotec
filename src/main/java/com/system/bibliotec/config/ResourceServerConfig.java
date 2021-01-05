@@ -18,6 +18,7 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
 import org.zalando.problem.spring.web.advice.security.SecurityProblemSupport;
 
 
@@ -40,6 +41,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 	private static final String ROOT_PATTERN_BUSCAR_CEP = "/endereco/findcep/**";
 	private static final String ROOT_PATTERN_SWAGGER = "/swagger-ui.html";
 	private static final String ROOT_PATTERN_API_DOCS = "/v2/api-docs/";
+	private static final String ROOT_PATTERN_ACTUATOR = "/actuator/**";
 	
 
 
@@ -71,7 +73,9 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 				//.addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
 				.exceptionHandling()
 				.authenticationEntryPoint(problemSupport)
-				.accessDeniedHandler(problemSupport)
+				.accessDeniedHandler(problemSupport).
+				and().
+				cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues())
 				.and()
 				.authorizeRequests()
 					//Todo: verificar a questão de como será definido no swagger a politica de segurança
@@ -92,15 +96,23 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 					
 					.antMatchers(HttpMethod.GET, ROOT_PATTERN_BUSCAR_CEP).anonymous()	
 					
-					//SWAGGER
+					//SWAGGER					
 					.antMatchers(HttpMethod.GET, ROOT_PATTERN_SWAGGER).permitAll()
 					.antMatchers(HttpMethod.POST, ROOT_PATTERN_SWAGGER).permitAll()
 					.antMatchers(HttpMethod.PUT, ROOT_PATTERN_SWAGGER).permitAll()
 					.antMatchers(HttpMethod.DELETE, ROOT_PATTERN_SWAGGER).permitAll()
-//					
+
+					// API DOCS					
 					.antMatchers(HttpMethod.GET, ROOT_PATTERN_API_DOCS).permitAll()
 					.antMatchers(HttpMethod.POST, ROOT_PATTERN_API_DOCS).permitAll()
 					.antMatchers(HttpMethod.PUT, ROOT_PATTERN_API_DOCS).permitAll()
+					
+					// ACTUATOR 
+					.antMatchers(HttpMethod.GET, ROOT_PATTERN_ACTUATOR).permitAll()
+					.antMatchers(HttpMethod.POST, ROOT_PATTERN_ACTUATOR).permitAll()
+					.antMatchers(HttpMethod.PUT, ROOT_PATTERN_ACTUATOR).permitAll()
+					.antMatchers(HttpMethod.DELETE, ROOT_PATTERN_ACTUATOR).permitAll()
+					
 
 				
 					.antMatchers(HttpMethod.GET, ROOT_PATTERN).access("#oauth2.hasScope('read')")
@@ -109,7 +121,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 					.antMatchers(HttpMethod.PUT, ROOT_PATTERN).access("#oauth2.hasScope('write')")
 					.antMatchers(HttpMethod.DELETE, ROOT_PATTERN).access("#oauth2.hasScope('write')");
 
-
+					
 
 	}
 
@@ -141,8 +153,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 		return converter;
 	}
 
-
-
+	    
 	private String getPublicKeyAsString() {
 		try {
 

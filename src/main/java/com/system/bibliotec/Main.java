@@ -6,8 +6,14 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.cert.Certificate;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
+import java.util.List;
 import java.util.StringTokenizer;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLPeerUnverifiedException;
@@ -39,18 +45,18 @@ public class Main {
 
 		Pattern regex = Pattern.compile("[$&+,:;=\\\\?@#|/'<>.^*()%!-]");
 
-		if (regex.matcher("Joao pedro%").find()) {
+	//	if (regex.matcher("Joao pedro%").find()) {
 		  
-			System.out.println("TEM CARACTERE ESPECIAL/......");
+	//		System.out.println("TEM CARACTERE ESPECIAL/......");
 		    
 		    
 		    
-		} 
-	    System.out.println("passou do return fvazio.");
+		//} 
+	//    System.out.println("passou do return fvazio.");
 
 	    
-	    System.out.println("quantidade de espaçso abaixo");
-	  System.out.println(new Main().contaEspacos("SIMPLE JOB teste testet teste "));
+	 //   System.out.println("quantidade de espaçso abaixo");
+	 // System.out.println(new Main().contaEspacos("SIMPLE JOB teste testet teste "));
 		
 		
 		
@@ -60,10 +66,43 @@ public class Main {
 		
 		
 	//	new Main().testIt("https://www.facebook.com");
+		
+		
+		
+		int a = 0;
+		
+		int b = 1;
+		
+		int c = 20;
+		
+		
+		
+		if(a == 0 && (b > 1 || c > 2) ) {
+			
+			System.out.println("deu certo..");
+		}
+		
+		
+		
+		
+		
+List<LocalDate> datasDaSemanaDiaX = 
+ Main.relacaoDatasSemana(LocalDate.of(2020, 12, 16));
+		
+		
+		datasDaSemanaDiaX.forEach( i ->  System.out.println(i));
 
 	}
 
 	
+	
+	
+	
+	
+	private static List<LocalDate> relacaoDatasSemana(LocalDate date) {
+	    LocalDate start = date.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+	    return IntStream.range(0, 7).mapToObj(start::plusDays).collect(Collectors.toList());
+	}
 	
 	 public static int contaEspacos(String texto){
 			return texto.length()-texto.replaceAll(" ","").length();

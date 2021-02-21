@@ -17,12 +17,14 @@ public final class SecurityUtils {
     private SecurityUtils() {
     }
 
-    public static Optional<String> getCurrentUserLogin() {
+
+
+    public static Optional<Object> getCurrentUserPrincipal() {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         return Optional.ofNullable(securityContext.getAuthentication()).map(authentication -> {
             if (authentication.getPrincipal() instanceof UserSystem) {
                 UserSystem springSecurityUser = (UserSystem) authentication.getPrincipal();
-                return springSecurityUser.getUsername();
+                return springSecurityUser;
             } else if (authentication.getPrincipal() instanceof String) {
                 return (String) authentication.getPrincipal();
             }
@@ -31,18 +33,20 @@ public final class SecurityUtils {
     }
 
 
-    public static Optional<String> getCurrentUserLoginToOperacoes() {
+    public static Optional<String> getCurrentUserLoginId() {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         return Optional.ofNullable(securityContext.getAuthentication()).map(authentication -> {
             if (authentication.getPrincipal() instanceof UserSystem) {
                 UserSystem springSecurityUser = (UserSystem) authentication.getPrincipal();
-                return springSecurityUser.getUsername();
+                return String.valueOf(springSecurityUser.getId());
             } else if (authentication.getPrincipal() instanceof String) {
                 return (String) authentication.getPrincipal();
             }
             return null;
         });
     }
+
+
 
     public static Optional<String> getCurrentTokenJWT() {
         SecurityContext securityContext = SecurityContextHolder.getContext();

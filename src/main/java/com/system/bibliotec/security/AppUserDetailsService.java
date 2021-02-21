@@ -18,9 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import com.system.bibliotec.exception.UsuarioBloqueadoException;
 import com.system.bibliotec.exception.UsuarioNaoAtivadoException;
 import com.system.bibliotec.model.Usuario;
 import com.system.bibliotec.repository.UsuarioRepository;
@@ -53,7 +51,7 @@ public class AppUserDetailsService implements UserDetailsService{
 
 	    }
 
-	    private org.springframework.security.core.userdetails.User createSpringSecurityUser(String lowercaseLogin, Usuario user) {
+	    private UserSystem createSpringSecurityUser(String lowercaseLogin, Usuario user) {
 	        if (!user.isAtivo()) {
 	            throw new UsuarioNaoAtivadoException(user.saudacoes() + "Sua conta não estar ativada. É necessario ativa-la para realizar o login neste sistema. Realize o processo de recuperação de senha e ativa sua conta");
 	        }else {

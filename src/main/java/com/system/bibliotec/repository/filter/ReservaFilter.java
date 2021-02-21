@@ -19,21 +19,10 @@ public class ReservaFilter {
 
 
 
-			public ReservaFilter(Long idReserva, Long idUsuario, Long idExemplar, String createdBy, Status status,
+			public ReservaFilter(Long idReserva, Long idExemplar, Status status,
 				LocalTime horaReservaInicio, LocalTime horaReservaFim, LocalDate dataReservaInicio,
 				LocalDate dataReservaFim, LocalDate dataPrevisaoTermino) {
-				
-					
-				//check type user in context...
-				if(idUsuario == null){
-							
-					this.createdBy = ( !SecurityUtils.isCurrentUserInRole(AuthoritiesConstantsUltis.ROLE_ADMIN) || 
-					
-								!SecurityUtils.isCurrentUserInRole(AuthoritiesConstantsUltis.ROLE_USER_SYSTEM) )?  SecurityUtils.getCurrentUserLogin().get() : null; // null para funcionario...
-				}else{
-					this.idUsuario = idUsuario;
-				}
-						
+
 				this.idReserva = idReserva;				
 				this.idExemplar = idExemplar;				
 				this.status = status;

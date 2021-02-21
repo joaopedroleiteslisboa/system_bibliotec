@@ -4,6 +4,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 import java.io.IOException;
 
+import com.system.bibliotec.token.CustomJwtAccessTokenConverter;
 import org.apache.commons.io.IOUtils;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -144,7 +145,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
 	@Bean
 	public JwtAccessTokenConverter jwtAccessTokenConverter() {
-		JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+		JwtAccessTokenConverter converter = new CustomJwtAccessTokenConverter();
 
 		//converter.setSigningKey(getPublicKeyAsString());
 		converter.setVerifierKey(getPublicKeyAsString());

@@ -6,38 +6,63 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
 import com.system.bibliotec.model.Usuario;
+import org.springframework.security.core.userdetails.UserDetails;
 
-public class UserSystem extends User {
+public class UserSystem extends Usuario implements UserDetails {
 	
 
 	private static final long serialVersionUID = 1L;
 
-	private Usuario usuario;
+
 
 	private String email;
+	private String password;
+	private String username;
+
+
+	private Collection<? extends GrantedAuthority> authorities;
 
 	public UserSystem(Usuario usuario, Collection<? extends GrantedAuthority> authorities) {
-		super(usuario.getEmail(), usuario.getSenha(), authorities);
-		this.usuario = usuario;
+		super(usuario);
+
 		this.email = usuario.getEmail().toLowerCase();
+		this.password = usuario.getSenha();
+		this.username = usuario.getEmail();
+		this.authorities = authorities;
 	}
 
-	public Usuario getUsuario() {
-		return usuario;
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return authorities;
 	}
 
-	public String getEmail() {
-		return email;
+	@Override
+	public String getPassword() {
+		return password;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	@Override
+	public String getUsername() {
+		return username;
 	}
 
-	public void setUsuario(Usuario usuario) {
-		this.usuario = usuario;
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
 	}
-	
 
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
 
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return true;
+	}
 }

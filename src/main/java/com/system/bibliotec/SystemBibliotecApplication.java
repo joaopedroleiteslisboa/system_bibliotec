@@ -10,6 +10,7 @@ import com.system.bibliotec.config.SpringSecurityAuditorAware;
 
 
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.data.repository.query.SecurityEvaluationContextExtension;
 
 
@@ -32,6 +33,7 @@ public class SystemBibliotecApplication {
 	public SecurityEvaluationContextExtension securityEvaluationContextExtension() {
 		return new SecurityEvaluationContextExtension();
 	}
+
 
 
 }

@@ -178,6 +178,10 @@ public class Usuario extends AbstractAuditingEntity {
 	public Usuario(Usuario usuario) {
 		// TODO Auto-generated constructor stub
 
+		this.id = usuario.getId();
+		this.bloqueado = usuario.isBloqueado();
+		this.motivoBloqueio = usuario.getMotivoBloqueio();
+		this.userName = usuario.getUserName();
 		this.ativo = usuario.isAtivo();
 		this.bloqueado = usuario.isBloqueado();
 		this.chaveAtivacao = usuario.getChaveAtivacao();

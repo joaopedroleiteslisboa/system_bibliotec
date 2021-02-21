@@ -23,23 +23,13 @@ public class SolicitacaoFilter {
     
 
 
-    public SolicitacaoFilter(Long idSolicitacao, Long idUsuario, Long idExemplar, String createdBy, Status status,
+    public SolicitacaoFilter(Long idSolicitacao,Long idExemplar, Status status,
     boolean rejeitado, TipoSolicitacao tipo, LocalTime horaSolicitacaoInicio, LocalTime horaSolicitacaoFim,
     LocalDate dataSolicitacaoInicio, LocalDate dataSolicitacaoFim) {
         
         this.idSolicitacao = idSolicitacao;
 
 
-	    //check type user in context...
-				if(idUsuario == null){
-							
-					this.createdBy = ( !SecurityUtils.isCurrentUserInRole(AuthoritiesConstantsUltis.ROLE_ADMIN) || 
-					
-								!SecurityUtils.isCurrentUserInRole(AuthoritiesConstantsUltis.ROLE_USER_SYSTEM) )?  SecurityUtils.getCurrentUserLogin().get() : null; // null para funcionario...
-				}else{
-					this.idUsuario = idUsuario;
-                }
-                
         this.idExemplar = idExemplar;        
         this.status = status;
         this.rejeitado = rejeitado;

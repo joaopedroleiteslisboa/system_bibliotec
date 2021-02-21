@@ -1,5 +1,6 @@
 package com.system.bibliotec.controller;
 
+import java.security.Principal;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,6 +13,8 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -73,7 +76,23 @@ public class AccountResource {
 		return endPointUtil.returnObjectOrNotFound(usuarioService.obterUsuarioOnline());
 
 	}
-	 	
+
+	@GetMapping("/principal")
+	public ResponseEntity<?> gerPrincipal() {
+
+		return ResponseEntity.ok().body(SecurityContextHolder.getContext()
+				.getAuthentication()
+				.getPrincipal());
+	}
+
+	@GetMapping("/me")
+	public ResponseEntity<Principal> get(final Principal principal) {
+		OAuth2Authentication auth = (OAuth2Authentication) principal;
+
+		return ResponseEntity.ok(auth);
+	}
+
+
 	@PostMapping("/register")
 	@ResponseStatus(code = HttpStatus.CREATED)
 	public void registerAccount(@Valid @RequestBody ManagedUserDTO managedUserVM, HttpServletResponse response) {

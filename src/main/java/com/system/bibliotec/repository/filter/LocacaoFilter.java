@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.system.bibliotec.model.enums.Status;
 import com.system.bibliotec.security.AuthoritiesConstantsUltis;
 import com.system.bibliotec.security.SecurityUtils;
+import com.system.bibliotec.security.UserSystem;
 import com.system.bibliotec.service.UserService;
 
 import lombok.*;
@@ -25,21 +26,11 @@ public class LocacaoFilter {
 	
 
 	
-	public LocacaoFilter(String createdBy, Long idLocacao, Long idExemplar, Long idUsuario, Status statusLocacao,
+	public LocacaoFilter(Long idLocacao, Long idExemplar,  Status statusLocacao,
 			LocalTime horaLocacaoInicio, LocalTime horaLocacaoFim, LocalTime horaCancelamentoLocacaoInicio,
 			LocalTime horaCancelamentoLocacaoFim, LocalDate dataLocacaoInicio, LocalDate dataLocacaoFim,
 			LocalDate dataCancelamentoLocacaoInicio, LocalDate dataCancelamentoLocacaoFim) {
-		
-			//check type user in context...
-			if(idUsuario == null){
-						
-				this.createdBy = ( !SecurityUtils.isCurrentUserInRole(AuthoritiesConstantsUltis.ROLE_ADMIN) || 
-				
-							!SecurityUtils.isCurrentUserInRole(AuthoritiesConstantsUltis.ROLE_USER_SYSTEM) )?  SecurityUtils.getCurrentUserLogin().get() : null; // null para funcionario...
-			}else{
-				this.idUsuario = idUsuario;
-			}
-		
+
 		this.idLocacao = idLocacao;
 		this.idExemplar = idExemplar;		
 		this.statusLocacao = statusLocacao;

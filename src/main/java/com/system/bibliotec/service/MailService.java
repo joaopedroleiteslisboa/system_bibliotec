@@ -159,7 +159,7 @@ public class MailService{
 	
 	
 	private String getCurrentAuditorUser() {
-		return Optional.of(SecurityUtils.getCurrentUserLogin().orElse(ConstantsUtils.ANONYMOUS_USER)).get();
+		return Optional.of(SecurityUtils.getCurrentUserLoginId().orElse(ConstantsUtils.ANONYMOUS_USER)).get();
 	}
 
 

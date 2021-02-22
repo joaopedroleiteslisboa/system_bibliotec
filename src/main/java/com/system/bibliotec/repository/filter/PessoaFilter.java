@@ -9,6 +9,7 @@ import com.system.bibliotec.model.enums.StatusPessoa;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import java.time.LocalDate;
+
 @Getter
 @Setter
 @ToString
@@ -18,21 +19,19 @@ import java.time.LocalDate;
 @Data
 public class PessoaFilter {
 
-	private String nome;
+    private String nome;
 
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private LocalDate dataNascimento;
-	
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private LocalDate dataNascimentoDe;
-	
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private LocalDate dataNascimentoAte;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate dataNascimento;
 
-	@Enumerated(EnumType.STRING)
-	private StatusPessoa statusCliente;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate dataNascimentoDe;
 
-	
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate dataNascimentoAte;
 
-	
+    @Enumerated(EnumType.STRING)
+    private StatusPessoa statusCliente;
+
+
 }

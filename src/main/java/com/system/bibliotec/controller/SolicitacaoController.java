@@ -37,8 +37,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class SolicitacaoController {
 
 
-
-
     @Autowired
     private final SolicitacaoService service;
 
@@ -48,39 +46,35 @@ public class SolicitacaoController {
     }
 
 
-    
     @PreAuthorize("hasAnyRole('ROLE_USER_ANONIMO','ROLE_ADMIN', 'ROLE_USER_SYSTEM') and #oauth2.hasScope('read')")
     @GetMapping
     public List<SolicitacaoVM> pesquisar(SolicitacaoFilter filter) {
-        
+
         return service.filterQuery(filter);
     }
 
     @PostMapping("/locacao")
     @PreAuthorize("hasAnyRole('ROLE_USER_ANONIMO' ) and #oauth2.hasScope('write')")
-    public ResponseEntity<SolicitacaoVM> solicitarLocacao(@RequestBody  @Valid   SolicitacaoLocacaoDTO dto){
-        
+    public ResponseEntity<SolicitacaoVM> solicitarLocacao(@RequestBody @Valid SolicitacaoLocacaoDTO dto) {
+
         return ResponseEntity.status(HttpStatus.CREATED).body(service.solicitarLocacao(dto));
     }
 
 
     @PutMapping("/cancelamento/locacao")
     @PreAuthorize("hasAnyRole('ROLE_USER_ANONIMO' ) and #oauth2.hasScope('write')")
-    public ResponseEntity<?> cancelarSolicitacaoLocacao(@RequestBody @Valid FormCancelamentoSolicitacaoLocacao dto){
-        
+    public ResponseEntity<?> cancelarSolicitacaoLocacao(@RequestBody @Valid FormCancelamentoSolicitacaoLocacao dto) {
+
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(service.solicitarCancelamentoDeSolicitacaoLocacao(dto));
     }
 
 
-    
- 
-
-    //Implementar controller de edição de solicitação    
+    //Implementar controller de edição de solicitação
 
 
     //implementar solicitação de mudança de documentos
 
-    
+
 }
 
 

@@ -17,53 +17,46 @@ import com.system.bibliotec.security.SecurityUtils;
 public class ReservaFilter {
 
 
+    public ReservaFilter(Long idReserva, Long idExemplar, Status status,
+                         LocalTime horaReservaInicio, LocalTime horaReservaFim, LocalDate dataReservaInicio,
+                         LocalDate dataReservaFim, LocalDate dataPrevisaoTermino) {
+
+        this.idReserva = idReserva;
+        this.idExemplar = idExemplar;
+        this.status = status;
+        this.horaReservaInicio = horaReservaInicio;
+        this.horaReservaFim = horaReservaFim;
+        this.dataReservaInicio = dataReservaInicio;
+        this.dataReservaFim = dataReservaFim;
+        this.dataPrevisaoTermino = dataPrevisaoTermino;
+    }
 
 
-			public ReservaFilter(Long idReserva, Long idExemplar, Status status,
-				LocalTime horaReservaInicio, LocalTime horaReservaFim, LocalDate dataReservaInicio,
-				LocalDate dataReservaFim, LocalDate dataPrevisaoTermino) {
+    private Long idReserva;
 
-				this.idReserva = idReserva;				
-				this.idExemplar = idExemplar;				
-				this.status = status;
-				this.horaReservaInicio = horaReservaInicio;
-				this.horaReservaFim = horaReservaFim;
-				this.dataReservaInicio = dataReservaInicio;
-				this.dataReservaFim = dataReservaFim;
-				this.dataPrevisaoTermino = dataPrevisaoTermino;
-		}
+    private Long idUsuario;
 
+    private Long idExemplar;
+
+    private String createdBy;  // anonymous user online...
+
+    private Status status;
+
+    @JsonFormat(pattern = "kk:mm:ss")
+    private LocalTime horaReservaInicio;
 
 
-	private Long idReserva;
+    @JsonFormat(pattern = "kk:mm:ss")
+    private LocalTime horaReservaFim;
 
-	private Long idUsuario;
+    @DateTimeFormat(pattern = "yyyy/MM/dd")
+    private LocalDate dataReservaInicio;
 
-	private Long idExemplar;
+    @DateTimeFormat(pattern = "yyyy/MM/dd")
+    private LocalDate dataReservaFim;
 
-	private String createdBy;  // anonymous user online...
-
-	private Status status;
-	
-	@JsonFormat(pattern = "kk:mm:ss")
-	private LocalTime horaReservaInicio;
-
-		
-	@JsonFormat(pattern = "kk:mm:ss")
-	private LocalTime horaReservaFim;
-
-	@DateTimeFormat(pattern = "yyyy/MM/dd")
-	private LocalDate dataReservaInicio;
-
-	@DateTimeFormat(pattern = "yyyy/MM/dd")
-	private LocalDate dataReservaFim;
-
-	@DateTimeFormat(pattern = "yyyy/MM/dd")
-	private LocalDate dataPrevisaoTermino;
+    @DateTimeFormat(pattern = "yyyy/MM/dd")
+    private LocalDate dataPrevisaoTermino;
 
 
-
-
-
-	
 }

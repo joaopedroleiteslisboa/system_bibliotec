@@ -4,6 +4,6 @@ import com.system.bibliotec.model.Endereco;
 
 public interface IValidaEndereco {
 
-	
-	public void validaEndereco(Endereco endereco);
+
+    public void validaEndereco(Endereco endereco);
 }

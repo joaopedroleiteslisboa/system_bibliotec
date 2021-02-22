@@ -13,17 +13,13 @@ import com.system.bibliotec.service.vm.ReservaVM;
 
 public interface IOperacaoReserva extends IAuditorTokenDeUsuarioDoContexto {
 
-	public ReservaVM reservaLivro(SolicitacaoReservaDTO reserva);
+    public ReservaVM reservaLivro(SolicitacaoReservaDTO reserva);
 
-	public ReservaCanceladaVM cancelarReserva(Long idReserva);
+    public ReservaCanceladaVM cancelarReserva(Long idReserva);
 
-	public ReservaVM findByIdReserva(Long idReserva);
-	
-	public List<ReservaVM>  findAllByReservaDoUsuario(Pageable pageable);
-	
-	
-	
-	
-	
-	
+    public ReservaVM findByIdReserva(Long idReserva);
+
+    public List<ReservaVM> findAllByReservaDoUsuario(Pageable pageable);
+
+
 }

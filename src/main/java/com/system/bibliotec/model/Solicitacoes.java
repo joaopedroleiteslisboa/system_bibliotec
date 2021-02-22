@@ -35,8 +35,7 @@ import lombok.Setter;
 @Table(name = "solicitacoes")
 public class Solicitacoes extends AbstractAuditingEntity {
 
-  
-    
+
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo")
@@ -72,7 +71,7 @@ public class Solicitacoes extends AbstractAuditingEntity {
     private StatusProcessamento statusProcessamento;
 
     @NotNull(message = "Solicitação Precisa ter um usuario vinculado")
-	@ManyToOne	
-	@JoinColumn(name = "idUsuario")
-	private Usuario usuario;
+    @ManyToOne
+    @JoinColumn(name = "idUsuario")
+    private Usuario usuario;
 }

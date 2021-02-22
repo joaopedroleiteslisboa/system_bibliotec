@@ -18,16 +18,15 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class MapeadorSolicitacao {
-    
+
     @Autowired
     private final UserService userService;
 
 
-
     public MapeadorSolicitacao(UserService userService) {
-		this.userService = userService;
+        this.userService = userService;
     }
-    
+
     public SolicitacaoVM entytiParaEntidadeVM(Solicitacoes s) {
         return new SolicitacaoVM(s);
     }
@@ -36,13 +35,13 @@ public class MapeadorSolicitacao {
         return new SolicitacaoVM(s, nomeExemplar);
     }
 
-   
+
     public List<SolicitacaoVM> entytiParaEntidadeVM(List<Solicitacoes> r) {
         return r.stream().filter(Objects::nonNull).map(this::entytiParaEntidadeVM).collect(Collectors.toList());
     }
 
 
-    public Solicitacoes dtoLocacaoParaEntidade(SolicitacaoLocacaoDTO dto){
+    public Solicitacoes dtoLocacaoParaEntidade(SolicitacaoLocacaoDTO dto) {
 
         Solicitacoes entity = new Solicitacoes();
 
@@ -53,19 +52,15 @@ public class MapeadorSolicitacao {
         entity.setStatus(Status.EM_ANALISE);
         entity.setTipo(TipoSolicitacao.LOCACAO);
         entity.setStatusProcessamento(StatusProcessamento.NAO_HABILITADO_A_PROCESSAMENTO);
-        
+
         try {
-        entity.setUsuario(userService.findOneByUsuarioContexto());
-       } catch (Exception e) {
-           throw new ErrorInternoException("Error interno da Aplicação. Por gentileza informar a um Atendente do System biblitec", e);
-       } 
-       
+            entity.setUsuario(userService.findOneByUsuarioContexto());
+        } catch (Exception e) {
+            throw new ErrorInternoException("Error interno da Aplicação. Por gentileza informar a um Atendente do System biblitec", e);
+        }
+
         return entity;
     }
-
-	
-
-    
 
 
 }

@@ -13,12 +13,12 @@ import java.awt.*;
 import java.io.Serializable;
 
 
-public class EventoSistema<T> extends ApplicationEvent{
+public class EventoSistema<T> extends ApplicationEvent {
 
     private T t;
-    
+
     public Object obj;
-    
+
     public EventoSistema(Object o, T t) {
         super(o);
         this.obj = o;
@@ -36,12 +36,12 @@ public class EventoSistema<T> extends ApplicationEvent{
     }
 
 
-    public boolean isEventSendEmailToUser(){
-	      return (t instanceof Usuario || t instanceof UserSystem ||
-      		t instanceof User || t instanceof UserDetails
-      		&& obj instanceof MailService)? true: false;
-  }
-    
+    public boolean isEventSendEmailToUser() {
+        return (t instanceof Usuario || t instanceof UserSystem ||
+                t instanceof User || t instanceof UserDetails
+                && obj instanceof MailService) ? true : false;
+    }
+
     public boolean isNotNullAndMinValue() {
         boolean retorno = false;
 
@@ -49,47 +49,46 @@ public class EventoSistema<T> extends ApplicationEvent{
 
             if (t instanceof String) {
 
-                retorno =  ((!((String) t).isEmpty()) ? true : false);
+                retorno = ((!((String) t).isEmpty()) ? true : false);
             } else if (t instanceof Integer) {
 
-                retorno = ( ((Integer) t)  >= Integer.MIN_VALUE )? true: false;
+                retorno = (((Integer) t) >= Integer.MIN_VALUE) ? true : false;
 
-            }else if (t instanceof Double) {
+            } else if (t instanceof Double) {
 
-                retorno = (   ((Double) t) >= Double.MIN_VALUE)? true: false;
-            }else if (t instanceof Float) {
+                retorno = (((Double) t) >= Double.MIN_VALUE) ? true : false;
+            } else if (t instanceof Float) {
 
-                retorno = (   ((Float) t) >= Float.MIN_VALUE)? true: false;
+                retorno = (((Float) t) >= Float.MIN_VALUE) ? true : false;
 
-            }else if (t instanceof Boolean) {
+            } else if (t instanceof Boolean) {
 
                 retorno = true;
 
-            }else if (t instanceof Long) {
+            } else if (t instanceof Long) {
 
-                retorno = (   ((Long) t) >= Long.MIN_VALUE)? true: false;
+                retorno = (((Long) t) >= Long.MIN_VALUE) ? true : false;
 
-            }else if (t instanceof java.util.List) {
+            } else if (t instanceof java.util.List) {
 
-                retorno = (   ((java.util.List) t).isEmpty())? true: false;
+                retorno = (((java.util.List) t).isEmpty()) ? true : false;
 
-            }else if (t instanceof Usuario){
+            } else if (t instanceof Usuario) {
 
                 retorno = true;
             }
 
-        }else{
+        } else {
             retorno = false;
         }
 
         return retorno;
     }
 
-    private boolean tIsNotNull(){
+    private boolean tIsNotNull() {
 
-        return (t !=null)? true: false;
+        return (t != null) ? true : false;
     }
 
-   
 
 }

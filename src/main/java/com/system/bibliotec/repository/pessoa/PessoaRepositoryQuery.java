@@ -7,6 +7,6 @@ import com.system.bibliotec.model.Pessoa;
 import com.system.bibliotec.repository.filter.PessoaFilter;
 
 public interface PessoaRepositoryQuery {
-	public Page<Pessoa> filtrar(PessoaFilter filter, Pageable pageable);
+    public Page<Pessoa> filtrar(PessoaFilter filter, Pageable pageable);
 
 }

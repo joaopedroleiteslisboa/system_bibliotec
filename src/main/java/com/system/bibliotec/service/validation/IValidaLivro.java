@@ -8,18 +8,13 @@ import com.system.bibliotec.model.enums.StatusLivro;
  */
 
 public interface IValidaLivro {
-	
-	void validaLivro(Livro livro);
-	
-	void validaLivro(Long id);
-			
-	void validaLivro(Integer estoque); 
-			
-	
 
-	
-	
-	
+    void validaLivro(Livro livro);
+
+    void validaLivro(Long id);
+
+    void validaLivro(Integer estoque);
+
 
 }
 

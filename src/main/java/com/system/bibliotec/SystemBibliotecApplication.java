@@ -18,22 +18,21 @@ import org.springframework.security.data.repository.query.SecurityEvaluationCont
 @EnableJpaAuditing(auditorAwareRef = "auditorAware")
 @EnableAsync
 public class SystemBibliotecApplication {
-	
-	
-	public static void main(String[] args) {
-		SpringApplication.run(SystemBibliotecApplication.class, args);
-	}
 
-	@Bean
-	public AuditorAware<String> auditorAware() {
-		return new SpringSecurityAuditorAware();
-	}
 
-	@Bean
-	public SecurityEvaluationContextExtension securityEvaluationContextExtension() {
-		return new SecurityEvaluationContextExtension();
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(SystemBibliotecApplication.class, args);
+    }
 
+    @Bean
+    public AuditorAware<String> auditorAware() {
+        return new SpringSecurityAuditorAware();
+    }
+
+    @Bean
+    public SecurityEvaluationContextExtension securityEvaluationContextExtension() {
+        return new SecurityEvaluationContextExtension();
+    }
 
 
 }

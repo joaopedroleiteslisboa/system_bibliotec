@@ -6,9 +6,9 @@ import lombok.ToString;
 @Data
 @ToString
 public class FormCancelamentoSolicitacao {
-    
+
 
     private String motivoCancelamento;
 
-    
+
 }

@@ -17,31 +17,31 @@ import javax.persistence.*;
 public class VOAcoesContextoEndPoints extends AbstractAuditingEntity {
 
 
-    @Column(name="recursoSolicitado")
+    @Column(name = "recursoSolicitado")
     private String recursoSolicitado;
-   
-	@ElementCollection
-	@MapKeyColumn(name = "header")
-	@Column(name = "value")
-	@CollectionTable(name = "acoesEndPoint_data_headers", joinColumns = @JoinColumn(name = "id"))
-	private Map<String, String> dataHeaders = new HashMap<>();
-	
-	@ElementCollection
-	@MapKeyColumn(name = "param")
-	@Column(name = "value")
-	@CollectionTable(name = "acoesEndPoint_data_parans", joinColumns = @JoinColumn(name = "id"))
-	private Map<String, String> dataParans = new HashMap<>();
-	
-    @Column(name="body")
+
+    @ElementCollection
+    @MapKeyColumn(name = "header")
+    @Column(name = "value")
+    @CollectionTable(name = "acoesEndPoint_data_headers", joinColumns = @JoinColumn(name = "id"))
+    private Map<String, String> dataHeaders = new HashMap<>();
+
+    @ElementCollection
+    @MapKeyColumn(name = "param")
+    @Column(name = "value")
+    @CollectionTable(name = "acoesEndPoint_data_parans", joinColumns = @JoinColumn(name = "id"))
+    private Map<String, String> dataParans = new HashMap<>();
+
+    @Column(name = "body")
     private String body;
 
-    @Column(name="method")
+    @Column(name = "method")
     private String method;
 
-    @Column(name="atividadeEsperada")
+    @Column(name = "atividadeEsperada")
     private String atividadeEsperada;
 
-    @Column(name="ip")
+    @Column(name = "ip")
     private String ip;
 
 }

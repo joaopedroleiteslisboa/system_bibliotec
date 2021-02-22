@@ -2,22 +2,19 @@ package com.system.bibliotec.model.enums;
 
 public enum Idioma {
 
-	ESPANHOL("Espanhol"), INGLES("Ingles"), ARABE("Arabe"), PORTUGUES("Portugues"),
-	BENGALI("Bengali"), RUSSO("Russo"), JAPONES("Japones"), PUNJABI("Punjabi");
+    ESPANHOL("Espanhol"), INGLES("Ingles"), ARABE("Arabe"), PORTUGUES("Portugues"),
+    BENGALI("Bengali"), RUSSO("Russo"), JAPONES("Japones"), PUNJABI("Punjabi");
 
-	private String idioma;
+    private String idioma;
 
-	Idioma(String idioma) {
+    Idioma(String idioma) {
 
-		this.idioma = idioma;
-	}
+        this.idioma = idioma;
+    }
 
-	public String getIdioma() {
-		return idioma;
-	}
+    public String getIdioma() {
+        return idioma;
+    }
 
-	
-
-	
 
 }

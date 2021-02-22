@@ -12,12 +12,12 @@ public class EmailInvalidoOuInexistenteException extends RuntimeException {
     private static final long serialVersionUID = 6450816969555682660L;
 
     public EmailInvalidoOuInexistenteException() {
-    super();
-    // TODO Auto-generated constructor stub
-}
+        super();
+        // TODO Auto-generated constructor stub
+    }
 
     public EmailInvalidoOuInexistenteException(String message, Throwable cause, boolean enableSuppression,
-                                  boolean writableStackTrace) {
+                                               boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
         // TODO Auto-generated constructor stub
     }
@@ -26,7 +26,6 @@ public class EmailInvalidoOuInexistenteException extends RuntimeException {
         super(cause);
         // TODO Auto-generated constructor stub
     }
-
 
 
     public EmailInvalidoOuInexistenteException(String message) {

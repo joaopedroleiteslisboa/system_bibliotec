@@ -8,15 +8,15 @@ import lombok.Setter;
 @Setter /* View Model */
 public class LocacaoCancelamentoVM extends LocacaoVM {
 
-	private String horaCancelamento;
-	private String dataCancelamento;
+    private String horaCancelamento;
+    private String dataCancelamento;
 
-	public LocacaoCancelamentoVM(Locacoes entidade) {
-		super(entidade);
+    public LocacaoCancelamentoVM(Locacoes entidade) {
+        super(entidade);
 
-		this.dataCancelamento = entidade.getDataCancelamento().toString();
-		this.horaCancelamento = entidade.getHoraCancelamento().toString();
+        this.dataCancelamento = entidade.getDataCancelamento().toString();
+        this.horaCancelamento = entidade.getHoraCancelamento().toString();
 
-	}
+    }
 
 }

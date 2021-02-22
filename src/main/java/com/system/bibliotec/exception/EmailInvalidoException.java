@@ -6,37 +6,37 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 public class EmailInvalidoException extends RuntimeException {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 6450816969034682660L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 6450816969034682660L;
 
-	public EmailInvalidoException() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
+    public EmailInvalidoException() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
 
-	public EmailInvalidoException(String message, Throwable cause, boolean enableSuppression,
-			boolean writableStackTrace) {
-		super(message, cause, enableSuppression, writableStackTrace);
-		// TODO Auto-generated constructor stub
-	}
+    public EmailInvalidoException(String message, Throwable cause, boolean enableSuppression,
+                                  boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+        // TODO Auto-generated constructor stub
+    }
 
-	public EmailInvalidoException(Throwable cause) {
-		super(cause);
-		// TODO Auto-generated constructor stub
-	}
+    public EmailInvalidoException(Throwable cause) {
+        super(cause);
+        // TODO Auto-generated constructor stub
+    }
 
-	/**
-	 * 
-	 */
+    /**
+     *
+     */
 
 
-	public EmailInvalidoException(String message) {
-		super(message);
-	}
+    public EmailInvalidoException(String message) {
+        super(message);
+    }
 
-	public EmailInvalidoException(String msg, Throwable cause) {
-		super(msg, cause);
-	}
+    public EmailInvalidoException(String msg, Throwable cause) {
+        super(msg, cause);
+    }
 }

@@ -7,11 +7,11 @@ import com.system.bibliotec.service.vm.AgendamentoVM;
 
 public class MapeadorAgendamento {
 
-	
-	public static ResponseEntity<AgendamentoVM> mapperResponse(Object data, HttpStatus status) {
-							
-		return new ResponseEntity<AgendamentoVM>(new AgendamentoVM(data), status);
-	}
 
-	
+    public static ResponseEntity<AgendamentoVM> mapperResponse(Object data, HttpStatus status) {
+
+        return new ResponseEntity<AgendamentoVM>(new AgendamentoVM(data), status);
+    }
+
+
 }

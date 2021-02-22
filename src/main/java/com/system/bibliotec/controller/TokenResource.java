@@ -21,42 +21,38 @@ import com.system.bibliotec.config.ApiPropertyConfig;
 @RequestMapping("/token/revoke")
 public class TokenResource {
 
-	@Autowired
-	private ApiPropertyConfig apiProperty;
+    @Autowired
+    private ApiPropertyConfig apiProperty;
 
 
-	@Resource(name = "tokenServices")
-	private ConsumerTokenServices tokenServices;
+    @Resource(name = "tokenServices")
+    private ConsumerTokenServices tokenServices;
 
 
-
-	@RequestMapping(method = RequestMethod.DELETE)
-	@ResponseBody
-	public void revokeToken(HttpServletRequest request) {
-		String authorization = request.getHeader("Authorization");
-		if (authorization != null && authorization.contains("Bearer")) {
-			String tokenId = authorization.substring("Bearer".length() + 1);
-			System.out.println("tokenId : " + tokenId);
-			tokenServices.revokeToken(tokenId);
-			//tokenStore.removeRefreshToken(token);
-		}
-	}
-
+    @RequestMapping(method = RequestMethod.DELETE)
+    @ResponseBody
+    public void revokeToken(HttpServletRequest request) {
+        String authorization = request.getHeader("Authorization");
+        if (authorization != null && authorization.contains("Bearer")) {
+            String tokenId = authorization.substring("Bearer".length() + 1);
+            System.out.println("tokenId : " + tokenId);
+            tokenServices.revokeToken(tokenId);
+            //tokenStore.removeRefreshToken(token);
+        }
+    }
 
 
-	@DeleteMapping("/revokeee")
-	public void revoke(HttpServletRequest req, HttpServletResponse resp) {
-		Cookie cookie = new Cookie("refreshToken", null);
-		cookie.setHttpOnly(true);
-		cookie.setSecure(apiProperty.getSeguranca().isEnableHttps());
-		cookie.setPath(req.getContextPath() + "/oauth/token");
-		cookie.setMaxAge(0);
+    @DeleteMapping("/revokeee")
+    public void revoke(HttpServletRequest req, HttpServletResponse resp) {
+        Cookie cookie = new Cookie("refreshToken", null);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(apiProperty.getSeguranca().isEnableHttps());
+        cookie.setPath(req.getContextPath() + "/oauth/token");
+        cookie.setMaxAge(0);
 
-		resp.addCookie(cookie);
-		resp.setStatus(HttpStatus.NO_CONTENT.value());
-	}
-
-
+        resp.addCookie(cookie);
+        resp.setStatus(HttpStatus.NO_CONTENT.value());
+    }
 
 
 }

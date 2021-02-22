@@ -10,110 +10,110 @@ import java.time.temporal.ChronoUnit;
 
 public class HoraDiasDataLocalService {
 
-	private static long DEFAULT_QUANTIDADE_DIAS_MAXIMO_PARA_ANALISE_ATIVACAO_CONTA_USUARIO = 2;
+    private static long DEFAULT_QUANTIDADE_DIAS_MAXIMO_PARA_ANALISE_ATIVACAO_CONTA_USUARIO = 2;
 
-	public static LocalTime horaLocal() {
-		
-			return LocalTime.now();
+    public static LocalTime horaLocal() {
 
-	}
+        return LocalTime.now();
 
-	public static LocalDate dataLocal() {
-		
-		return LocalDate.now();
+    }
 
-	}
+    public static LocalDate dataLocal() {
 
-	public static LocalDate dataReservaLimite() {
+        return LocalDate.now();
 
-		LocalDate localDatePlus3 = LocalDate.now().plusDays(3);
+    }
 
-		LocalDate localDateComDiaUtil = oBterProximoDiaUtil(localDatePlus3);
+    public static LocalDate dataReservaLimite() {
 
-		return localDateComDiaUtil;
+        LocalDate localDatePlus3 = LocalDate.now().plusDays(3);
 
-	}
+        LocalDate localDateComDiaUtil = oBterProximoDiaUtil(localDatePlus3);
 
-	public static LocalDate dataLocacaoDevolucao() {
+        return localDateComDiaUtil;
 
-		LocalDate localDatePlus10 = LocalDate.now().plusDays(10);
+    }
 
-		LocalDate localDateAnalyzed = oBterProximoDiaUtil(localDatePlus10);
+    public static LocalDate dataLocacaoDevolucao() {
 
-		return localDateAnalyzed;
+        LocalDate localDatePlus10 = LocalDate.now().plusDays(10);
 
-	}
+        LocalDate localDateAnalyzed = oBterProximoDiaUtil(localDatePlus10);
 
-	public static LocalDate dataRenovacaoLocacao(LocalDate dataTerminoLocacao) {
+        return localDateAnalyzed;
 
-		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    }
 
-		LocalDate localDateAnalyzed = null;
+    public static LocalDate dataRenovacaoLocacao(LocalDate dataTerminoLocacao) {
 
-		LocalDate localDateCurrent = LocalDate.now();
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-		if (localDateCurrent.isBefore(dataTerminoLocacao) || dataTerminoLocacao.isEqual(localDateCurrent)) {
+        LocalDate localDateAnalyzed = null;
 
-			LocalDate localDate_Plus10_Plus_dataTerminoLocacao = dataTerminoLocacao.plusDays(10);
+        LocalDate localDateCurrent = LocalDate.now();
 
-			localDateAnalyzed = oBterProximoDiaUtil(localDate_Plus10_Plus_dataTerminoLocacao);
+        if (localDateCurrent.isBefore(dataTerminoLocacao) || dataTerminoLocacao.isEqual(localDateCurrent)) {
 
-		}
+            LocalDate localDate_Plus10_Plus_dataTerminoLocacao = dataTerminoLocacao.plusDays(10);
 
-		LocalDate dataValida = LocalDate.parse(localDateAnalyzed.toString(), dateTimeFormatter);
-		return dataValida;
+            localDateAnalyzed = oBterProximoDiaUtil(localDate_Plus10_Plus_dataTerminoLocacao);
 
-	}
+        }
 
-	public static boolean isDataRenovacaoLocacaoValida(LocalDate dataTerminoLocacao) {
+        LocalDate dataValida = LocalDate.parse(localDateAnalyzed.toString(), dateTimeFormatter);
+        return dataValida;
 
-		boolean isDataValida = false;
+    }
 
-		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    public static boolean isDataRenovacaoLocacaoValida(LocalDate dataTerminoLocacao) {
 
-		LocalDate dataTerminoLocacaoFormatada = LocalDate.parse(dataTerminoLocacao.format(dateTimeFormatter));
+        boolean isDataValida = false;
 
-		LocalDate localDateCurrent = LocalDate.parse(LocalDate.now().format(dateTimeFormatter));
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-		if (localDateCurrent.isBefore(dataTerminoLocacaoFormatada)
-				|| dataTerminoLocacaoFormatada.isEqual(localDateCurrent)) {
+        LocalDate dataTerminoLocacaoFormatada = LocalDate.parse(dataTerminoLocacao.format(dateTimeFormatter));
 
-			isDataValida = true;
+        LocalDate localDateCurrent = LocalDate.parse(LocalDate.now().format(dateTimeFormatter));
 
-		}
+        if (localDateCurrent.isBefore(dataTerminoLocacaoFormatada)
+                || dataTerminoLocacaoFormatada.isEqual(localDateCurrent)) {
 
-		return isDataValida;
+            isDataValida = true;
 
-	}
+        }
 
-	private static LocalDate oBterProximoDiaUtil(LocalDate dataAgendada) {
+        return isDataValida;
 
-		if (dataAgendada.getDayOfWeek() == DayOfWeek.SATURDAY) {
+    }
 
-			dataAgendada = dataAgendada.plusDays(2);
+    private static LocalDate oBterProximoDiaUtil(LocalDate dataAgendada) {
 
-		} else if (dataAgendada.getDayOfWeek() == DayOfWeek.SUNDAY) {
+        if (dataAgendada.getDayOfWeek() == DayOfWeek.SATURDAY) {
 
-			dataAgendada = dataAgendada.plusDays(1);
+            dataAgendada = dataAgendada.plusDays(2);
 
-		}
+        } else if (dataAgendada.getDayOfWeek() == DayOfWeek.SUNDAY) {
 
-		return dataAgendada;
+            dataAgendada = dataAgendada.plusDays(1);
 
-	}
+        }
 
-	public static boolean processoAtivacaoUsuarioEAtivo(Instant inst) {
+        return dataAgendada;
 
-		LocalDate dataProcessoAtivacaoUsuario = inst.atZone(ZoneId.of("America/Sao_Paulo")).toLocalDate();
+    }
 
-		if (dataProcessoAtivacaoUsuario.isBefore(LocalDate.now())) {
-			long diasPassados = ChronoUnit.DAYS.between(dataProcessoAtivacaoUsuario, LocalDate.now());
-			if (diasPassados > DEFAULT_QUANTIDADE_DIAS_MAXIMO_PARA_ANALISE_ATIVACAO_CONTA_USUARIO) {
-				return true;
-			}
-		}
-		return false;
+    public static boolean processoAtivacaoUsuarioEAtivo(Instant inst) {
 
-	}
+        LocalDate dataProcessoAtivacaoUsuario = inst.atZone(ZoneId.of("America/Sao_Paulo")).toLocalDate();
+
+        if (dataProcessoAtivacaoUsuario.isBefore(LocalDate.now())) {
+            long diasPassados = ChronoUnit.DAYS.between(dataProcessoAtivacaoUsuario, LocalDate.now());
+            if (diasPassados > DEFAULT_QUANTIDADE_DIAS_MAXIMO_PARA_ANALISE_ATIVACAO_CONTA_USUARIO) {
+                return true;
+            }
+        }
+        return false;
+
+    }
 
 }

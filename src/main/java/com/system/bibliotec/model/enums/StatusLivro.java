@@ -2,19 +2,18 @@ package com.system.bibliotec.model.enums;
 
 public enum StatusLivro {
 
-	AVARIADO("Avariado"), ATIVO("Ativo");
+    AVARIADO("Avariado"), ATIVO("Ativo");
 
-	private String statusReservado;
+    private String statusReservado;
 
-	StatusLivro(String statusReservado) {
+    StatusLivro(String statusReservado) {
 
-		this.statusReservado = statusReservado;
-	}
+        this.statusReservado = statusReservado;
+    }
 
-	public String getstatusReservado() {
-		return statusReservado;
-	}
+    public String getstatusReservado() {
+        return statusReservado;
+    }
 
-	
 
 }

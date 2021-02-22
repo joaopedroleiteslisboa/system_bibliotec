@@ -19,18 +19,16 @@ import lombok.ToString;
 @Setter
 @ToString
 public class SolicitacaoFilter {
- 
-    
 
 
-    public SolicitacaoFilter(Long idSolicitacao,Long idExemplar, Status status,
-    boolean rejeitado, TipoSolicitacao tipo, LocalTime horaSolicitacaoInicio, LocalTime horaSolicitacaoFim,
-    LocalDate dataSolicitacaoInicio, LocalDate dataSolicitacaoFim) {
-        
+    public SolicitacaoFilter(Long idSolicitacao, Long idExemplar, Status status,
+                             boolean rejeitado, TipoSolicitacao tipo, LocalTime horaSolicitacaoInicio, LocalTime horaSolicitacaoFim,
+                             LocalDate dataSolicitacaoInicio, LocalDate dataSolicitacaoFim) {
+
         this.idSolicitacao = idSolicitacao;
 
 
-        this.idExemplar = idExemplar;        
+        this.idExemplar = idExemplar;
         this.status = status;
         this.rejeitado = rejeitado;
         this.tipo = tipo;
@@ -38,37 +36,36 @@ public class SolicitacaoFilter {
         this.horaSolicitacaoFim = horaSolicitacaoFim;
         this.dataSolicitacaoInicio = dataSolicitacaoInicio;
         this.dataSolicitacaoFim = dataSolicitacaoFim;
-}
-
+    }
 
 
     private Long idSolicitacao;
 
-	private Long idUsuario;
+    private Long idUsuario;
 
-	private Long idExemplar;
+    private Long idExemplar;
 
-	private String createdBy;  // anonymous user online...
+    private String createdBy;  // anonymous user online...
 
     private Status status;
-    
+
     private boolean rejeitado;
-    
+
     private TipoSolicitacao tipo;
-	
-	@JsonFormat(pattern = "kk:mm:ss")
-	private LocalTime horaSolicitacaoInicio;
 
-		
-	@JsonFormat(pattern = "kk:mm:ss")
-	private LocalTime horaSolicitacaoFim;
+    @JsonFormat(pattern = "kk:mm:ss")
+    private LocalTime horaSolicitacaoInicio;
 
 
-	@DateTimeFormat(pattern = "yyyy/MM/dd")
-	private LocalDate dataSolicitacaoInicio;
+    @JsonFormat(pattern = "kk:mm:ss")
+    private LocalTime horaSolicitacaoFim;
+
 
     @DateTimeFormat(pattern = "yyyy/MM/dd")
-	private LocalDate dataSolicitacaoFim;
+    private LocalDate dataSolicitacaoInicio;
+
+    @DateTimeFormat(pattern = "yyyy/MM/dd")
+    private LocalDate dataSolicitacaoFim;
 
 
 }

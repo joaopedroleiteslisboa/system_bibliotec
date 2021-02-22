@@ -16,12 +16,12 @@ import java.util.List;
 @Table(name = "categorias")
 public class Categoria extends AbstractAuditingEntity {
 
-		
-	@NotBlank(message = "Este campo não pode ficar em branco")
-	@Column(name = "nome", unique = true, length = 40)
-	private String nome;
-	
-	@JsonBackReference
-	@ManyToMany(mappedBy = "categorias", fetch = FetchType.EAGER)
-	private List<Livro> livros;
+
+    @NotBlank(message = "Este campo não pode ficar em branco")
+    @Column(name = "nome", unique = true, length = 40)
+    private String nome;
+
+    @JsonBackReference
+    @ManyToMany(mappedBy = "categorias", fetch = FetchType.EAGER)
+    private List<Livro> livros;
 }

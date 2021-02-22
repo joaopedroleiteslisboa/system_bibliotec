@@ -23,81 +23,71 @@ import java.time.LocalTime;
 public class LocacaoFilter {
 
 
-	
+    public LocacaoFilter(Long idLocacao, Long idExemplar, Status statusLocacao,
+                         LocalTime horaLocacaoInicio, LocalTime horaLocacaoFim, LocalTime horaCancelamentoLocacaoInicio,
+                         LocalTime horaCancelamentoLocacaoFim, LocalDate dataLocacaoInicio, LocalDate dataLocacaoFim,
+                         LocalDate dataCancelamentoLocacaoInicio, LocalDate dataCancelamentoLocacaoFim) {
 
-	
-	public LocacaoFilter(Long idLocacao, Long idExemplar,  Status statusLocacao,
-			LocalTime horaLocacaoInicio, LocalTime horaLocacaoFim, LocalTime horaCancelamentoLocacaoInicio,
-			LocalTime horaCancelamentoLocacaoFim, LocalDate dataLocacaoInicio, LocalDate dataLocacaoFim,
-			LocalDate dataCancelamentoLocacaoInicio, LocalDate dataCancelamentoLocacaoFim) {
-
-		this.idLocacao = idLocacao;
-		this.idExemplar = idExemplar;		
-		this.statusLocacao = statusLocacao;
-		this.horaLocacaoInicio = horaLocacaoInicio;
-		this.horaLocacaoFim = horaLocacaoFim;
-		this.horaCancelamentoLocacaoInicio = horaCancelamentoLocacaoInicio;
-		this.horaCancelamentoLocacaoFim = horaCancelamentoLocacaoFim;
-		this.dataLocacaoInicio = dataLocacaoInicio;
-		this.dataLocacaoFim = dataLocacaoFim;
-		this.dataCancelamentoLocacaoInicio = dataCancelamentoLocacaoInicio;
-		this.dataCancelamentoLocacaoFim = dataCancelamentoLocacaoFim;
-	}
-	
+        this.idLocacao = idLocacao;
+        this.idExemplar = idExemplar;
+        this.statusLocacao = statusLocacao;
+        this.horaLocacaoInicio = horaLocacaoInicio;
+        this.horaLocacaoFim = horaLocacaoFim;
+        this.horaCancelamentoLocacaoInicio = horaCancelamentoLocacaoInicio;
+        this.horaCancelamentoLocacaoFim = horaCancelamentoLocacaoFim;
+        this.dataLocacaoInicio = dataLocacaoInicio;
+        this.dataLocacaoFim = dataLocacaoFim;
+        this.dataCancelamentoLocacaoInicio = dataCancelamentoLocacaoInicio;
+        this.dataCancelamentoLocacaoFim = dataCancelamentoLocacaoFim;
+    }
 
 
-	
-	private String createdBy;  // anonymous user online...
+    private String createdBy;  // anonymous user online...
 
-	private Long idLocacao;
+    private Long idLocacao;
 
-	private Long idExemplar;
+    private Long idExemplar;
 
-	private Long idUsuario;
-	
-
-	@Enumerated(EnumType.STRING)
-	private Status statusLocacao;
-
-	@JsonFormat(pattern = "hh:mm:ss")
-	@DateTimeFormat(pattern = "hh:mm:ss")
-	private LocalTime horaLocacaoInicio;
-
-	@JsonFormat(pattern = "hh:mm:ss")
-	@DateTimeFormat(pattern = "hh:mm:ss")
-	private LocalTime horaLocacaoFim;
-
-	
-	@JsonFormat(pattern = "hh:mm:ss")
-	@DateTimeFormat(pattern = "hh:mm:ss")
-	private LocalTime horaCancelamentoLocacaoInicio;
-
-	@JsonFormat(pattern = "hh:mm:ss")
-	@DateTimeFormat(pattern = "hh:mm:ss")
-	private LocalTime horaCancelamentoLocacaoFim;
+    private Long idUsuario;
 
 
-	@JsonFormat(pattern = "yyyy-MM-dd")
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private LocalDate dataLocacaoInicio;
+    @Enumerated(EnumType.STRING)
+    private Status statusLocacao;
 
-	@JsonFormat(pattern = "yyyy-MM-dd")
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private LocalDate dataLocacaoFim;
+    @JsonFormat(pattern = "hh:mm:ss")
+    @DateTimeFormat(pattern = "hh:mm:ss")
+    private LocalTime horaLocacaoInicio;
 
-
-		
-	@JsonFormat(pattern = "yyyy-MM-dd")
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private LocalDate dataCancelamentoLocacaoInicio;
-	
-	@JsonFormat(pattern = "yyyy-MM-dd")
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private LocalDate dataCancelamentoLocacaoFim;
+    @JsonFormat(pattern = "hh:mm:ss")
+    @DateTimeFormat(pattern = "hh:mm:ss")
+    private LocalTime horaLocacaoFim;
 
 
+    @JsonFormat(pattern = "hh:mm:ss")
+    @DateTimeFormat(pattern = "hh:mm:ss")
+    private LocalTime horaCancelamentoLocacaoInicio;
+
+    @JsonFormat(pattern = "hh:mm:ss")
+    @DateTimeFormat(pattern = "hh:mm:ss")
+    private LocalTime horaCancelamentoLocacaoFim;
 
 
-	
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate dataLocacaoInicio;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate dataLocacaoFim;
+
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate dataCancelamentoLocacaoInicio;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate dataCancelamentoLocacaoFim;
+
 
 }

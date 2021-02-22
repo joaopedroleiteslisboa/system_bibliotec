@@ -29,7 +29,7 @@ public class CustomJwtAccessTokenConverter extends JwtAccessTokenConverter {
             String email = (String) authentication.getPrincipal();
             if (email != null) {
 
-                UserDetails userDetails = this.userDetailsService.loadUserByUsername( email);
+                UserDetails userDetails = this.userDetailsService.loadUserByUsername(email);
 
                 Collection<? extends GrantedAuthority> authorities = userAuthentication.getAuthorities();
 

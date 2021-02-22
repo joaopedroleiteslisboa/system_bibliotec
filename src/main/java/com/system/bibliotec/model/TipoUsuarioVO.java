@@ -19,12 +19,11 @@ import lombok.ToString;
 @Table(name = "tipoUsuarioVO")
 public class TipoUsuarioVO extends AbstractAuditingEntity {
 
-	
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -8280908297718251722L;
-	@Column(name = "tipo", unique = true)
-	private String tipo;
+
+    /**
+     *
+     */
+    private static final long serialVersionUID = -8280908297718251722L;
+    @Column(name = "tipo", unique = true)
+    private String tipo;
 }

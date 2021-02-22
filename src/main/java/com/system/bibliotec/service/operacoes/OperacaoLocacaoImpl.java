@@ -55,352 +55,352 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class OperacaoLocacaoImpl implements IOperacaoLocacao {
 
-	private final IvalidaUsuarioTriagemInicial validaUsuarioPessoa;
+    private final IvalidaUsuarioTriagemInicial validaUsuarioPessoa;
 
-	private final ITriagemReservaELocacao<Locacoes, Livro, Long, Usuario> triagemInicialLocacao;
+    private final ITriagemReservaELocacao<Locacoes, Livro, Long, Usuario> triagemInicialLocacao;
 
-	private final LivroService livroService;
+    private final LivroService livroService;
 
-	private final LivroRepository livroRepository;
+    private final LivroRepository livroRepository;
 
-	private final IValidaLivro validadorLivro;
+    private final IValidaLivro validadorLivro;
 
-	private final LocacaoRepository locacaoRepository;
+    private final LocacaoRepository locacaoRepository;
 
-	private final UserService userService;
+    private final UserService userService;
 
-	private final UsuarioRepository userRepository;
+    private final UsuarioRepository userRepository;
 
-	private final IValidaPessoa validadorCliente;
+    private final IValidaPessoa validadorCliente;
 
-	private final MapeadorLocacao mapper;
+    private final MapeadorLocacao mapper;
 
-	private final ReservaRepository reservaRepository;
+    private final ReservaRepository reservaRepository;
 
-	private final SolicitacaoService solicitacaoService;
+    private final SolicitacaoService solicitacaoService;
 
-	@Autowired
-	public OperacaoLocacaoImpl(IvalidaUsuarioTriagemInicial validaUsuarioPessoa,
-			ITriagemReservaELocacao<Locacoes, Livro, Long, Usuario> triagemInicialLocacao, LivroService livroService,
-			LivroRepository livroRepository, IValidaLivro validadorLivro, LocacaoRepository locacaoRepository,
-			UserService userService, UsuarioRepository userRepository, IValidaPessoa validadorCliente,
-			MapeadorLocacao mapper, ReservaRepository reservaRepository, SolicitacaoService solicitacaoService) {
+    @Autowired
+    public OperacaoLocacaoImpl(IvalidaUsuarioTriagemInicial validaUsuarioPessoa,
+                               ITriagemReservaELocacao<Locacoes, Livro, Long, Usuario> triagemInicialLocacao, LivroService livroService,
+                               LivroRepository livroRepository, IValidaLivro validadorLivro, LocacaoRepository locacaoRepository,
+                               UserService userService, UsuarioRepository userRepository, IValidaPessoa validadorCliente,
+                               MapeadorLocacao mapper, ReservaRepository reservaRepository, SolicitacaoService solicitacaoService) {
 
-		this.validaUsuarioPessoa = validaUsuarioPessoa;
-		this.triagemInicialLocacao = triagemInicialLocacao;
-		this.livroService = livroService;
-		this.livroRepository = livroRepository;
-		this.validadorLivro = validadorLivro;
-		this.locacaoRepository = locacaoRepository;
-		this.userService = userService;
-		this.userRepository = userRepository;
-		this.validadorCliente = validadorCliente;
-		this.mapper = mapper;
-		this.reservaRepository = reservaRepository;
-		this.solicitacaoService = solicitacaoService;
-	}
+        this.validaUsuarioPessoa = validaUsuarioPessoa;
+        this.triagemInicialLocacao = triagemInicialLocacao;
+        this.livroService = livroService;
+        this.livroRepository = livroRepository;
+        this.validadorLivro = validadorLivro;
+        this.locacaoRepository = locacaoRepository;
+        this.userService = userService;
+        this.userRepository = userRepository;
+        this.validadorCliente = validadorCliente;
+        this.mapper = mapper;
+        this.reservaRepository = reservaRepository;
+        this.solicitacaoService = solicitacaoService;
+    }
 
-	@Transactional
-	@Override
-	public LocacaoVM despacharPedidoLocacao(DespachoSolicitacaoLocacaoDTO dto) {
+    @Transactional
+    @Override
+    public LocacaoVM despacharPedidoLocacao(DespachoSolicitacaoLocacaoDTO dto) {
 
-		//Usuario funcionario = userService.findOneByUsuarioContexto();  //funcionario do atendimento para locação
+        //Usuario funcionario = userService.findOneByUsuarioContexto();  //funcionario do atendimento para locação
 
-		Usuario cliente = userService.findByIdCliente(dto.getIdClienteSolicitante());
+        Usuario cliente = userService.findByIdCliente(dto.getIdClienteSolicitante());
 
-		Solicitacoes solicitacaoUsuario = solicitacaoService.findByIdSolicitacao(dto.getIdSolicitacao());
+        Solicitacoes solicitacaoUsuario = solicitacaoService.findByIdSolicitacao(dto.getIdSolicitacao());
 
-		Livro l = livroService.findByIdLivro(dto.getIdLivro());
+        Livro l = livroService.findByIdLivro(dto.getIdLivro());
 
-		log.info("Usuario " + cliente.getEmail() + " Iniciando Processo de triagem para Locação do livro: "
-				+ l.getNome());
+        log.info("Usuario " + cliente.getEmail() + " Iniciando Processo de triagem para Locação do livro: "
+                + l.getNome());
 
-		try {
-			validadorCliente.validacaoFisicaEJuridica(cliente);
-		} catch (Exception ex) { // ex é validações de negocios
-			// Encerrando processo de locação por conter inconsistência no cadastro do
-			// Cliente
-			solicitacaoService.updateStatusAndDescricao(Status.RECUSADA, dto.getIdSolicitacao(), ex.getMessage(), true);
+        try {
+            validadorCliente.validacaoFisicaEJuridica(cliente);
+        } catch (Exception ex) { // ex é validações de negocios
+            // Encerrando processo de locação por conter inconsistência no cadastro do
+            // Cliente
+            solicitacaoService.updateStatusAndDescricao(Status.RECUSADA, dto.getIdSolicitacao(), ex.getMessage(), true);
 
-			throw new OperacaoCanceladaException("Triagem de Documentação. " + ex.getMessage());
-		}
+            throw new OperacaoCanceladaException("Triagem de Documentação. " + ex.getMessage());
+        }
 
-		try {
-			validadorLivro.validaLivro(l);
-		} catch (Exception ex) { // ex é validações de negocios
+        try {
+            validadorLivro.validaLivro(l);
+        } catch (Exception ex) { // ex é validações de negocios
 
-			solicitacaoService.updateStatusAndDescricao(Status.RECUSADA, dto.getIdSolicitacao(), ex.getMessage(), true);
-			throw new OperacaoCanceladaException(ex.getMessage());
-		}
+            solicitacaoService.updateStatusAndDescricao(Status.RECUSADA, dto.getIdSolicitacao(), ex.getMessage(), true);
+            throw new OperacaoCanceladaException(ex.getMessage());
+        }
 
-		Locacoes lo = new Locacoes().builder().withHoraLocacao(HoraDiasDataLocalService.horaLocal())
-				.withDataLocacao(HoraDiasDataLocalService.dataLocal())
-				.withDataPrevisaoTerminoLocacao(HoraDiasDataLocalService.dataLocacaoDevolucao())
-				.withStatus(ConstantsUtils.DEFAULT_VALUE_STATUSLOCACAO_ATIVA)
-				.withQuantidadeDeRenovacao(ConstantsUtils.DEFAULT_VALUE_QUANTIDADE_LOCACAO_INICIAL).withUsuario(cliente)
-				.withLivro(l)
-				.withObservacoesEntrega(
-						(dto.getObservacoesEntregaLivro() != null && !dto.getObservacoesEntregaLivro().isEmpty())
-								? dto.getObservacoesEntregaLivro()
-								: ConstantsUtils.N_A)
-				.build();
+        Locacoes lo = new Locacoes().builder().withHoraLocacao(HoraDiasDataLocalService.horaLocal())
+                .withDataLocacao(HoraDiasDataLocalService.dataLocal())
+                .withDataPrevisaoTerminoLocacao(HoraDiasDataLocalService.dataLocacaoDevolucao())
+                .withStatus(ConstantsUtils.DEFAULT_VALUE_STATUSLOCACAO_ATIVA)
+                .withQuantidadeDeRenovacao(ConstantsUtils.DEFAULT_VALUE_QUANTIDADE_LOCACAO_INICIAL).withUsuario(cliente)
+                .withLivro(l)
+                .withObservacoesEntrega(
+                        (dto.getObservacoesEntregaLivro() != null && !dto.getObservacoesEntregaLivro().isEmpty())
+                                ? dto.getObservacoesEntregaLivro()
+                                : ConstantsUtils.N_A)
+                .build();
 
-		try {
-			triagemInicialLocacao.triagemReservaELocacao(lo, l, l.getId(), cliente);
-		} catch (Exception ex) { // ex é validações de negocios
-			solicitacaoService.updateStatusAndDescricao(Status.RECUSADA, dto.getIdSolicitacao(), ex.getMessage(), true);
-			throw new OperacaoCanceladaException(ex.getMessage());
-		}
+        try {
+            triagemInicialLocacao.triagemReservaELocacao(lo, l, l.getId(), cliente);
+        } catch (Exception ex) { // ex é validações de negocios
+            solicitacaoService.updateStatusAndDescricao(Status.RECUSADA, dto.getIdSolicitacao(), ex.getMessage(), true);
+            throw new OperacaoCanceladaException(ex.getMessage());
+        }
 
-		if (!isReservado(dto.getIdLivro(), dto.getIdClienteSolicitante())) {
-			livroService.decrescentarEstoque(dto.getIdLivro(), 1);
-		}
+        if (!isReservado(dto.getIdLivro(), dto.getIdClienteSolicitante())) {
+            livroService.decrescentarEstoque(dto.getIdLivro(), 1);
+        }
 
-		solicitacaoService.updateStatus(Status.HOMOLOGADA, dto.getIdSolicitacao()); // Atualizando que a solicitação foi
-																					// deferida
+        solicitacaoService.updateStatus(Status.HOMOLOGADA, dto.getIdSolicitacao()); // Atualizando que a solicitação foi
+        // deferida
 
-		locacaoRepository.save(lo);
-		locacaoRepository.flush();
+        locacaoRepository.save(lo);
+        locacaoRepository.flush();
 
-		log.info("Operação realizada com sucesso: ");
+        log.info("Operação realizada com sucesso: ");
 
-		return mapper.locacaoParaLocacaoVM(lo);
+        return mapper.locacaoParaLocacaoVM(lo);
 
-	}
+    }
 
-	@Override
-	public LocacaoVM atenderLocacao(AtendimentoLocacaoDTO dto) {
-		//Usuario funcionario = userService.findOneByUsuarioContexto(); //funcionario do atendimento para locação
+    @Override
+    public LocacaoVM atenderLocacao(AtendimentoLocacaoDTO dto) {
+        //Usuario funcionario = userService.findOneByUsuarioContexto(); //funcionario do atendimento para locação
 
-		Usuario cliente = userService.findByIdCliente(dto.getIdClienteSolicitante());
+        Usuario cliente = userService.findByIdCliente(dto.getIdClienteSolicitante());
 
-		Livro l = livroService.findByIdLivro(dto.getIdLivro());
+        Livro l = livroService.findByIdLivro(dto.getIdLivro());
 
-		Solicitacoes s = new Solicitacoes(); // historico de propostas
+        Solicitacoes s = new Solicitacoes(); // historico de propostas
 
-		s.setTipo(TipoSolicitacao.LOCACAO);
-		s.setIdExemplar(dto.getIdLivro());
-		s.setUsuario(cliente);
+        s.setTipo(TipoSolicitacao.LOCACAO);
+        s.setIdExemplar(dto.getIdLivro());
+        s.setUsuario(cliente);
 
-		log.info("Usuario " + cliente.getEmail() + " Iniciando Processo de triagem para Locação do livro: "
-				+ l.getNome());
+        log.info("Usuario " + cliente.getEmail() + " Iniciando Processo de triagem para Locação do livro: "
+                + l.getNome());
 
-		try {
-			validadorCliente.validacaoFisicaEJuridica(cliente);
-		} catch (Exception ex) { // ex é validações de negocios
-			// Encerrando processo de locação por conter inconsistência no cadastro do
-			// Cliente
-			solicitacaoService.updateStatusAndDescricao(s, Status.RECUSADA, "Triagem Documentação. " + ex.getMessage(),
-					true);
+        try {
+            validadorCliente.validacaoFisicaEJuridica(cliente);
+        } catch (Exception ex) { // ex é validações de negocios
+            // Encerrando processo de locação por conter inconsistência no cadastro do
+            // Cliente
+            solicitacaoService.updateStatusAndDescricao(s, Status.RECUSADA, "Triagem Documentação. " + ex.getMessage(),
+                    true);
 
-			throw new OperacaoCanceladaException("Triagem de Documentação. " + ex.getMessage());
-		}
+            throw new OperacaoCanceladaException("Triagem de Documentação. " + ex.getMessage());
+        }
 
-		try {
-			validadorLivro.validaLivro(l);
-		} catch (Exception ex) { // ex é validações de negocios
+        try {
+            validadorLivro.validaLivro(l);
+        } catch (Exception ex) { // ex é validações de negocios
 
-			solicitacaoService.updateStatusAndDescricao(s, Status.RECUSADA, ex.getMessage(), true);
-			throw new OperacaoCanceladaException(ex.getMessage());
-		}
+            solicitacaoService.updateStatusAndDescricao(s, Status.RECUSADA, ex.getMessage(), true);
+            throw new OperacaoCanceladaException(ex.getMessage());
+        }
 
-		Locacoes lo = new Locacoes().builder().withHoraLocacao(HoraDiasDataLocalService.horaLocal())
-				.withDataLocacao(HoraDiasDataLocalService.dataLocal())
-				.withDataPrevisaoTerminoLocacao(HoraDiasDataLocalService.dataLocacaoDevolucao())
-				.withStatus(ConstantsUtils.DEFAULT_VALUE_STATUSLOCACAO_ATIVA)
-				.withQuantidadeDeRenovacao(ConstantsUtils.DEFAULT_VALUE_QUANTIDADE_LOCACAO_INICIAL).withUsuario(cliente)
-				.withLivro(l)
-				.withObservacoesEntrega(
-						(dto.getObservacoesEntregaLivro() != null && !dto.getObservacoesEntregaLivro().isEmpty())
-								? dto.getObservacoesEntregaLivro()
-								: ConstantsUtils.N_A)
-				.build();
+        Locacoes lo = new Locacoes().builder().withHoraLocacao(HoraDiasDataLocalService.horaLocal())
+                .withDataLocacao(HoraDiasDataLocalService.dataLocal())
+                .withDataPrevisaoTerminoLocacao(HoraDiasDataLocalService.dataLocacaoDevolucao())
+                .withStatus(ConstantsUtils.DEFAULT_VALUE_STATUSLOCACAO_ATIVA)
+                .withQuantidadeDeRenovacao(ConstantsUtils.DEFAULT_VALUE_QUANTIDADE_LOCACAO_INICIAL).withUsuario(cliente)
+                .withLivro(l)
+                .withObservacoesEntrega(
+                        (dto.getObservacoesEntregaLivro() != null && !dto.getObservacoesEntregaLivro().isEmpty())
+                                ? dto.getObservacoesEntregaLivro()
+                                : ConstantsUtils.N_A)
+                .build();
 
-		try {
-			triagemInicialLocacao.triagemReservaELocacao(lo, l, l.getId(), cliente);
-		} catch (Exception ex) { // ex é validações de negocios
+        try {
+            triagemInicialLocacao.triagemReservaELocacao(lo, l, l.getId(), cliente);
+        } catch (Exception ex) { // ex é validações de negocios
 
-			solicitacaoService.updateStatusAndDescricao(s, Status.RECUSADA, ex.getMessage(), true);
+            solicitacaoService.updateStatusAndDescricao(s, Status.RECUSADA, ex.getMessage(), true);
 
-			throw new OperacaoCanceladaException(ex.getMessage());
-		}
+            throw new OperacaoCanceladaException(ex.getMessage());
+        }
 
-		if (!isReservado(dto.getIdLivro(), dto.getIdClienteSolicitante())) {
-			livroService.decrescentarEstoque(dto.getIdLivro(), 1);
-		}
+        if (!isReservado(dto.getIdLivro(), dto.getIdClienteSolicitante())) {
+            livroService.decrescentarEstoque(dto.getIdLivro(), 1);
+        }
 
-		s.setRejeitado(false);
+        s.setRejeitado(false);
 
-		s.setStatus(Status.HOMOLOGADA); // setando que a solicitação foi deferida
+        s.setStatus(Status.HOMOLOGADA); // setando que a solicitação foi deferida
 
-		solicitacaoService.gravarHistorico(s);
+        solicitacaoService.gravarHistorico(s);
 
-		locacaoRepository.save(lo); // salvando locação do Cliente
+        locacaoRepository.save(lo); // salvando locação do Cliente
 
-		locacaoRepository.flush();
+        locacaoRepository.flush();
 
-		log.info("Operação realizada com sucesso: ");
+        log.info("Operação realizada com sucesso: ");
 
-		return mapper.locacaoParaLocacaoVM(lo);
-	}
+        return mapper.locacaoParaLocacaoVM(lo);
+    }
 
-	@Transactional
-	@Override
-	public LocacaoCancelamentoVM cancelarLocacao(CancelamentoLocacaoDTO dto) {
+    @Transactional
+    @Override
+    public LocacaoCancelamentoVM cancelarLocacao(CancelamentoLocacaoDTO dto) {
 
-		return Optional.of(findByIdLocacaoAtivaParaUsuarioContexto(dto.getIdLocacao(), dto.getIdClienteSolicitante()))
-				.map((Function<? super Locacoes, ? extends LocacaoCancelamentoVM>) l -> {
-					log.info("Iniciando Cancelamento da Locação: " + l);
+        return Optional.of(findByIdLocacaoAtivaParaUsuarioContexto(dto.getIdLocacao(), dto.getIdClienteSolicitante()))
+                .map((Function<? super Locacoes, ? extends LocacaoCancelamentoVM>) l -> {
+                    log.info("Iniciando Cancelamento da Locação: " + l);
 
-					if (dataLimiteAtingidaOuUltrapassada(l)) {
-						throw new CancelamentoOperacaoLocacaoInvalida(
-								"Não é possivel cancelar uma locação com o Prazo de Vencimento Ultrapassado. Acesse a pagina de Encerramento para efetivar a finalização do Contrato");
-					} else {
-						l.setStatus(ConstantsUtils.DEFAULT_VALUE_STATUSLOCACAO_CANCELADA);
+                    if (dataLimiteAtingidaOuUltrapassada(l)) {
+                        throw new CancelamentoOperacaoLocacaoInvalida(
+                                "Não é possivel cancelar uma locação com o Prazo de Vencimento Ultrapassado. Acesse a pagina de Encerramento para efetivar a finalização do Contrato");
+                    } else {
+                        l.setStatus(ConstantsUtils.DEFAULT_VALUE_STATUSLOCACAO_CANCELADA);
 
-						l.setHoraCancelamento(HoraDiasDataLocalService.horaLocal());
-						l.setDataCancelamento(HoraDiasDataLocalService.dataLocal());
+                        l.setHoraCancelamento(HoraDiasDataLocalService.horaLocal());
+                        l.setDataCancelamento(HoraDiasDataLocalService.dataLocal());
 
-						livroService.acrescentarEstoque(l.getLivro().getId(),
-								ConstantsUtils.DEFAULT_VALUE_ACRESCENTAR_QUANTIDADE_LIVRO);
-					}
+                        livroService.acrescentarEstoque(l.getLivro().getId(),
+                                ConstantsUtils.DEFAULT_VALUE_ACRESCENTAR_QUANTIDADE_LIVRO);
+                    }
 
-					// saveAndFlush para user, livro e locacao...
-					return mapper.locacaoParaLocacaoCanceladaVM(locacaoRepository.saveAndFlush(l));
+                    // saveAndFlush para user, livro e locacao...
+                    return mapper.locacaoParaLocacaoCanceladaVM(locacaoRepository.saveAndFlush(l));
 
-				}).orElseThrow(() -> new CancelamentoOperacaoLocacaoInvalida(
-						"Operação não realizada. Não foi possivel cancelar a Locação."));
+                }).orElseThrow(() -> new CancelamentoOperacaoLocacaoInvalida(
+                        "Operação não realizada. Não foi possivel cancelar a Locação."));
 
-	}
+    }
 
-	@Transactional
-	@Override
-	public LocacaoDevolucaoVM encerramento(DevolucaoLocacaoDTO dto) {
+    @Transactional
+    @Override
+    public LocacaoDevolucaoVM encerramento(DevolucaoLocacaoDTO dto) {
 
-		return Optional.of(findByIdLocacaoAtivaParaUsuarioContexto(dto.getIdLocacao(), dto.getIdClienteSolicitante()))
-				.map((Function<? super Locacoes, ? extends LocacaoDevolucaoVM>) l -> {
-					log.info("Iniciando Encerramento da Locação: " + l);
+        return Optional.of(findByIdLocacaoAtivaParaUsuarioContexto(dto.getIdLocacao(), dto.getIdClienteSolicitante()))
+                .map((Function<? super Locacoes, ? extends LocacaoDevolucaoVM>) l -> {
+                    log.info("Iniciando Encerramento da Locação: " + l);
 
-					if (dataLimiteAtingidaOuUltrapassada(l) || l.getStatus().equals(Status.ATRASADA)) {
+                    if (dataLimiteAtingidaOuUltrapassada(l) || l.getStatus().equals(Status.ATRASADA)) {
 
-						l.setStatus(ConstantsUtils.DEFAULT_VALUE_STATUSLOCACAO_ATRASADA);
+                        l.setStatus(ConstantsUtils.DEFAULT_VALUE_STATUSLOCACAO_ATRASADA);
 
-						Optional.of(l.getUsuario()).map((Function<? super Usuario, ? extends Usuario>)
+                        Optional.of(l.getUsuario()).map((Function<? super Usuario, ? extends Usuario>)
 
-				u -> { // user - cliente da locacão
+                                u -> { // user - cliente da locacão
 
-					if (!u.isFuncionario()) {
-						u.setStatusPessoa(ConstantsUtils.DEFAULT_VALUE_STATUS_USUARIO_INADIMPLENTE);
-						u.setBloqueado(true);
-						u.setMotivoBloqueio("Prazo de devolução do Livro Ultrapassado");
-					}
+                                    if (!u.isFuncionario()) {
+                                        u.setStatusPessoa(ConstantsUtils.DEFAULT_VALUE_STATUS_USUARIO_INADIMPLENTE);
+                                        u.setBloqueado(true);
+                                        u.setMotivoBloqueio("Prazo de devolução do Livro Ultrapassado");
+                                    }
 
-					return userRepository.save(u);
+                                    return userRepository.save(u);
 
-				}).orElseThrow(() -> new CancelamentoOperacaoLocacaoInvalida(
-						"Usuario não localizado. Error Interno do Servidor"));
+                                }).orElseThrow(() -> new CancelamentoOperacaoLocacaoInvalida(
+                                "Usuario não localizado. Error Interno do Servidor"));
 
-					} else {
-						l.setStatus(ConstantsUtils.DEFAULT_VALUE_STATUSLOCACAO_CANCELADA);
-					}
-					l.setObservacoesDevolucao(dto.getObservacoesDevolucao());
-					l.setHoraEncerramento(HoraDiasDataLocalService.horaLocal());
-					l.setDataEncerramento(HoraDiasDataLocalService.dataLocal());
+                    } else {
+                        l.setStatus(ConstantsUtils.DEFAULT_VALUE_STATUSLOCACAO_CANCELADA);
+                    }
+                    l.setObservacoesDevolucao(dto.getObservacoesDevolucao());
+                    l.setHoraEncerramento(HoraDiasDataLocalService.horaLocal());
+                    l.setDataEncerramento(HoraDiasDataLocalService.dataLocal());
 
-					livroService.acrescentarEstoque(l.getLivro().getId(), 1);
+                    livroService.acrescentarEstoque(l.getLivro().getId(), 1);
 
-					// saveAndFlush para user, livro e locacao...
-					return mapper.locacaoParaLocacaoDevolucaoVM(locacaoRepository.saveAndFlush(l));
+                    // saveAndFlush para user, livro e locacao...
+                    return mapper.locacaoParaLocacaoDevolucaoVM(locacaoRepository.saveAndFlush(l));
 
-				}).orElseThrow(() -> new EncerramentoOperacaoLocacaoException("Não foi possivel Encerrar  a Locação "));
+                }).orElseThrow(() -> new EncerramentoOperacaoLocacaoException("Não foi possivel Encerrar  a Locação "));
 
-	}
+    }
 
-	@Transactional
-	private boolean isReservado(Long idLivro, long idCliente) {
-		boolean isReservado = false;
+    @Transactional
+    private boolean isReservado(Long idLivro, long idCliente) {
+        boolean isReservado = false;
 
-		if (reservaRepository.isAtivaToUserContextAndlivro(idLivro, idCliente) >= 1) {
+        if (reservaRepository.isAtivaToUserContextAndlivro(idLivro, idCliente) >= 1) {
 
-			isReservado = true;
+            isReservado = true;
 
-			reservaRepository.findOneGenericObjectAtivoToUserAndLivro(idLivro, idCliente)
-					.map((Function<? super Reservas, ? extends Reservas>) r -> {
+            reservaRepository.findOneGenericObjectAtivoToUserAndLivro(idLivro, idCliente)
+                    .map((Function<? super Reservas, ? extends Reservas>) r -> {
 
-						// Finalizando Reserva para Iniciar Processo de Locação do Exemplar
+                        // Finalizando Reserva para Iniciar Processo de Locação do Exemplar
 
-						r.setStatus(ConstantsUtils.DEFAULT_VALUE_STATUSRESERVA_FINALIZADA);
+                        r.setStatus(ConstantsUtils.DEFAULT_VALUE_STATUSRESERVA_FINALIZADA);
 
-						log.debug(r.toString() + " Finalizando para Iniciar Processo de locação");
+                        log.debug(r.toString() + " Finalizando para Iniciar Processo de locação");
 
-						return reservaRepository.saveAndFlush(r); // flush
-					}).orElse(null);
+                        return reservaRepository.saveAndFlush(r); // flush
+                    }).orElse(null);
 
-		} else {
-			isReservado = false;
-		}
+        } else {
+            isReservado = false;
+        }
 
-		return isReservado;
-	}
+        return isReservado;
+    }
 
-	@Transactional
-	@Override
-	public void renovarLocacao(Long id) {
+    @Transactional
+    @Override
+    public void renovarLocacao(Long id) {
 
-		Locacoes locacaoSalva = findByIdLocacaoAtivaParaUsuarioContexto(id); // anonymous user online (web)
+        Locacoes locacaoSalva = findByIdLocacaoAtivaParaUsuarioContexto(id); // anonymous user online (web)
 
-		log.info("Iniciando Processo de Renovação da Locação do livro:" + locacaoSalva.getLivro().getNome());
+        log.info("Iniciando Processo de Renovação da Locação do livro:" + locacaoSalva.getLivro().getNome());
 
-		validaDataLimiteLocacao(locacaoSalva);
+        validaDataLimiteLocacao(locacaoSalva);
 
-		validaUsuarioPessoa.validadorUsuarioCliente(locacaoSalva.getUsuario());
+        validaUsuarioPessoa.validadorUsuarioCliente(locacaoSalva.getUsuario());
 
-		int quantidadeRenovada = locacaoSalva.getQuantidadeDeRenovacao();
+        int quantidadeRenovada = locacaoSalva.getQuantidadeDeRenovacao();
 
-		if (quantidadeRenovada >= ConstantsUtils.DEFAULT_VALUE_QUANTIDADE_RENOVACAO_MAXIMA_LOCACAO) { // maximo
-																										// renovação 3
-			throw new QuantidadeRenovacaoLocacaoLimiteException(
-					"Quantidade de Renovação maxima atingida. Operação não realizada");
-		}
+        if (quantidadeRenovada >= ConstantsUtils.DEFAULT_VALUE_QUANTIDADE_RENOVACAO_MAXIMA_LOCACAO) { // maximo
+            // renovação 3
+            throw new QuantidadeRenovacaoLocacaoLimiteException(
+                    "Quantidade de Renovação maxima atingida. Operação não realizada");
+        }
 
-		locacaoSalva.setQuantidadeDeRenovacao(quantidadeRenovada + 1);
+        locacaoSalva.setQuantidadeDeRenovacao(quantidadeRenovada + 1);
 
-		locacaoSalva.setDataPrevisaoTermino(
-				HoraDiasDataLocalService.dataRenovacaoLocacao(locacaoSalva.getDataPrevisaoTermino()));
+        locacaoSalva.setDataPrevisaoTermino(
+                HoraDiasDataLocalService.dataRenovacaoLocacao(locacaoSalva.getDataPrevisaoTermino()));
 
-		locacaoRepository.save(locacaoSalva);
+        locacaoRepository.save(locacaoSalva);
 
-		log.info("Processo de Renovação de Locação de livro realizada:");
-	}
+        log.info("Processo de Renovação de Locação de livro realizada:");
+    }
 
-	@Transactional
-	@Override
-	public void updatePropertyStatusLocacao(Long idLocacao, Status statusLocacao) {
+    @Transactional
+    @Override
+    public void updatePropertyStatusLocacao(Long idLocacao, Status statusLocacao) {
 
-		Optional.of(findByIdLocacaoAtivaParaUsuarioContexto(idLocacao))
-				.map((Function<? super Locacoes, ? extends Locacoes>) l -> {
-					log.info("Iniciando Processo de atualização de Status da locação:");
-					validaDataLimiteLocacao(l);
-					l.setStatus(statusLocacao);
-					return locacaoRepository.save(l);
-				}).orElseThrow(() -> new LocacaoUpdateException("Não foi possivel atualizar o Status da Locação"));
+        Optional.of(findByIdLocacaoAtivaParaUsuarioContexto(idLocacao))
+                .map((Function<? super Locacoes, ? extends Locacoes>) l -> {
+                    log.info("Iniciando Processo de atualização de Status da locação:");
+                    validaDataLimiteLocacao(l);
+                    l.setStatus(statusLocacao);
+                    return locacaoRepository.save(l);
+                }).orElseThrow(() -> new LocacaoUpdateException("Não foi possivel atualizar o Status da Locação"));
 
-	}
+    }
 
-	private Locacoes findByIdLocacaoAtivaParaUsuarioContexto(Long id) {
+    private Locacoes findByIdLocacaoAtivaParaUsuarioContexto(Long id) {
 
-		return locacaoRepository.findOneGenericObjectAtivoToUser(id)
-				.orElseThrow(() -> new LocacaoInvalidaOuInexistenteException(
-						"Locação não localizada ou Já Cancelada em sua Base de dados"));
+        return locacaoRepository.findOneGenericObjectAtivoToUser(id)
+                .orElseThrow(() -> new LocacaoInvalidaOuInexistenteException(
+                        "Locação não localizada ou Já Cancelada em sua Base de dados"));
 
-	}
+    }
 
-	private Locacoes findByIdLocacaoAtivaParaUsuarioContexto(Long id, long idUsuario) {
+    private Locacoes findByIdLocacaoAtivaParaUsuarioContexto(Long id, long idUsuario) {
 
-		return locacaoRepository.findOneGenericObjectAtivoToUser(id, idUsuario)
-				.orElseThrow(() -> new LocacaoInvalidaOuInexistenteException(
-						"Locação não localizada ou Já Cancelada em sua Base de dados"));
+        return locacaoRepository.findOneGenericObjectAtivoToUser(id, idUsuario)
+                .orElseThrow(() -> new LocacaoInvalidaOuInexistenteException(
+                        "Locação não localizada ou Já Cancelada em sua Base de dados"));
 
-	}
+    }
 
 }

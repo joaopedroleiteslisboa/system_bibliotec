@@ -16,31 +16,29 @@ import com.system.bibliotec.model.Usuario_;
 @Component
 public class UsuarioRepositoryQueryEmailImpl implements UsuarioRepositoryQueryEmail {
 
-	@PersistenceContext
-	private EntityManager manager;
-	
-	@Override
-	public Usuario findOneByEmail(String email) {
-		// TODO Auto-generated method stub
-				
-		CriteriaBuilder builder = manager.getCriteriaBuilder();		
-		CriteriaQuery<Usuario> criteriaQuery = builder.createQuery(Usuario.class);		
-		Root<Usuario> root = criteriaQuery.from(Usuario.class);
-		criteriaQuery.select(root);		
-		criteriaQuery.where(builder.equal(root.get(Usuario_.email), email));
-		TypedQuery<Usuario> typedQuery = manager.createQuery(criteriaQuery);		
-		Usuario user = null;
-		try {
-			user = typedQuery.getSingleResult();
-		}catch (Exception e) {
-			// TODO: handle exception
-			throw new UsuarioNaoEncontrado("Usuario invalido ou inexistente");
-		}
-					
-		return (user != null)? user : null;
-	}
+    @PersistenceContext
+    private EntityManager manager;
 
-	
-	
-	
+    @Override
+    public Usuario findOneByEmail(String email) {
+        // TODO Auto-generated method stub
+
+        CriteriaBuilder builder = manager.getCriteriaBuilder();
+        CriteriaQuery<Usuario> criteriaQuery = builder.createQuery(Usuario.class);
+        Root<Usuario> root = criteriaQuery.from(Usuario.class);
+        criteriaQuery.select(root);
+        criteriaQuery.where(builder.equal(root.get(Usuario_.email), email));
+        TypedQuery<Usuario> typedQuery = manager.createQuery(criteriaQuery);
+        Usuario user = null;
+        try {
+            user = typedQuery.getSingleResult();
+        } catch (Exception e) {
+            // TODO: handle exception
+            throw new UsuarioNaoEncontrado("Usuario invalido ou inexistente");
+        }
+
+        return (user != null) ? user : null;
+    }
+
+
 }

@@ -35,13 +35,10 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     private AppUserDetailsService userDetailsService;
 
 
-
-
-
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService)
-        .passwordEncoder(passwordEncoder());
+                .passwordEncoder(passwordEncoder());
     }
 
 
@@ -70,22 +67,21 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 
 //    @Bean
- //   @Override
-  //  public UserDetailsService userDetailsServiceBean() throws Exception {
-  //      return new AppUserDetailsService();
-   // }
+    //   @Override
+    //  public UserDetailsService userDetailsServiceBean() throws Exception {
+    //      return new AppUserDetailsService();
+    // }
 
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/v2/api-docs", "/configuration/**", "/swagger-resources/**",  "/swagger-ui.html", "/webjars/**", "/api-docs/**");
+        web.ignoring().antMatchers("/v2/api-docs", "/configuration/**", "/swagger-resources/**", "/swagger-ui.html", "/webjars/**", "/api-docs/**");
     }
-    
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues());
     }
-    
-        
-    
+
+
 }

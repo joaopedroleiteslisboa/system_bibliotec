@@ -15,27 +15,27 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class ManagedUserDTO extends UserAnonimoDTO{
+public class ManagedUserDTO extends UserAnonimoDTO {
 
-	
-	 	public static final int PASSWORD_MIN_LENGTH = 4;
 
-	    public static final int PASSWORD_MAX_LENGTH = 100;
+    public static final int PASSWORD_MIN_LENGTH = 4;
 
-	    @Size(min = PASSWORD_MIN_LENGTH, max = PASSWORD_MAX_LENGTH)
-	    private String password;
+    public static final int PASSWORD_MAX_LENGTH = 100;
 
-	  
-		public String getPassword() {
-	        return password;
-	    }
+    @Size(min = PASSWORD_MIN_LENGTH, max = PASSWORD_MAX_LENGTH)
+    private String password;
 
-	    public void setPassword(String password) {
-	        this.password = password;
-	    }
 
-	    @Override
-	    public String toString() {
-	        return "ManagedUserDTO{" + super.toString() + "} ";
-	    }
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    @Override
+    public String toString() {
+        return "ManagedUserDTO{" + super.toString() + "} ";
+    }
 }

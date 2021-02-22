@@ -20,40 +20,35 @@ public class CustomAsyncExceptionHandler implements AsyncUncaughtExceptionHandle
     @Autowired
     private ApplicationContext applicationContext;
 
-    
+
     private final Logger log = LoggerFactory.getLogger(CustomAsyncExceptionHandler.class);
 
 
-    
     public void setApplicationContext(final ApplicationContext applicationContext) throws BeansException {
         // TODO Auto-generated method stub
 
         this.applicationContext = applicationContext;
     }
 
-    
-  @Override
-  public void handleUncaughtException(final Throwable ex, final Method method, final Object... objects) {
-    final String msg = "Async Biliotec Exception**************************************************************"
-        + "\nmethod happen: " + method
-        + "\nmethod params: " + Arrays.toString(objects)
-        + "\nException class: {}" + ex.getClass().getName()
-        + "\nex.getMessage(): {}" + ex.getMessage()
-        + "\n***************************************************************************************************";
-    
-    ServicoDoSistema serviceSystemError = this.applicationContext.getBean("servicoDoSistema", ServicoDoSistema.class);
-     log.error(msg, ex);
-     serviceSystemError.saveContextErrorAssyncException(ex, method, getCurrentAuditorUser(),objects);
-  }
 
-  
-  private String getCurrentAuditorUser() {
-      return obterUsuarioDoContextoPeloToken();
-  }
+    @Override
+    public void handleUncaughtException(final Throwable ex, final Method method, final Object... objects) {
+        final String msg = "Async Biliotec Exception**************************************************************"
+                + "\nmethod happen: " + method
+                + "\nmethod params: " + Arrays.toString(objects)
+                + "\nException class: {}" + ex.getClass().getName()
+                + "\nex.getMessage(): {}" + ex.getMessage()
+                + "\n***************************************************************************************************";
+
+        ServicoDoSistema serviceSystemError = this.applicationContext.getBean("servicoDoSistema", ServicoDoSistema.class);
+        log.error(msg, ex);
+        serviceSystemError.saveContextErrorAssyncException(ex, method, getCurrentAuditorUser(), objects);
+    }
 
 
+    private String getCurrentAuditorUser() {
+        return obterUsernameDoUsuarioDoContextoPeloToken();
+    }
 
 
-
-    
 }

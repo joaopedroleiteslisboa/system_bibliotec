@@ -23,145 +23,138 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.zalando.problem.spring.web.advice.security.SecurityProblemSupport;
 
 
-
-
 @Configuration
 @EnableResourceServer
 @EnableConfigurationProperties(ApiSecurityResourceServerProperties.class)
 @org.springframework.context.annotation.Import(SecurityProblemSupport.class)
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
-	private static final String ROOT_PATTERN = "/**";
-	private static final String ROOT_PATTERN_AGENDADOR = "/agendador/**";
-	private static final String ROOT_PATTERN_REGISTER = "/account/register";
-	private static final String ROOT_PATTERN_ACTIVATE = "/account/activate";
-	private static final String ROOT_PATTERN_RESET_PASSWORD_FINISH = "/account/reset-password/finish";
-	private static final String ROOT_PATTERN_RESET_PASSWORD_INIT = "/account/reset-password/init";
-	private static final String ROOT_PATTERN_LIVROS = "/livros";
-	private static final String ROOT_PATTERN_OFERTAS = "/ofertas";
-	private static final String ROOT_PATTERN_BUSCAR_CEP = "/endereco/findcep/**";
-	private static final String ROOT_PATTERN_SWAGGER = "/swagger-ui.html";
-	private static final String ROOT_PATTERN_API_DOCS = "/v2/api-docs/";
-	private static final String ROOT_PATTERN_ACTUATOR = "/actuator/**";
-	
+    private static final String ROOT_PATTERN = "/**";
+    private static final String ROOT_PATTERN_AGENDADOR = "/agendador/**";
+    private static final String ROOT_PATTERN_REGISTER = "/account/register";
+    private static final String ROOT_PATTERN_ACTIVATE = "/account/activate";
+    private static final String ROOT_PATTERN_RESET_PASSWORD_FINISH = "/account/reset-password/finish";
+    private static final String ROOT_PATTERN_RESET_PASSWORD_INIT = "/account/reset-password/init";
+    private static final String ROOT_PATTERN_LIVROS = "/livros";
+    private static final String ROOT_PATTERN_OFERTAS = "/ofertas";
+    private static final String ROOT_PATTERN_BUSCAR_CEP = "/endereco/findcep/**";
+    private static final String ROOT_PATTERN_SWAGGER = "/swagger-ui.html";
+    private static final String ROOT_PATTERN_API_DOCS = "/v2/api-docs/";
+    private static final String ROOT_PATTERN_ACTUATOR = "/actuator/**";
 
 
-	private final ApiSecurityResourceServerProperties securityProperties;
+    private final ApiSecurityResourceServerProperties securityProperties;
 
-	private TokenStore tokenStore;
+    private TokenStore tokenStore;
 
-	private final SecurityProblemSupport problemSupport;
-
-
-
-	public ResourceServerConfig(final ApiSecurityResourceServerProperties securityProperties, SecurityProblemSupport problemSupport) {
-		this.securityProperties = securityProperties;
-
-		this.problemSupport = problemSupport;
-	}
+    private final SecurityProblemSupport problemSupport;
 
 
-	@Override
-	public void configure(final ResourceServerSecurityConfigurer resources) {
+    public ResourceServerConfig(final ApiSecurityResourceServerProperties securityProperties, SecurityProblemSupport problemSupport) {
+        this.securityProperties = securityProperties;
 
-		resources.tokenStore(tokenStore());
-	}
-
-	@Override
-	public void configure(HttpSecurity http) throws Exception {
-		http.csrf()
-				.disable()
-				//.addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
-				.exceptionHandling()
-				.authenticationEntryPoint(problemSupport)
-				.accessDeniedHandler(problemSupport).
-				and().
-				cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues())
-				.and()
-				.authorizeRequests()
-					//Todo: verificar a questão de como será definido no swagger a politica de segurança
-					
-					.antMatchers(HttpMethod.POST, ROOT_PATTERN_AGENDADOR).permitAll()
-
-					.antMatchers(HttpMethod.GET, ROOT_PATTERN_LIVROS).permitAll()
-
-					.antMatchers(HttpMethod.POST, ROOT_PATTERN_RESET_PASSWORD_INIT).anonymous()
-
-					.antMatchers(HttpMethod.POST, ROOT_PATTERN_RESET_PASSWORD_FINISH).anonymous()
-
-					.antMatchers(HttpMethod.POST, ROOT_PATTERN_REGISTER).anonymous()
-
-					.antMatchers(HttpMethod.GET, ROOT_PATTERN_ACTIVATE).anonymous()
-
-					.antMatchers(HttpMethod.GET, ROOT_PATTERN_OFERTAS).anonymous()
-					
-					.antMatchers(HttpMethod.GET, ROOT_PATTERN_BUSCAR_CEP).anonymous()	
-					
-					//SWAGGER					
-					.antMatchers(HttpMethod.GET, ROOT_PATTERN_SWAGGER).permitAll()
-					.antMatchers(HttpMethod.POST, ROOT_PATTERN_SWAGGER).permitAll()
-					.antMatchers(HttpMethod.PUT, ROOT_PATTERN_SWAGGER).permitAll()
-					.antMatchers(HttpMethod.DELETE, ROOT_PATTERN_SWAGGER).permitAll()
-
-					// API DOCS					
-					.antMatchers(HttpMethod.GET, ROOT_PATTERN_API_DOCS).permitAll()
-					.antMatchers(HttpMethod.POST, ROOT_PATTERN_API_DOCS).permitAll()
-					.antMatchers(HttpMethod.PUT, ROOT_PATTERN_API_DOCS).permitAll()
-					
-					// ACTUATOR 
-					.antMatchers(HttpMethod.GET, ROOT_PATTERN_ACTUATOR).permitAll()
-					.antMatchers(HttpMethod.POST, ROOT_PATTERN_ACTUATOR).permitAll()
-					.antMatchers(HttpMethod.PUT, ROOT_PATTERN_ACTUATOR).permitAll()
-					.antMatchers(HttpMethod.DELETE, ROOT_PATTERN_ACTUATOR).permitAll()
-					
-
-				
-					.antMatchers(HttpMethod.GET, ROOT_PATTERN).access("#oauth2.hasScope('read')")
-					.antMatchers(HttpMethod.POST, ROOT_PATTERN).access("#oauth2.hasScope('write')")
-					.antMatchers(HttpMethod.PATCH, ROOT_PATTERN).access("#oauth2.hasScope('write')")
-					.antMatchers(HttpMethod.PUT, ROOT_PATTERN).access("#oauth2.hasScope('write')")
-					.antMatchers(HttpMethod.DELETE, ROOT_PATTERN).access("#oauth2.hasScope('write')");
-
-					
-
-	}
+        this.problemSupport = problemSupport;
+    }
 
 
+    @Override
+    public void configure(final ResourceServerSecurityConfigurer resources) {
 
-	@Bean
-	public DefaultTokenServices tokenServices(final TokenStore tokenStore) {
-		DefaultTokenServices tokenServices = new DefaultTokenServices();
-		tokenServices.setTokenStore(tokenStore);
-		return tokenServices;
-	}
+        resources.tokenStore(tokenStore());
+    }
 
-	@Bean
-	public TokenStore tokenStore() {
-		if (tokenStore == null) {
-			tokenStore = new JwtTokenStore(jwtAccessTokenConverter());
-		}
-		return tokenStore;
-	}
+    @Override
+    public void configure(HttpSecurity http) throws Exception {
+        http.csrf()
+                .disable()
+                //.addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling()
+                .authenticationEntryPoint(problemSupport)
+                .accessDeniedHandler(problemSupport).
+                and().
+                cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues())
+                .and()
+                .authorizeRequests()
+                //Todo: verificar a questão de como será definido no swagger a politica de segurança
 
-	@Bean
-	public JwtAccessTokenConverter jwtAccessTokenConverter() {
-		JwtAccessTokenConverter converter = new CustomJwtAccessTokenConverter();
+                .antMatchers(HttpMethod.POST, ROOT_PATTERN_AGENDADOR).permitAll()
 
-		//converter.setSigningKey(getPublicKeyAsString());
-		converter.setVerifierKey(getPublicKeyAsString());
-		converter.setSigningKey("@admin@");
-		
-		return converter;
-	}
+                .antMatchers(HttpMethod.GET, ROOT_PATTERN_LIVROS).permitAll()
 
-	    
-	private String getPublicKeyAsString() {
-		try {
+                .antMatchers(HttpMethod.POST, ROOT_PATTERN_RESET_PASSWORD_INIT).anonymous()
 
-			return IOUtils.toString(securityProperties.getJwt().getPublicKey().getInputStream(), UTF_8);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-	}
+                .antMatchers(HttpMethod.POST, ROOT_PATTERN_RESET_PASSWORD_FINISH).anonymous()
+
+                .antMatchers(HttpMethod.POST, ROOT_PATTERN_REGISTER).anonymous()
+
+                .antMatchers(HttpMethod.GET, ROOT_PATTERN_ACTIVATE).anonymous()
+
+                .antMatchers(HttpMethod.GET, ROOT_PATTERN_OFERTAS).anonymous()
+
+                .antMatchers(HttpMethod.GET, ROOT_PATTERN_BUSCAR_CEP).anonymous()
+
+                //SWAGGER
+                .antMatchers(HttpMethod.GET, ROOT_PATTERN_SWAGGER).permitAll()
+                .antMatchers(HttpMethod.POST, ROOT_PATTERN_SWAGGER).permitAll()
+                .antMatchers(HttpMethod.PUT, ROOT_PATTERN_SWAGGER).permitAll()
+                .antMatchers(HttpMethod.DELETE, ROOT_PATTERN_SWAGGER).permitAll()
+
+                // API DOCS
+                .antMatchers(HttpMethod.GET, ROOT_PATTERN_API_DOCS).permitAll()
+                .antMatchers(HttpMethod.POST, ROOT_PATTERN_API_DOCS).permitAll()
+                .antMatchers(HttpMethod.PUT, ROOT_PATTERN_API_DOCS).permitAll()
+
+                // ACTUATOR
+                .antMatchers(HttpMethod.GET, ROOT_PATTERN_ACTUATOR).permitAll()
+                .antMatchers(HttpMethod.POST, ROOT_PATTERN_ACTUATOR).permitAll()
+                .antMatchers(HttpMethod.PUT, ROOT_PATTERN_ACTUATOR).permitAll()
+                .antMatchers(HttpMethod.DELETE, ROOT_PATTERN_ACTUATOR).permitAll()
+
+
+                .antMatchers(HttpMethod.GET, ROOT_PATTERN).access("#oauth2.hasScope('read')")
+                .antMatchers(HttpMethod.POST, ROOT_PATTERN).access("#oauth2.hasScope('write')")
+                .antMatchers(HttpMethod.PATCH, ROOT_PATTERN).access("#oauth2.hasScope('write')")
+                .antMatchers(HttpMethod.PUT, ROOT_PATTERN).access("#oauth2.hasScope('write')")
+                .antMatchers(HttpMethod.DELETE, ROOT_PATTERN).access("#oauth2.hasScope('write')");
+
+
+    }
+
+
+    @Bean
+    public DefaultTokenServices tokenServices(final TokenStore tokenStore) {
+        DefaultTokenServices tokenServices = new DefaultTokenServices();
+        tokenServices.setTokenStore(tokenStore);
+        return tokenServices;
+    }
+
+    @Bean
+    public TokenStore tokenStore() {
+        if (tokenStore == null) {
+            tokenStore = new JwtTokenStore(jwtAccessTokenConverter());
+        }
+        return tokenStore;
+    }
+
+    @Bean
+    public JwtAccessTokenConverter jwtAccessTokenConverter() {
+        JwtAccessTokenConverter converter = new CustomJwtAccessTokenConverter();
+
+        //converter.setSigningKey(getPublicKeyAsString());
+        converter.setVerifierKey(getPublicKeyAsString());
+        converter.setSigningKey("@admin@");
+
+        return converter;
+    }
+
+
+    private String getPublicKeyAsString() {
+        try {
+
+            return IOUtils.toString(securityProperties.getJwt().getPublicKey().getInputStream(), UTF_8);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 }

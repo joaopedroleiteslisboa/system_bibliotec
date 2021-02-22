@@ -6,9 +6,7 @@ import com.system.bibliotec.model.Pessoa;
 public interface FindOneByCpfQuery {
 
 
-	
-	public Pessoa findOneByCpf(String cpf);
-	
-	
-	
+    public Pessoa findOneByCpf(String cpf);
+
+
 }

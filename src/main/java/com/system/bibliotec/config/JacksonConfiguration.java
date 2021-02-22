@@ -14,6 +14,7 @@ import org.zalando.problem.violations.ConstraintViolationProblemModule;
 public class JacksonConfiguration {
     /**
      * Support for Java date and time API.
+     *
      * @return the corresponding Jackson module.
      */
     @Bean
@@ -37,7 +38,7 @@ public class JacksonConfiguration {
     /*
      * Jackson Afterburner module to speed up serialization/deserialization.
      */
-     @Bean
+    @Bean
     public AfterburnerModule afterburnerModule() {
         return new AfterburnerModule();
     }

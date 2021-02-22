@@ -14,50 +14,48 @@ import com.system.bibliotec.service.operacoes.IOperacaoLivro;
 public class LivroService {
 
 
-	private final IOperacaoLivro operacao;
+    private final IOperacaoLivro operacao;
 
-	
-	@Autowired
-	public LivroService(IOperacaoLivro operacao) {
-		
-		this.operacao = operacao;
-	}
 
-	
-	public Livro save(Livro livro) {
+    @Autowired
+    public LivroService(IOperacaoLivro operacao) {
 
-		return operacao.save(livro);
+        this.operacao = operacao;
+    }
 
-	}
 
-	public Livro updateLivro(Long id, Livro livro) {
+    public Livro save(Livro livro) {
 
-		return operacao.updateLivro(id, livro);
-	}
+        return operacao.save(livro);
 
-	public void updatePropertyIsbn13Livro(Long id, String isbn13) {
-		operacao.updatePropertyIsbn13Livro(id, isbn13);
+    }
 
-	}
+    public Livro updateLivro(Long id, Livro livro) {
 
-	public void decrescentarEstoque(Long idLivro, int quantidade) {
-		operacao.decrescentarEstoque(idLivro, quantidade);
-	}
+        return operacao.updateLivro(id, livro);
+    }
 
-	public void acrescentarEstoque(Long idLivro, int quantidade) {
-		operacao.acrescentarEstoque(idLivro, quantidade);
-	}
+    public void updatePropertyIsbn13Livro(Long id, String isbn13) {
+        operacao.updatePropertyIsbn13Livro(id, isbn13);
 
-	public void deleteLivro(Long id) {
-		operacao.deleteLivro(id);
+    }
 
-	}
+    public void decrescentarEstoque(Long idLivro, int quantidade) {
+        operacao.decrescentarEstoque(idLivro, quantidade);
+    }
 
-	public Livro findByIdLivro(Long id) {
-		return operacao.findByIdLivro(id);
-	}
-	
+    public void acrescentarEstoque(Long idLivro, int quantidade) {
+        operacao.acrescentarEstoque(idLivro, quantidade);
+    }
 
+    public void deleteLivro(Long id) {
+        operacao.deleteLivro(id);
+
+    }
+
+    public Livro findByIdLivro(Long id) {
+        return operacao.findByIdLivro(id);
+    }
 
 
 }

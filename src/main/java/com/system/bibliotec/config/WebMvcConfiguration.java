@@ -19,7 +19,6 @@ import java.util.Locale;
 public class WebMvcConfiguration implements WebMvcConfigurer {
 
 
-
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
 
@@ -36,9 +35,10 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 
 
     @Bean
-    public CustomAuditEventRepositoryService customAuditEventRepositoryService(){
+    public CustomAuditEventRepositoryService customAuditEventRepositoryService() {
         return new CustomAuditEventRepositoryService();
     }
+
     @Bean
     public LocaleResolver localeResolver() {
         SessionLocaleResolver s = new SessionLocaleResolver();
@@ -61,9 +61,6 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
         messageSource.setDefaultEncoding("UTF-8");
         return messageSource;
     }
-
-
-
 
 
 }

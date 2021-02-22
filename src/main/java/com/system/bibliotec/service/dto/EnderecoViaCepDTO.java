@@ -10,30 +10,30 @@ import lombok.Setter;
 @Getter
 @Setter
 public class EnderecoViaCepDTO {
-	
-	
-	private String cep;
-
-	
-	private String logradouro;
 
 
-	private String complemento;
+    private String cep;
 
 
-	private String bairro;
+    private String logradouro;
 
 
-	private String localidade;
+    private String complemento;
 
 
-	private String uf;
+    private String bairro;
 
 
-	private String ibge;
-	
-	
-	private String ddd;
-	
+    private String localidade;
+
+
+    private String uf;
+
+
+    private String ibge;
+
+
+    private String ddd;
+
 
 }

@@ -12,6 +12,6 @@ public class FormCancelamentoSolicitacaoLocacao extends FormCancelamentoSolicita
 
     @NotNull(message = "É necessario informar a solicitação que deseja cancelar")
     private Long idSolicitacao;
-    
-        
+
+
 }

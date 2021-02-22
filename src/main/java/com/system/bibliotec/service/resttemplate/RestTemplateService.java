@@ -15,21 +15,21 @@ import com.system.bibliotec.model.Endereco;
 
 public interface RestTemplateService {
 
-	@Async
-	public <T> Future<T> getAsynchronousResults(String resourceUrl, Class<T> resultType, RestOperations restTemplate);
+    @Async
+    public <T> Future<T> getAsynchronousResults(String resourceUrl, Class<T> resultType, RestOperations restTemplate);
 
-	public <T> T getResults(String resourceUrl, Class<T> resultType, RestOperations restTemplate);
+    public <T> T getResults(String resourceUrl, Class<T> resultType, RestOperations restTemplate);
 
-	public <T> T getClientOnlyResults(String resourceUrl, Class<T> resultType, RestOperations restTemplate);
+    public <T> T getClientOnlyResults(String resourceUrl, Class<T> resultType, RestOperations restTemplate);
 
-	public <T> T getForObject(String resourceUrl, Class<T> responseType, RestOperations restTemplate);
-	
-	public <T> T getForObject(String resourceUrl, Class<T> responseType, RestOperations restTemplate, Map<String, String> params);
+    public <T> T getForObject(String resourceUrl, Class<T> responseType, RestOperations restTemplate);
 
-	//restTemplate.exchange
-	public <T> T getForObject(String resourceUrl, HttpMethod method, HttpEntity<?> requestEntity, Class<T> responseType, RestOperations restTemplate);
-	
-	//restTemplate.exchange
-	public <T> T getForObject(String resourceUrl,  HttpMethod method, HttpEntity<?> requestEntity, Class<T> responseType, RestOperations restTemplate, Map<String, String> params);
-	
+    public <T> T getForObject(String resourceUrl, Class<T> responseType, RestOperations restTemplate, Map<String, String> params);
+
+    //restTemplate.exchange
+    public <T> T getForObject(String resourceUrl, HttpMethod method, HttpEntity<?> requestEntity, Class<T> responseType, RestOperations restTemplate);
+
+    //restTemplate.exchange
+    public <T> T getForObject(String resourceUrl, HttpMethod method, HttpEntity<?> requestEntity, Class<T> responseType, RestOperations restTemplate, Map<String, String> params);
+
 }

@@ -33,38 +33,34 @@ import com.system.bibliotec.service.resttemplate.RestTemplateService;
 @RequestMapping("endereco/findcep")
 public class FindCepResource {
 
-	private final RestTemplateService restTemplateService;
+    private final RestTemplateService restTemplateService;
 
-	
-	private final RestTemplate restTemplateDefault;
 
-	@Autowired
-	public FindCepResource(RestTemplateService restTemplateService, @Qualifier("restTemplateDefault") RestTemplate restTemplateDefault) {
+    private final RestTemplate restTemplateDefault;
 
-		this.restTemplateService = restTemplateService;
-		this.restTemplateDefault = restTemplateDefault;
-	}
+    @Autowired
+    public FindCepResource(RestTemplateService restTemplateService, @Qualifier("restTemplateDefault") RestTemplate restTemplateDefault) {
 
-	@PreAuthorize("permitAll()")
-	@GetMapping("/{cep}")
-	public ResponseEntity<?> getCep(@PathVariable String cep) {
+        this.restTemplateService = restTemplateService;
+        this.restTemplateDefault = restTemplateDefault;
+    }
 
-		ResponseEntity<?> response = null;
-		
-		String uri = "http://viacep.com.br/ws/{cep}/json/";
+    @PreAuthorize("permitAll()")
+    @GetMapping("/{cep}")
+    public ResponseEntity<?> getCep(@PathVariable String cep) {
 
-		Map<String, String> params = new HashMap<String, String>();
-		params.put("cep", cep);
-		
-		EnderecoViaCepDTO endereco =  restTemplateService.getForObject(uri, EnderecoViaCepDTO.class, restTemplateDefault, params);
-		
-		return new ResponseEntity<EnderecoViaCepDTO>(endereco, HttpStatus.OK);
-	}
-	
-	
-	
-	
-	
+        ResponseEntity<?> response = null;
+
+        String uri = "http://viacep.com.br/ws/{cep}/json/";
+
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("cep", cep);
+
+        EnderecoViaCepDTO endereco = restTemplateService.getForObject(uri, EnderecoViaCepDTO.class, restTemplateDefault, params);
+
+        return new ResponseEntity<EnderecoViaCepDTO>(endereco, HttpStatus.OK);
+    }
+
 
 }
 

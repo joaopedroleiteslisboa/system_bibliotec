@@ -11,9 +11,9 @@ import org.springframework.stereotype.Repository;
 import com.system.bibliotec.model.TipoUsuarioVO;
 
 @Repository
-public interface TipoUsuarioVORepository extends JpaRepository<TipoUsuarioVO, Long> { 
+public interface TipoUsuarioVORepository extends JpaRepository<TipoUsuarioVO, Long> {
 
-	@Query(value = "select * from tipoUsuarioVO where tipoUsuarioVO.tipo = :tipo", nativeQuery = true)
-	Optional<TipoUsuarioVO> findOneByTipoIgnoreCase(@Param("tipo")String tipo);
+    @Query(value = "select * from tipoUsuarioVO where tipoUsuarioVO.tipo = :tipo", nativeQuery = true)
+    Optional<TipoUsuarioVO> findOneByTipoIgnoreCase(@Param("tipo") String tipo);
 
 }

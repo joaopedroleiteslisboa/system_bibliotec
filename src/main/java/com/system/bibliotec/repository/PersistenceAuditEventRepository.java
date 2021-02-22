@@ -11,9 +11,9 @@ import org.springframework.stereotype.Repository;
 import com.system.bibliotec.model.PersistentAuditEvent;
 
 @Repository
-public interface PersistenceAuditEventRepository extends JpaRepository<PersistentAuditEvent, Long>{
+public interface PersistenceAuditEventRepository extends JpaRepository<PersistentAuditEvent, Long> {
 
-	List<PersistentAuditEvent> findByPrincipal(String principal);
+    List<PersistentAuditEvent> findByPrincipal(String principal);
 
     List<PersistentAuditEvent> findByPrincipalAndAuditEventDateAfterAndAuditEventType(String principal, Instant after, String type);
 

@@ -5,6 +5,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.system.bibliotec.service.vo.AgendamentoTarefaVO;
+import com.system.bibliotec.service.vo.RelacaoTarefasVO;
+import com.system.bibliotec.service.vo.TipoTrabalhoEnum;
 import org.quartz.SchedulerException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.quartz.QuartzJobBean;
@@ -13,31 +16,32 @@ import com.system.bibliotec.service.vm.AgendamentoVM;
 
 public interface QuartzService {
 
-	ResponseEntity<AgendamentoVM> scheduleDate(String jobName, Date jobScheduleTime) throws SchedulerException;
 
-	public ResponseEntity<AgendamentoVM> scheduleCron(String jobName, Date jobScheduleTime, String cronExpression) throws SchedulerException;
+    public AgendamentoTarefaVO criarTarefaPorData(Class<? extends QuartzJobBean> jobClass, String jobName, Date jobScheduleTime, TipoTrabalhoEnum tipoServicoTrabalho);
 
-	public boolean deleteJob(String jobName) throws SchedulerException;
-		
-	ResponseEntity<AgendamentoVM> updateOneTimeJob(String jobName, Date date) throws Exception;
+    public AgendamentoTarefaVO criarTarefaPorCron(Class<? extends QuartzJobBean> jobClass, String jobName, Date date, String cronExpression, TipoTrabalhoEnum tipoServicoTrabalho);
 
-	ResponseEntity<AgendamentoVM> updateCronJob(String jobName, Date date, String cronExpression) throws SchedulerException;
+    public boolean deleteJob(String jobName);
 
-	boolean unScheduleJob(String jobName);	
+    public AgendamentoTarefaVO updateOneTimeJob(String jobName, Date date);
 
-	ResponseEntity<AgendamentoVM> pauseJob(String jobName) throws SchedulerException;
+    public AgendamentoTarefaVO updateCronJob(String jobName, Date date, String cronExpression);
 
-	ResponseEntity<AgendamentoVM> resumeJob(String jobName) throws SchedulerException;
+    public boolean unScheduleJob(String jobName);
 
-	boolean startJobNow(String jobName) throws SchedulerException;
+    public boolean pauseJob(String jobName);
 
-	ResponseEntity<AgendamentoVM> isJobRunning(String jobName) throws SchedulerException;
+    public AgendamentoTarefaVO resumeJob(String jobName);
 
-	ResponseEntity<AgendamentoVM> getAllJobs() throws SchedulerException;
+    public boolean startJobNow(String jobName);
 
-	ResponseEntity<AgendamentoVM> isJobWithNamePresent(String jobName) throws SchedulerException;
+    public boolean isJobRunning(String jobName);
 
-	String getJobState(String jobName);
+    public RelacaoTarefasVO getAllJobs();
 
-	ResponseEntity<AgendamentoVM> stopJob(String jobName) throws SchedulerException;
+    public boolean isJobWithNamePresent(String jobName);
+
+    public String getJobState(String jobName);
+
+    public boolean stopJob(String jobName);
 }

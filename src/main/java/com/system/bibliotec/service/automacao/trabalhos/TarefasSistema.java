@@ -15,14 +15,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
-public class TarefasSistema{
-
-    
-    
-    
-    
+public class TarefasSistema {
 
 
-    
-    
 }

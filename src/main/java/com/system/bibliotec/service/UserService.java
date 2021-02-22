@@ -15,68 +15,70 @@ import com.system.bibliotec.service.operacoes.IOperacaoUsuario;
 @Service
 public class UserService {
 
-	@Autowired
-	private IOperacaoUsuario operacaoUsuario;
+    @Autowired
+    private IOperacaoUsuario operacaoUsuario;
 
-	public Usuario activateRegistration(String key) {
+    public Usuario activateRegistration(String key) {
 
-		return operacaoUsuario.activateRegistration(key);
+        return operacaoUsuario.activateRegistration(key);
 
-	}
+    }
 
-	public Optional<Usuario> completePasswordReset(String newPassword, String confirmPassword, String key) {
+    public Optional<Usuario> completePasswordReset(String newPassword, String confirmPassword, String key) {
 
-		return operacaoUsuario.completePasswordReset(newPassword, confirmPassword, key);
+        return operacaoUsuario.completePasswordReset(newPassword, confirmPassword, key);
 
-	}
+    }
 
-	public Optional<Usuario> requestPasswordReset(String mail) {
-		return operacaoUsuario.requestPasswordReset(mail);
+    public Optional<Usuario> requestPasswordReset(String mail) {
+        return operacaoUsuario.requestPasswordReset(mail);
 
-	}
+    }
 
-	public Usuario registrarUsuarioAnonimo(ManagedUserDTO userDTO) {
+    public Usuario registrarUsuarioAnonimo(ManagedUserDTO userDTO) {
 
-		return operacaoUsuario.registrarUsuarioAnonimo(userDTO);
+        return operacaoUsuario.registrarUsuarioAnonimo(userDTO);
 
-	}
-	//Todo: Mudar implementação para vincular a um usuario existente em vez de cadastrar do zero
-	public Usuario registrarUsuarioSistema(Object userDTO) {
+    }
 
-		return operacaoUsuario.registrarUsuarioSistema(userDTO);
+    //Todo: Mudar implementação para vincular a um usuario existente em vez de cadastrar do zero
+    public Usuario registrarUsuarioSistema(Object userDTO) {
 
-	}
-//Todo: Mudar implementação para vincular a um usuario existente em vez de cadastrar do zero
-	public Usuario criarUsuarioSistema(Object userDTO) {
+        return operacaoUsuario.registrarUsuarioSistema(userDTO);
 
-		return operacaoUsuario.criarUsuarioSistema(userDTO);
-	}
+    }
 
-	public Object obterUsuarioOnline() {
+    //Todo: Mudar implementação para vincular a um usuario existente em vez de cadastrar do zero
+    public Usuario criarUsuarioSistema(Object userDTO) {
 
-		return operacaoUsuario.obterUsuarioCorrente();
-	}
+        return operacaoUsuario.criarUsuarioSistema(userDTO);
+    }
 
-	public void updateUserAnonimo(UserAnonimoDTO usuarioDTO) {
-		operacaoUsuario.updateUserAnonimo(usuarioDTO);
-	}
-	
-	public void changePassword(String currentClearTextPassword, String newPassword) {
-		operacaoUsuario.changePassword(currentClearTextPassword, newPassword);
-	}
-	
-	public Usuario findOneByUsuarioContexto() {
-		return operacaoUsuario.findOneByUsuarioContexto();
-	}
-	
-	public void bloquearAcesso(boolean bool, String motivo, String username) {
-		
-		operacaoUsuario.bloqueadorDeAcesso(bool, motivo, username);
-	}
+    public Object obterUsuarioOnline() {
 
-	public Usuario findByIdCliente(Long id){
+        return operacaoUsuario.obterUsuarioCorrente();
+    }
 
-		return operacaoUsuario.findById(id);
-	}
+    public void updateUserAnonimo(UserAnonimoDTO usuarioDTO) {
+        operacaoUsuario.updateUserAnonimo(usuarioDTO);
+    }
+
+    public void changePassword(String currentClearTextPassword, String newPassword) {
+        operacaoUsuario.changePassword(currentClearTextPassword, newPassword);
+    }
+
+    public Usuario findOneByUsuarioContexto() {
+        return operacaoUsuario.findOneByUsuarioContexto();
+    }
+
+    public void bloquearAcesso(boolean bool, String motivo, String username) {
+
+        operacaoUsuario.bloqueadorDeAcesso(bool, motivo, username);
+    }
+
+    public Usuario findByIdCliente(Long id) {
+
+        return operacaoUsuario.findById(id);
+    }
 
 }

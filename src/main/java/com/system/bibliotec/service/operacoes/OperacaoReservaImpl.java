@@ -47,186 +47,186 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class OperacaoReservaImpl implements IOperacaoReserva {
 
-	private static final String USUARIO_NAO_LOCALIZADO = "Usuario Não Localizado. Error Interno do servidor";
+    private static final String USUARIO_NAO_LOCALIZADO = "Usuario Não Localizado. Error Interno do servidor";
 
-	private final ReservaRepository repository;
+    private final ReservaRepository repository;
 
-	private final LivroService livroService;
+    private final LivroService livroService;
 
-	private final IValidaLivro validadorLivro;
+    private final IValidaLivro validadorLivro;
 
-	private final IValidaPessoa validadorCliente;
+    private final IValidaPessoa validadorCliente;
 
-	private final UserService userService;
+    private final UserService userService;
 
-	private final TipoUsuarioVORepository tipoUsuarioVORepository;
+    private final TipoUsuarioVORepository tipoUsuarioVORepository;
 
-	private final MapeadorReserva mapper;
+    private final MapeadorReserva mapper;
 
-	private final SolicitacaoService solicitacaoService;
+    private final SolicitacaoService solicitacaoService;
 
-	private final ITriagemReservaELocacao<Reservas, Livro, Long, Usuario> triagemInicialReserva;
+    private final ITriagemReservaELocacao<Reservas, Livro, Long, Usuario> triagemInicialReserva;
 
-	@Autowired
-	public OperacaoReservaImpl(ReservaRepository repository, LivroService livroService, IValidaLivro validadorLivro,
-			IValidaPessoa validadorCliente, UserService userService, TipoUsuarioVORepository tipoUsuarioVORepository,
-			MapeadorReserva mapper, ITriagemReservaELocacao<Reservas, Livro, Long, Usuario> triagemInicialReserva,
-			SolicitacaoService solicitacaoService) {
+    @Autowired
+    public OperacaoReservaImpl(ReservaRepository repository, LivroService livroService, IValidaLivro validadorLivro,
+                               IValidaPessoa validadorCliente, UserService userService, TipoUsuarioVORepository tipoUsuarioVORepository,
+                               MapeadorReserva mapper, ITriagemReservaELocacao<Reservas, Livro, Long, Usuario> triagemInicialReserva,
+                               SolicitacaoService solicitacaoService) {
 
-		this.repository = repository;
-		this.livroService = livroService;
-		this.validadorLivro = validadorLivro;
-		this.validadorCliente = validadorCliente;
-		this.userService = userService;
-		this.tipoUsuarioVORepository = tipoUsuarioVORepository;
-		this.mapper = mapper;
-		this.triagemInicialReserva = triagemInicialReserva;
-		this.solicitacaoService = solicitacaoService;
-	}
+        this.repository = repository;
+        this.livroService = livroService;
+        this.validadorLivro = validadorLivro;
+        this.validadorCliente = validadorCliente;
+        this.userService = userService;
+        this.tipoUsuarioVORepository = tipoUsuarioVORepository;
+        this.mapper = mapper;
+        this.triagemInicialReserva = triagemInicialReserva;
+        this.solicitacaoService = solicitacaoService;
+    }
 
-	@Transactional
-	@Override
-	public ReservaVM reservaLivro(SolicitacaoReservaDTO dto) {
+    @Transactional
+    @Override
+    public ReservaVM reservaLivro(SolicitacaoReservaDTO dto) {
 
-		log.info("Iniciando Processo de reserva de livro: Usuario");
+        log.info("Iniciando Processo de reserva de livro: Usuario");
 
-		Solicitacoes s = new Solicitacoes(); // historico de propostas
+        Solicitacoes s = new Solicitacoes(); // historico de propostas
 
-		s.setTipo(TipoSolicitacao.RESERVA);
-		s.setIdExemplar(dto.getIdLivro());
-		s.setDataRetiradaExemplar(dto.getDataRetiradaExemplar());
-		s.setHoraRetiradaExemplar(dto.getHoraRetiradaExemplar());
+        s.setTipo(TipoSolicitacao.RESERVA);
+        s.setIdExemplar(dto.getIdLivro());
+        s.setDataRetiradaExemplar(dto.getDataRetiradaExemplar());
+        s.setHoraRetiradaExemplar(dto.getHoraRetiradaExemplar());
 
-		Livro l = livroService.findByIdLivro(dto.getIdLivro());
+        Livro l = livroService.findByIdLivro(dto.getIdLivro());
 
-		Reservas r = new Reservas();
+        Reservas r = new Reservas();
 
-		Usuario cliente = null;
+        Usuario cliente = null;
 
-		if (SecurityUtils.isCurrentUserInRole(AuthoritiesConstantsUltis.ROLE_ADMIN)
-				|| SecurityUtils.isCurrentUserInRole(AuthoritiesConstantsUltis.ROLE_USER_SYSTEM)) {
+        if (SecurityUtils.isCurrentUserInRole(AuthoritiesConstantsUltis.ROLE_ADMIN)
+                || SecurityUtils.isCurrentUserInRole(AuthoritiesConstantsUltis.ROLE_USER_SYSTEM)) {
 
-			cliente = userService.findByIdCliente(dto.getIdClienteCheckin());
-			s.setUsuario(cliente);
+            cliente = userService.findByIdCliente(dto.getIdClienteCheckin());
+            s.setUsuario(cliente);
 
-		} else {  // user anonymous online...
+        } else {  // user anonymous online...
 
-			cliente = userService.findOneByUsuarioContexto(); 
-			s.setUsuario(cliente);
-		}
+            cliente = userService.findOneByUsuarioContexto();
+            s.setUsuario(cliente);
+        }
 
-		try {
-			validadorCliente.validacaoFisicaEJuridica(cliente);
-		} catch (Exception e) {
+        try {
+            validadorCliente.validacaoFisicaEJuridica(cliente);
+        } catch (Exception e) {
 
-			solicitacaoService.updateStatusAndDescricao(s, Status.RECUSADA,
-					"Item não permitido devido " + e.getMessage(), true);
+            solicitacaoService.updateStatusAndDescricao(s, Status.RECUSADA,
+                    "Item não permitido devido " + e.getMessage(), true);
 
-			throw new OperacaoCanceladaException(
-					"Operação não permitida. Foi detectado inconsistência em seus dados. " + e.getMessage());
-		}
+            throw new OperacaoCanceladaException(
+                    "Operação não permitida. Foi detectado inconsistência em seus dados. " + e.getMessage());
+        }
 
-		try {
+        try {
 
-			triagemInicialReserva.triagemReservaELocacao(r, l, l.getId(), cliente);
+            triagemInicialReserva.triagemReservaELocacao(r, l, l.getId(), cliente);
 
-		} catch (Exception e) {
+        } catch (Exception e) {
 
-			solicitacaoService.updateStatusAndDescricao(s, Status.RECUSADA,
-					"Item não permitido devido " + e.getMessage(), true);
-			
-				throw new OperacaoCanceladaException(
-						"Operação não permitida. Foi detectado inconsistência na Triagem. " + e.getMessage());
-		}
+            solicitacaoService.updateStatusAndDescricao(s, Status.RECUSADA,
+                    "Item não permitido devido " + e.getMessage(), true);
 
-		try {
-			validadorLivro.validaLivro(l);
-		} catch (Exception e) {
-			solicitacaoService.updateStatusAndDescricao(s, Status.RECUSADA,
-					"Item não permitido devido " + e.getMessage(), true);
+            throw new OperacaoCanceladaException(
+                    "Operação não permitida. Foi detectado inconsistência na Triagem. " + e.getMessage());
+        }
 
-					throw new OperacaoCanceladaException(
-						"Operação não permitida. Foi detectado inconsistência na Triagem do Exemplar. " + e.getMessage());
-		}
+        try {
+            validadorLivro.validaLivro(l);
+        } catch (Exception e) {
+            solicitacaoService.updateStatusAndDescricao(s, Status.RECUSADA,
+                    "Item não permitido devido " + e.getMessage(), true);
 
-		r.setUsuario(cliente);
-		s.setRejeitado(false);
-		s.setStatus(Status.HOMOLOGADA);
+            throw new OperacaoCanceladaException(
+                    "Operação não permitida. Foi detectado inconsistência na Triagem do Exemplar. " + e.getMessage());
+        }
 
-		solicitacaoService.gravarHistorico(s); //presistindo historico...
+        r.setUsuario(cliente);
+        s.setRejeitado(false);
+        s.setStatus(Status.HOMOLOGADA);
+
+        solicitacaoService.gravarHistorico(s); //presistindo historico...
 
 
-		r.setLivro(l);
-		
+        r.setLivro(l);
 
-		r.setHoraReserva(HoraDiasDataLocalService.horaLocal());
 
-		r.setDataReserva(HoraDiasDataLocalService.dataLocal());
+        r.setHoraReserva(HoraDiasDataLocalService.horaLocal());
 
-		r.setDataPrevisaoTermino(HoraDiasDataLocalService.dataReservaLimite());
+        r.setDataReserva(HoraDiasDataLocalService.dataLocal());
 
-		r.setStatus(ConstantsUtils.DEFAULT_VALUE_STATUSRESERVA_ATIVA);
+        r.setDataPrevisaoTermino(HoraDiasDataLocalService.dataReservaLimite());
 
-		r.setDataRetiradaLivro(dto.getDataRetiradaExemplar());
-		r.setHoraRetiradaLivro(dto.getHoraRetiradaExemplar());
+        r.setStatus(ConstantsUtils.DEFAULT_VALUE_STATUSRESERVA_ATIVA);
 
-		livroService.decrescentarEstoque(dto.getIdLivro(), 1); 
+        r.setDataRetiradaLivro(dto.getDataRetiradaExemplar());
+        r.setHoraRetiradaLivro(dto.getHoraRetiradaExemplar());
 
-		log.info("Livro Reservado:" + dto.getIdLivro());
+        livroService.decrescentarEstoque(dto.getIdLivro(), 1);
 
-	
-		return mapper.reservaParaReservaVM(repository.saveAndFlush(r));
-	}
+        log.info("Livro Reservado:" + dto.getIdLivro());
 
-	@Override
-	@Transactional
-	public ReservaCanceladaVM cancelarReserva(Long idReserva) {
 
-		Reservas r = findByIdReservaAtivaParaUsuario(idReserva);
+        return mapper.reservaParaReservaVM(repository.saveAndFlush(r));
+    }
 
-		r.setStatus(ConstantsUtils.DEFAULT_VALUE_STATUSRESERVA_CANCELADA);
+    @Override
+    @Transactional
+    public ReservaCanceladaVM cancelarReserva(Long idReserva) {
 
-		livroService.acrescentarEstoque(r.getLivro().getId(),
-				ConstantsUtils.DEFAULT_VALUE_ACRESCENTAR_QUANTIDADE_LIVRO);
+        Reservas r = findByIdReservaAtivaParaUsuario(idReserva);
 
-		repository.save(r);
-		repository.flush();
+        r.setStatus(ConstantsUtils.DEFAULT_VALUE_STATUSRESERVA_CANCELADA);
 
-		return mapper.reservaParaReservaCanceladaVM(r);
+        livroService.acrescentarEstoque(r.getLivro().getId(),
+                ConstantsUtils.DEFAULT_VALUE_ACRESCENTAR_QUANTIDADE_LIVRO);
 
-	}
+        repository.save(r);
+        repository.flush();
 
-	@Override
-	public List<ReservaVM> findAllByReservaDoUsuario(Pageable pageable) {
+        return mapper.reservaParaReservaCanceladaVM(r);
 
-		return mapper.reservaParaReservaVM(repository.findAllGenericObjectToUser(pageable).orElseThrow(
-				() -> new ReservaInexistenteException("Não foi localizada nenhum registro em nossa Base de dados")));
+    }
 
-	}
+    @Override
+    public List<ReservaVM> findAllByReservaDoUsuario(Pageable pageable) {
 
-	@Override
-	public ReservaVM findByIdReserva(Long id) {
+        return mapper.reservaParaReservaVM(repository.findAllGenericObjectToUser(pageable).orElseThrow(
+                () -> new ReservaInexistenteException("Não foi localizada nenhum registro em nossa Base de dados")));
 
-		return repository.findOneGenericObjectToUser(id).map(mapper::reservaParaReservaVM)
-				.orElseThrow(() -> new ReservaInexistenteException("Reserva não localizada em nossos registros"));
+    }
 
-	}
+    @Override
+    public ReservaVM findByIdReserva(Long id) {
 
-	public Reservas findByIdReservaAtivaParaUsuario(Long id) {
+        return repository.findOneGenericObjectToUser(id).map(mapper::reservaParaReservaVM)
+                .orElseThrow(() -> new ReservaInexistenteException("Reserva não localizada em nossos registros"));
 
-		return repository.findOneGenericObjectAtivoToUser(id).orElseThrow(
-				() -> new ReservaInexistenteException("Reserva não localizada ou Já Cancelada em sua Base de dados"));
+    }
 
-	}
+    public Reservas findByIdReservaAtivaParaUsuario(Long id) {
 
-	public boolean existsByIdReserva(Long idReserva) {
+        return repository.findOneGenericObjectAtivoToUser(id).orElseThrow(
+                () -> new ReservaInexistenteException("Reserva não localizada ou Já Cancelada em sua Base de dados"));
 
-		if (!repository.existsById(idReserva)) {
+    }
 
-			return false;
-		}
-		return true;
+    public boolean existsByIdReserva(Long idReserva) {
 
-	}
+        if (!repository.existsById(idReserva)) {
+
+            return false;
+        }
+        return true;
+
+    }
 
 }

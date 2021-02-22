@@ -25,63 +25,53 @@ import com.system.bibliotec.repository.UsuarioRepository;
 
 
 @Service
-public class AppUserDetailsService implements UserDetailsService{
+public class AppUserDetailsService implements UserDetailsService {
 
-	@Autowired
-	private UsuarioRepository usuarioRepository;
-	
-	private final Logger log = LoggerFactory.getLogger(AppUserDetailsService.class);
-		// TODO Auto-generated method stub
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
-	
-	  	@Override	    
-	    public UserDetails loadUserByUsername(final String login) {
-	        log.debug("Authenticating {}", login);
+    private final Logger log = LoggerFactory.getLogger(AppUserDetailsService.class);
+    // TODO Auto-generated method stub
 
-	        if (new EmailValidator().isValid(login, null)) {
-	            return usuarioRepository.findOneByEmailIgnoreCase(login)
-	                .map(user -> createSpringSecurityUser(login, user))
-	                .orElseThrow(() -> new EmailInvalidoException("Login " + login + " nao cadastrado em nossa base de dados."));
-	        }
 
-	        String lowercaseUserName = login.toLowerCase(new Locale("pt", "BR"));  
-	        return usuarioRepository.findOneByUserName(lowercaseUserName)
-	            .map(user -> createSpringSecurityUser(lowercaseUserName, user))
-	            .orElseThrow(() -> new UsernameNotFoundException("Usuario " + lowercaseUserName + " não encontrado em nossa base de dados"));
+    @Override
+    public UserDetails loadUserByUsername(final String login) {
+        log.debug("Authenticating {}", login);
 
-	    }
+        if (new EmailValidator().isValid(login, null)) {
+            return usuarioRepository.findOneByEmailIgnoreCase(login)
+                    .map(user -> createSpringSecurityUser(login, user))
+                    .orElseThrow(() -> new EmailInvalidoException("Login " + login + " nao cadastrado em nossa base de dados."));
+        }
 
-	    private UserSystem createSpringSecurityUser(String lowercaseLogin, Usuario user) {
-	        if (!user.isAtivo()) {
-	            throw new UsuarioNaoAtivadoException(user.saudacoes() + "Sua conta não estar ativada. É necessario ativa-la para realizar o login neste sistema. Realize o processo de recuperação de senha e ativa sua conta");
-	        }else {
+        String lowercaseUserName = login.toLowerCase(new Locale("pt", "BR"));
+        return usuarioRepository.findOneByUserName(lowercaseUserName)
+                .map(user -> createSpringSecurityUser(lowercaseUserName, user))
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario " + lowercaseUserName + " não encontrado em nossa base de dados"));
 
-		        List<GrantedAuthority> grantedAuthorities = user.getPermissoes().stream()
-		            .map(authority -> new SimpleGrantedAuthority(authority.getDescricao()))
-		            .collect(Collectors.toList());
+    }
 
-		        return new UserSystem(user, grantedAuthorities);
+    private UserSystem createSpringSecurityUser(String lowercaseLogin, Usuario user) {
+        if (!user.isAtivo()) {
+            throw new UsuarioNaoAtivadoException(user.saudacoes() + "Sua conta não estar ativada. É necessario ativa-la para realizar o login neste sistema. Realize o processo de recuperação de senha e ativa sua conta");
+        } else {
 
-	        }	        
-	       
-	    }
+            List<GrantedAuthority> grantedAuthorities = user.getPermissoes().stream()
+                    .map(authority -> new SimpleGrantedAuthority(authority.getDescricao()))
+                    .collect(Collectors.toList());
 
-	
-	
-	    private Collection<? extends GrantedAuthority> getPermissoesOLD(Usuario usuario) {
-			Set<SimpleGrantedAuthority> authorities = new HashSet<>();
-			usuario.getPermissoes().forEach(p -> authorities.add(new SimpleGrantedAuthority(p.getDescricao().toUpperCase())));
-			return authorities;
-		}
-		
-		
-		
-	
-	
-	
-	
-	
-	
-	
-	
+            return new UserSystem(user, grantedAuthorities);
+
+        }
+
+    }
+
+
+    private Collection<? extends GrantedAuthority> getPermissoesOLD(Usuario usuario) {
+        Set<SimpleGrantedAuthority> authorities = new HashSet<>();
+        usuario.getPermissoes().forEach(p -> authorities.add(new SimpleGrantedAuthority(p.getDescricao().toUpperCase())));
+        return authorities;
+    }
+
+
 }

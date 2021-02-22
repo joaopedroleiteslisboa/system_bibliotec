@@ -21,16 +21,17 @@ public class ReservaCanceladaVM {
 
     private String titular;
 
-    public ReservaCanceladaVM(Reservas entidade){{
+    public ReservaCanceladaVM(Reservas entidade) {
+        {
 
-        this.codigo = entidade.getId();
-        this.statusReserva = entidade.getStatus().toString();
-        this.horaCancelamento = HoraDiasDataLocalService.horaLocal().toString();
-        this.dataCancelamento = HoraDiasDataLocalService.dataLocal().toString();
-        this.livro = entidade.getLivro().getNome();
-        this.titular = entidade.getUsuario().getNome();
+            this.codigo = entidade.getId();
+            this.statusReserva = entidade.getStatus().toString();
+            this.horaCancelamento = HoraDiasDataLocalService.horaLocal().toString();
+            this.dataCancelamento = HoraDiasDataLocalService.dataLocal().toString();
+            this.livro = entidade.getLivro().getNome();
+            this.titular = entidade.getUsuario().getNome();
 
-    }
+        }
 
     }
 }

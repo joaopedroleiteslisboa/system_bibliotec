@@ -2,16 +2,16 @@ package com.system.bibliotec.model.enums;
 
 public enum TipoUsuario {
 
-	CLIENTE("Cliente"), FUNCIONARIO("Funcionario");
+    CLIENTE("Cliente"), FUNCIONARIO("Funcionario");
 
-	private String tipoCliente;
+    private String tipoCliente;
 
-	TipoUsuario(String tipoUsuario) {
+    TipoUsuario(String tipoUsuario) {
 
-		this.tipoCliente = tipoUsuario;
-	}
+        this.tipoCliente = tipoUsuario;
+    }
 
-	public String getTipoUsuario() {
-		return tipoCliente;
-	}
+    public String getTipoUsuario() {
+        return tipoCliente;
+    }
 }

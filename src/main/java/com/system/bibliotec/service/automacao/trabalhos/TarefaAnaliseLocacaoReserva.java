@@ -20,112 +20,112 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TarefaAnaliseLocacaoReserva implements IValidaDataOperacao<AbstractAuditingEntity> {
 
-	private final LocacaoRepository locacaoRepository;
+    private final LocacaoRepository locacaoRepository;
 
-	private final ReservaRepository reservaRepository;
+    private final ReservaRepository reservaRepository;
 
-	private final UserService userService;
+    private final UserService userService;
 
-	private final MailService servicoEmail;
+    private final MailService servicoEmail;
 
-	@Autowired
-	public TarefaAnaliseLocacaoReserva(LocacaoRepository locacaoRepository, ReservaRepository reservaRepository,
-			UserService userService, MailService servicoEmail) {
+    @Autowired
+    public TarefaAnaliseLocacaoReserva(LocacaoRepository locacaoRepository, ReservaRepository reservaRepository,
+                                       UserService userService, MailService servicoEmail) {
 
-		this.locacaoRepository = locacaoRepository;
-		this.reservaRepository = reservaRepository;
-		this.userService = userService;
-		this.servicoEmail = servicoEmail;
-	}
+        this.locacaoRepository = locacaoRepository;
+        this.reservaRepository = reservaRepository;
+        this.userService = userService;
+        this.servicoEmail = servicoEmail;
+    }
 
-	@Async
-	public void checarLocacoesEReservasAtrasadas() {
-		checarLocacoesAtrasada();
-		checarReservasAtrasada();
+    @Async
+    public void checarLocacoesEReservasAtrasadas() {
+        checarLocacoesAtrasada();
+        checarReservasAtrasada();
 
-	}
+    }
 
-	@Async
-	public void checarLocacoesAtrasada() {
-		checarLocacoesAtrasadaSynchronized();
-	}
+    @Async
+    public void checarLocacoesAtrasada() {
+        checarLocacoesAtrasadaSynchronized();
+    }
 
-	@Async
-	public void checarReservasAtrasada() {
-		checarReservasAtrasadaSynchronized();
-	}
+    @Async
+    public void checarReservasAtrasada() {
+        checarReservasAtrasadaSynchronized();
+    }
 
-	private synchronized void checarLocacoesAtrasadaSynchronized() {
+    private synchronized void checarLocacoesAtrasadaSynchronized() {
 
-		final String DEFAULT_MESSAGE_TO_USER = "Data de Devolução do Livro atingida.";
+        final String DEFAULT_MESSAGE_TO_USER = "Data de Devolução do Livro atingida.";
 
-		log.info("Iniciando Tarefa de analise de locações ativas com data Limite de Devolução ultrapassadas: ");
+        log.info("Iniciando Tarefa de analise de locações ativas com data Limite de Devolução ultrapassadas: ");
 
-		locacaoRepository.findAllGenericObjectAtivo().ifPresent(o -> {
+        locacaoRepository.findAllGenericObjectAtivo().ifPresent(o -> {
 
-			o.stream().map((Function<? super Locacoes, ? extends Locacoes>) l -> {
+            o.stream().map((Function<? super Locacoes, ? extends Locacoes>) l -> {
 
-				if (isPenultimoDia(l)) {
+                if (isPenultimoDia(l)) {
 
-					log.info("Penultimo dia Atingido para data de Renovação da Locação: " + l.toString());
-					servicoEmail.sendPenultimoDiaOperacao(l.getUsuario());
-					log.info("Notificando titular: " + l.getUsuario().saudacoes()
-							+ " sobre Penultimo dia da data de Renovação da Locação atingido");
+                    log.info("Penultimo dia Atingido para data de Renovação da Locação: " + l.toString());
+                    servicoEmail.sendPenultimoDiaOperacao(l.getUsuario());
+                    log.info("Notificando titular: " + l.getUsuario().saudacoes()
+                            + " sobre Penultimo dia da data de Renovação da Locação atingido");
 
-				} else if (isUltimoDia(l)) {
+                } else if (isUltimoDia(l)) {
 
-					log.info("Ultimo dia Atingido para Locação: " + l.toString());
-					servicoEmail.sendUltimoDiaOperacao(l.getUsuario());
-					log.info("Notificando titular: " + l.getUsuario().saudacoes() + " sobre Ultimo dia atingido");
+                    log.info("Ultimo dia Atingido para Locação: " + l.toString());
+                    servicoEmail.sendUltimoDiaOperacao(l.getUsuario());
+                    log.info("Notificando titular: " + l.getUsuario().saudacoes() + " sobre Ultimo dia atingido");
 
-				} else if (dataLimiteAtingidaOuUltrapassada(l)) {
+                } else if (dataLimiteAtingidaOuUltrapassada(l)) {
 
-					log.info("Data de renovação ou Devolução atingida para a Locação: " + l.toString());
-					servicoEmail.sendDataUltrapassadaOperacao(l.getUsuario());
-					log.info("Notificando titular: " + l.getUsuario().saudacoes()
-							+ " sobre bloqueio de sua Conta pelo motivo " + DEFAULT_MESSAGE_TO_USER);
-				
-					l.setStatus(Status.ATRASADA);
-					
-					locacaoRepository.save(l);
-					locacaoRepository.flush();
-					
-					userService.bloquearAcesso(true, DEFAULT_MESSAGE_TO_USER, l.getUsuario().getEmail());
-					
+                    log.info("Data de renovação ou Devolução atingida para a Locação: " + l.toString());
+                    servicoEmail.sendDataUltrapassadaOperacao(l.getUsuario());
+                    log.info("Notificando titular: " + l.getUsuario().saudacoes()
+                            + " sobre bloqueio de sua Conta pelo motivo " + DEFAULT_MESSAGE_TO_USER);
 
-				}
-				return null;
-			});
-		});
+                    l.setStatus(Status.ATRASADA);
 
-	}
+                    locacaoRepository.save(l);
+                    locacaoRepository.flush();
 
-	private synchronized void checarReservasAtrasadaSynchronized() {
+                    userService.bloquearAcesso(true, DEFAULT_MESSAGE_TO_USER, l.getUsuario().getEmail());
 
-		log.info("Iniciando Tarefa de analise de Reservas ativas com data Limite para Locação ultrapassadas: ");
 
-		reservaRepository.findAllGenericObjectAtivo().ifPresent(o -> {
+                }
+                return null;
+            });
+        });
 
-			o.stream().map((Function<? super Reservas, ? extends Reservas>) r -> {
+    }
 
-				if (isUltimoDia(r)) {
+    private synchronized void checarReservasAtrasadaSynchronized() {
 
-					servicoEmail.sendUltimoDiaOperacao(r.getUsuario());
-					log.info("Notificando titular: " + r.getUsuario().saudacoes()
-							+ " sobre Ultimo dia da Data da Reserva do Exemplar para Locação");
+        log.info("Iniciando Tarefa de analise de Reservas ativas com data Limite para Locação ultrapassadas: ");
 
-				} else if (dataLimiteAtingidaOuUltrapassada(r)) {
+        reservaRepository.findAllGenericObjectAtivo().ifPresent(o -> {
 
-					servicoEmail.sendDataUltrapassadaOperacao(r.getUsuario());
-					log.info("Notificando titular: " + r.getUsuario().saudacoes()
-							+ " sobre cancelamento da Reserva devido a data Limite estar ultrapassada");
-					r.setStatus(Status.CANCELADA);
-					reservaRepository.saveAndFlush(r);
-				}
-				return null;
-			});
-		});
+            o.stream().map((Function<? super Reservas, ? extends Reservas>) r -> {
 
-	}
+                if (isUltimoDia(r)) {
+
+                    servicoEmail.sendUltimoDiaOperacao(r.getUsuario());
+                    log.info("Notificando titular: " + r.getUsuario().saudacoes()
+                            + " sobre Ultimo dia da Data da Reserva do Exemplar para Locação");
+
+                } else if (dataLimiteAtingidaOuUltrapassada(r)) {
+
+                    servicoEmail.sendDataUltrapassadaOperacao(r.getUsuario());
+                    log.info("Notificando titular: " + r.getUsuario().saudacoes()
+                            + " sobre cancelamento da Reserva devido a data Limite estar ultrapassada");
+                    r.setStatus(Status.CANCELADA);
+                    reservaRepository.saveAndFlush(r);
+                }
+                return null;
+            });
+        });
+
+    }
 
 }

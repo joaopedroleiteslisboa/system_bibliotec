@@ -25,82 +25,76 @@ import java.util.Set;
 public class Livro extends AbstractAuditingEntity {
 
 
-	
-	//TODO: Mudar em ambiente de produção
-	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
-	@Column(name = "codBarras", length = 13)
-	private String codBarras;
-	
-	//TODO: Mudar implementação @JsonProperty(access = JsonProperty.Access.READ_ONLY) em ambiente de produção...
-	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
-	@Size(max = 256)
-	@Column(name = "imagenUrl", length = 256)
-	private String imagenUrl;
+    //TODO: Mudar em ambiente de produção
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @Column(name = "codBarras", length = 13)
+    private String codBarras;
 
-	@NotBlank(message = "Digite um nome de livro")
-	@Size(max = 200, message = "Nome de livro muito grande")
-	@Column(name = "nome")
-	private String nome;
+    //TODO: Mudar implementação @JsonProperty(access = JsonProperty.Access.READ_ONLY) em ambiente de produção...
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @Size(max = 256)
+    @Column(name = "imagenUrl", length = 256)
+    private String imagenUrl;
 
-	
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "livro_has_autores", joinColumns = { @JoinColumn(name = "id_livro") }, inverseJoinColumns = {
-			@JoinColumn(name = "id_autor") })
-	private Set<Autor> autores = new HashSet<Autor>();
+    @NotBlank(message = "Digite um nome de livro")
+    @Size(max = 200, message = "Nome de livro muito grande")
+    @Column(name = "nome")
+    private String nome;
 
-	
-	@JoinColumn(name = "idEditora")
-	@ManyToOne(optional = false, fetch = FetchType.EAGER)
-	private Editora editora;
 
-	@NotNull(message = "Este campo é obrigatorio")
-	@Column(name = "edicao")
-	private String edicao;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "livro_has_autores", joinColumns = {@JoinColumn(name = "id_livro")}, inverseJoinColumns = {
+            @JoinColumn(name = "id_autor")})
+    private Set<Autor> autores = new HashSet<Autor>();
 
-	@Enumerated(EnumType.STRING)
-	@Column(name = "idioma")
-	private Idioma idioma;
 
-	
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "livro_has_categorias", joinColumns = { @JoinColumn(name = "id_livro") }, inverseJoinColumns = {
-			@JoinColumn(name = "id_categoria") })
-	private Set<Categoria> categorias = new HashSet<Categoria>();
+    @JoinColumn(name = "idEditora")
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    private Editora editora;
 
-	@Size(max = 8388607, min = 3, message = "Descrição de livro muito grande")
-	@Column(name = "descricao")
-	private String descricao;
+    @NotNull(message = "Este campo é obrigatorio")
+    @Column(name = "edicao")
+    private String edicao;
 
-	@NotNull(message = "Insira o ISBN do livro")
-	@Column(name = "isbn13")
-	private String isbn13;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "idioma")
+    private Idioma idioma;
 
-	@NotNull(message = "O livro deve ter o numero de paginas")
-	@Min(value = 1, message = "O livro deve ter no minimo 1 pagina")
-	@Column(name = "numeroPaginas")
-	private Integer numeroPaginas;
 
-	@NotNull(message = "Insira uma data de publicação")
-	@Past(message = "A data deve ser inferior a atual")
-	@Column(name = "dataPublicacao")
-	@JsonFormat(pattern = "dd-MM-yyyy")
-	@DateTimeFormat(pattern = "dd-MM-yyyy") 
-	private LocalDate dataPublicacao;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "livro_has_categorias", joinColumns = {@JoinColumn(name = "id_livro")}, inverseJoinColumns = {
+            @JoinColumn(name = "id_categoria")})
+    private Set<Categoria> categorias = new HashSet<Categoria>();
 
-	@DecimalMin(value = "1.00", message = "O livro deve ter um preço valido")
-	@NotNull(message = "Insira um preço")
-	@Column(name = "valorUnitario",precision = 10, scale = 2)
-	private BigDecimal valorUnitario = BigDecimal.ZERO; //TODO: Modificar esse default value em implementação para produção...
+    @Size(max = 8388607, min = 3, message = "Descrição de livro muito grande")
+    @Column(name = "descricao")
+    private String descricao;
 
-	@NotNull(message = "Informe uma quantidade adicionada em seu Estoque de Livros")
-	@Column(name = "quantidade")
-	@Range(min = 1, max = 100, message = "Informe pelo menos {min} livro para Salvar no Estoque ou um valor maximo de  {max}")
-	private Integer quantidade;
+    @NotNull(message = "Insira o ISBN do livro")
+    @Column(name = "isbn13")
+    private String isbn13;
 
-	
-	
-		
-	
-	
-	
+    @NotNull(message = "O livro deve ter o numero de paginas")
+    @Min(value = 1, message = "O livro deve ter no minimo 1 pagina")
+    @Column(name = "numeroPaginas")
+    private Integer numeroPaginas;
+
+    @NotNull(message = "Insira uma data de publicação")
+    @Past(message = "A data deve ser inferior a atual")
+    @Column(name = "dataPublicacao")
+    @JsonFormat(pattern = "dd-MM-yyyy")
+    @DateTimeFormat(pattern = "dd-MM-yyyy")
+    private LocalDate dataPublicacao;
+
+    @DecimalMin(value = "1.00", message = "O livro deve ter um preço valido")
+    @NotNull(message = "Insira um preço")
+    @Column(name = "valorUnitario", precision = 10, scale = 2)
+    private BigDecimal valorUnitario = BigDecimal.ZERO; //TODO: Modificar esse default value em implementação para produção...
+
+    @NotNull(message = "Informe uma quantidade adicionada em seu Estoque de Livros")
+    @Column(name = "quantidade")
+    @Range(min = 1, max = 100, message = "Informe pelo menos {min} livro para Salvar no Estoque ou um valor maximo de  {max}")
+    private Integer quantidade;
+
+
 }

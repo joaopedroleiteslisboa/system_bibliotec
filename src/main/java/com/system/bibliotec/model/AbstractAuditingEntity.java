@@ -29,49 +29,49 @@ import lombok.ToString;
 @ToString
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public  class AbstractAuditingEntity implements Serializable, IGetId ,IGetNome, IGetGenero, IGetDataPrevisaoTerminoOperacao{
+public class AbstractAuditingEntity implements Serializable, IGetId, IGetNome, IGetGenero, IGetDataPrevisaoTerminoOperacao {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -7879582121840012026L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -7879582121840012026L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	protected Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    protected Long id;
 
-	@CreatedBy
-	@Column(name = "created_by", nullable = false, length = 70, updatable = false)
-	@JsonIgnore
-	private String createdBy;
+    @CreatedBy
+    @Column(name = "created_by", nullable = false, length = 70, updatable = false)
+    @JsonIgnore
+    private String createdBy;
 
-	@CreatedDate
-	@Column(name = "created_date", updatable = false)
-	@JsonIgnore
-	private Instant createdDate = Instant.now();
+    @CreatedDate
+    @Column(name = "created_date", updatable = false)
+    @JsonIgnore
+    private Instant createdDate = Instant.now();
 
-	@LastModifiedBy
-	@Column(name = "last_modified_by", length = 70)
-	@JsonIgnore
-	private String lastModifiedBy;
+    @LastModifiedBy
+    @Column(name = "last_modified_by", length = 70)
+    @JsonIgnore
+    private String lastModifiedBy;
 
-	@LastModifiedDate
-	@Column(name = "last_modified_date")
-	@JsonIgnore
-	private Instant lastModifiedDate = Instant.now();
+    @LastModifiedDate
+    @Column(name = "last_modified_date")
+    @JsonIgnore
+    private Instant lastModifiedDate = Instant.now();
 
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		AbstractAuditingEntity that = (AbstractAuditingEntity) o;
-		return Objects.equals(id, that.id);
-	}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AbstractAuditingEntity that = (AbstractAuditingEntity) o;
+        return Objects.equals(id, that.id);
+    }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(id);
-	}
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

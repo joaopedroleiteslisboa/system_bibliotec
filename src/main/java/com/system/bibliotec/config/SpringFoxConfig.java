@@ -31,6 +31,7 @@ import springfox.documentation.swagger.web.SecurityConfiguration;
 import springfox.documentation.swagger.web.SecurityConfigurationBuilder;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import springfox.documentation.swagger.web.ApiKeyVehicle;
+
 import java.util.Collections;
 
 @Configuration
@@ -48,42 +49,40 @@ public class SpringFoxConfig implements WebMvcConfigurer {
                 .addResourceHandler("/webjars/**")
                 .addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
-	
-	
-	private ApiInfo apiInfo() {
-		ApiInfoBuilder apiInfoBuilder = new ApiInfoBuilder();
-		apiInfoBuilder.title("System Bibliotec");
-		apiInfoBuilder.description("API de Gerenciamento de Reservas e Locações de Livros");
-		apiInfoBuilder.version("V1.0.0");
-		apiInfoBuilder.contact(new Contact("João Pedro Leite", "https://www.linkedin.com/in/joaopedroleiteslisboa/",
-				"joaopedroleite.s.lisboa@outlook.com"));
-		apiInfoBuilder.license("GNU GENERAL PUBLIC LICENSE, Version 3");
-		apiInfoBuilder.licenseUrl("https://www.gnu.org/licenses/gpl-3.0.en.html");
-		apiInfoBuilder.termsOfServiceUrl("https://github.com/joaopedroleiteslisboa/system_bibliotec");
-		return apiInfoBuilder.build();
-	}
 
-	@Bean
-	public Docket restApi() {
-		return new Docket(DocumentationType.SWAGGER_2).select().apis(RequestHandlerSelectors.any())
+
+    private ApiInfo apiInfo() {
+        ApiInfoBuilder apiInfoBuilder = new ApiInfoBuilder();
+        apiInfoBuilder.title("System Bibliotec");
+        apiInfoBuilder.description("API de Gerenciamento de Reservas e Locações de Livros");
+        apiInfoBuilder.version("V1.0.0");
+        apiInfoBuilder.contact(new Contact("João Pedro Leite", "https://www.linkedin.com/in/joaopedroleiteslisboa/",
+                "joaopedroleite.s.lisboa@outlook.com"));
+        apiInfoBuilder.license("GNU GENERAL PUBLIC LICENSE, Version 3");
+        apiInfoBuilder.licenseUrl("https://www.gnu.org/licenses/gpl-3.0.en.html");
+        apiInfoBuilder.termsOfServiceUrl("https://github.com/joaopedroleiteslisboa/system_bibliotec");
+        return apiInfoBuilder.build();
+    }
+
+    @Bean
+    public Docket restApi() {
+        return new Docket(DocumentationType.SWAGGER_2).select().apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.any()).build().securitySchemes(Collections.singletonList(securitySchema()))
                 .securityContexts(Collections.singletonList(securityContext())).pathMapping("/")
                 .useDefaultResponseMessages(false).apiInfo(apiInfo())
                 ;
 
 
-
     }
-					
 
-	
-	@Bean
+
+    @Bean
     public SecurityConfiguration securityInfo() {
         return new SecurityConfiguration("swagger", "@admin", "", "", "", ApiKeyVehicle.HEADER, "", " ");
     }
-	
-	
-	private OAuth securitySchema() {
+
+
+    private OAuth securitySchema() {
 
         List<AuthorizationScope> authorizationScopeList = new java.util.ArrayList<>();
         authorizationScopeList.add(new AuthorizationScope("read", "read all"));
@@ -98,9 +97,9 @@ public class SpringFoxConfig implements WebMvcConfigurer {
         return new OAuth("oauth2schema", authorizationScopeList, grantTypes);
 
     }
-	
-	
-	private SecurityContext securityContext() {
+
+
+    private SecurityContext securityContext() {
         return SecurityContext.builder().securityReferences(defaultAuth()).forPaths(PathSelectors.ant("/user/**"))
                 .build();
     }
@@ -108,16 +107,11 @@ public class SpringFoxConfig implements WebMvcConfigurer {
     private List<SecurityReference> defaultAuth() {
 
         final AuthorizationScope[] authorizationScopes = new AuthorizationScope[3];
-        authorizationScopes[0] = new AuthorizationScope("read", "read all");        
+        authorizationScopes[0] = new AuthorizationScope("read", "read all");
         authorizationScopes[1] = new AuthorizationScope("write", "write all");
 
         return Collections.singletonList(new SecurityReference("oauth2schema", authorizationScopes));
     }
-	
-	
 
 
-	
-
-	
 }

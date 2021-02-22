@@ -6,9 +6,9 @@ import java.util.Random;
 
 public class RandomUtils {
 
-	private static final int DEF_COUNT = 20;
-	
-	private static final int DEF_COUNT_PIC_URL_RANDOM = 899;
+    private static final int DEF_COUNT = 20;
+
+    private static final int DEF_COUNT_PIC_URL_RANDOM = 899;
 
     private RandomUtils() {
     }
@@ -39,29 +39,29 @@ public class RandomUtils {
     public static String generateResetKey() {
         return RandomStringUtils.randomNumeric(DEF_COUNT);
     }
-    
-    
+
+
     //TODO: Remover ester metodo quando implementar o front-end desta aplicação....
+
     /**
-     * 
      * Gerando numero aleatorio para anexar a API de busca de fotos para os livros....
      *
      * @return Numero aleatorio.
      */
-	 public static String randomIntForUrlPic() {
-	
-		 	Random random = new Random();
-		 	return String.valueOf(random.nextInt(DEF_COUNT_PIC_URL_RANDOM));
-	 }
-	 
-	 	//TODO: Remover ester metodo quando implementar o gerador oficial e leitor de codigo de barras desta aplicação....
-	    /**
-	     * 
-	     * Gerando numero aleatorio para o codigo de barras do Livro
-	     *
-	     * @return Numero aleatorio.
-	     */	
-		  public static String randomCodBarras() {
-		        return RandomStringUtils.randomNumeric(DEF_COUNT);
-		    }
+    public static String randomIntForUrlPic() {
+
+        Random random = new Random();
+        return String.valueOf(random.nextInt(DEF_COUNT_PIC_URL_RANDOM));
+    }
+
+    //TODO: Remover ester metodo quando implementar o gerador oficial e leitor de codigo de barras desta aplicação....
+
+    /**
+     * Gerando numero aleatorio para o codigo de barras do Livro
+     *
+     * @return Numero aleatorio.
+     */
+    public static String randomCodBarras() {
+        return RandomStringUtils.randomNumeric(DEF_COUNT);
+    }
 }

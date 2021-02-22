@@ -7,8 +7,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface LivroRepositoryQuery {
-	
-	Page<Livro> filtrar(LivroFilter livroFilter, Pageable pageable);
-	Page<ResumoLivro> resumo(LivroFilter livroFilter, Pageable pageable);
+
+    Page<Livro> filtrar(LivroFilter livroFilter, Pageable pageable);
+
+    Page<ResumoLivro> resumo(LivroFilter livroFilter, Pageable pageable);
 
 }

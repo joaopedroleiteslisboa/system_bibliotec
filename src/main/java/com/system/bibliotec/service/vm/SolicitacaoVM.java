@@ -12,46 +12,40 @@ import lombok.ToString;
 @ToString
 public class SolicitacaoVM {
 
-    
 
-
- 
     private String tipo;
 
-    
+
     private String horaSolicitacao;
 
-   
+
     private String dataSolicitacao;
 
-    
+
     private String dataRetiradaExemplar;
 
-    
+
     private String horaRetiradaExemplar;
 
 
     private String nomeExeplar;
 
-    
+
     private String status;
 
-    
+
     private String descricao;
 
-    
+
     private boolean rejeitado;
 
 
     private String nomeCliente;
 
 
-
-
-
     public SolicitacaoVM(Solicitacoes entity) {
-       
-       
+
+
         this.tipo = entity.getTipo().toString();
         this.horaSolicitacao = entity.getHoraSolicitacao().toString();
         this.dataSolicitacao = entity.getDataSolicitacao().toString();
@@ -59,7 +53,7 @@ public class SolicitacaoVM {
         this.horaRetiradaExemplar = entity.getHoraRetiradaExemplar().toString();
 
         //this.nomeExeplar = nomeExemplar;
-        
+
         this.status = entity.getStatus().toString();
         this.descricao = entity.getDescricao();
         this.rejeitado = entity.isRejeitado();
@@ -68,8 +62,8 @@ public class SolicitacaoVM {
 
 
     public SolicitacaoVM(Solicitacoes entity, String nomeExemplar) {
-       
-       
+
+
         this.tipo = entity.getTipo().toString();
         this.horaSolicitacao = entity.getHoraSolicitacao().toString();
         this.dataSolicitacao = entity.getDataSolicitacao().toString();
@@ -81,6 +75,6 @@ public class SolicitacaoVM {
         this.rejeitado = entity.isRejeitado();
         this.nomeCliente = entity.getUsuario().getNome();
     }
-    
+
 
 }

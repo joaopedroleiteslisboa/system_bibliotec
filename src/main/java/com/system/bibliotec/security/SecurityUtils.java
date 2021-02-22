@@ -18,34 +18,29 @@ public final class SecurityUtils {
     }
 
 
+    public static Optional<UserSystem> getCurrentUserPrincipal() {
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        return Optional.ofNullable(securityContext.getAuthentication()).map(authentication -> {
 
-    public static Optional<Object> getCurrentUserPrincipal() {
+            UserSystem springSecurityUser = (UserSystem) authentication.getPrincipal();
+
+            return springSecurityUser;
+        });
+    }
+
+    public static Optional<String> getCurrentUserNameId() {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         return Optional.ofNullable(securityContext.getAuthentication()).map(authentication -> {
             if (authentication.getPrincipal() instanceof UserSystem) {
                 UserSystem springSecurityUser = (UserSystem) authentication.getPrincipal();
-                return springSecurityUser;
+                return String.valueOf(springSecurityUser.getId()); // id para não ter problemas am caso de atualização de email...
+
             } else if (authentication.getPrincipal() instanceof String) {
                 return (String) authentication.getPrincipal();
             }
             return null;
         });
     }
-
-
-    public static Optional<String> getCurrentUserLoginId() {
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        return Optional.ofNullable(securityContext.getAuthentication()).map(authentication -> {
-            if (authentication.getPrincipal() instanceof UserSystem) {
-                UserSystem springSecurityUser = (UserSystem) authentication.getPrincipal();
-                return String.valueOf(springSecurityUser.getId());
-            } else if (authentication.getPrincipal() instanceof String) {
-                return (String) authentication.getPrincipal();
-            }
-            return null;
-        });
-    }
-
 
 
     public static Optional<String> getCurrentTokenJWT() {

@@ -11,7 +11,9 @@ import com.system.bibliotec.security.AuthoritiesConstantsUltis;
 import com.system.bibliotec.security.SecurityUtils;
 
 import java.util.List;
+import java.util.Optional;
 
+import com.system.bibliotec.security.UserSystem;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,96 +38,108 @@ import com.system.bibliotec.service.vm.LocacaoVM;
 @Service
 public class LocacaoService {
 
-	private final IOperacaoLocacao operacao;
+    private final IOperacaoLocacao operacao;
 
-	private final MapeadorLocacao mapper;
+    private final MapeadorLocacao mapper;
 
-	private final LocacaoRepository locacaoRepository;
+    private final LocacaoRepository locacaoRepository;
 
-	@Autowired
-	public LocacaoService(IOperacaoLocacao operacao, MapeadorLocacao mapper, LocacaoRepository locacaoRepository) {
+    @Autowired
+    public LocacaoService(IOperacaoLocacao operacao, MapeadorLocacao mapper, LocacaoRepository locacaoRepository) {
 
-		this.operacao = operacao;
-		this.mapper = mapper;
-		this.locacaoRepository = locacaoRepository;
-	}
+        this.operacao = operacao;
+        this.mapper = mapper;
+        this.locacaoRepository = locacaoRepository;
+    }
 
-	public LocacaoVM atenderLocacao(AtendimentoLocacaoDTO dto) {
+    public LocacaoVM atenderLocacao(AtendimentoLocacaoDTO dto) {
 
-		return operacao.atenderLocacao(dto);
+        return operacao.atenderLocacao(dto);
 
-	}
+    }
 
 
+    public LocacaoVM despacharLocacao(DespachoSolicitacaoLocacaoDTO locacao) {
 
-	public LocacaoVM despacharLocacao(DespachoSolicitacaoLocacaoDTO locacao) {
+        return operacao.despacharPedidoLocacao(locacao);
 
-		return operacao.despacharPedidoLocacao(locacao);
+    }
 
-	}
+    public void renovarLocacao(Long id) {
+        operacao.renovarLocacao(id);
+    }
 
-	public void renovarLocacao(Long id) {
-		operacao.renovarLocacao(id);
-	}
+    public LocacaoCancelamentoVM cancelarLocacao(CancelamentoLocacaoDTO dto) {
+        return operacao.cancelarLocacao(dto);
 
-	public LocacaoCancelamentoVM cancelarLocacao(CancelamentoLocacaoDTO dto) {
-		return operacao.cancelarLocacao(dto);
+    }
 
-	}
+    public LocacaoDevolucaoVM devolucaoLivro(DevolucaoLocacaoDTO dto) {
 
-	public LocacaoDevolucaoVM devolucaoLivro(DevolucaoLocacaoDTO dto) {
+        return operacao.encerramento(dto);
+    }
 
-		return operacao.encerramento(dto);
-	}
+    public void updatePropertyStatusLocacao(Long id, Status statusLocacao) {
+        operacao.updatePropertyStatusLocacao(id, statusLocacao);
+    }
 
-	public void updatePropertyStatusLocacao(Long id, Status statusLocacao) {
-		operacao.updatePropertyStatusLocacao(id, statusLocacao);
-	}
+    public List<LocacaoVM> findAllByLocacaoDoUsuario(Pageable pageable) {
 
-	public List<LocacaoVM> findAllByLocacaoDoUsuario(Pageable pageable) {
+        return mapper.locacaoParaLocacaoVM(locacaoRepository.findAllGenericObjectToUser(pageable).orElseThrow(
+                () -> new LocacaoInexistenteException("Não foi localizada nenhum registro em nossa Base de dados")));
+    }
 
-		return mapper.locacaoParaLocacaoVM(locacaoRepository.findAllGenericObjectToUser(pageable).orElseThrow(
-				() -> new LocacaoInexistenteException("Não foi localizada nenhum registro em nossa Base de dados")));
-	}
+    public LocacaoVM findByIdLocacao(Long id) {
 
-	public LocacaoVM findByIdLocacao(Long id) {
+        return locacaoRepository.findOneGenericObjectToUser(id).map(mapper::locacaoParaLocacaoVM)
+                .orElseThrow(() -> new LocacaoInexistenteException("Locação não localizada em nossos registros"));
 
-		return locacaoRepository.findOneGenericObjectToUser(id).map(mapper::locacaoParaLocacaoVM)
-				.orElseThrow(() -> new LocacaoInexistenteException("Locação não localizada em nossos registros"));
+    }
 
-	}
+    public List<LocacaoVM> filterQuery(LocacaoFilter filter) {
 
-	public List<LocacaoVM> filterQuery(LocacaoFilter filter) {
+        Optional<UserSystem> usuarioAnonimo = Optional.empty();
 
-		Specification<Locacoes> query = Specification.where(
 
-				LocacaoSpecification.porID(filter.getIdLocacao()))
+        if (!SecurityUtils.isCurrentUserInRole(AuthoritiesConstantsUltis.ROLE_ADMIN) || //caso for ADM ou USER SYSTEM listar todas solicitações/locação...
+                !SecurityUtils.isCurrentUserInRole(AuthoritiesConstantsUltis.ROLE_USER_SYSTEM)) {
 
-				.and(LocacaoSpecification.porUsuarioContexto(filter.getCreatedBy())) // valor definido no construtor de
-																						// LocacaoFilter para deixar
-																						// esta consulta dinamica com
-																						// base no usuario
+            usuarioAnonimo = SecurityUtils.getCurrentUserPrincipal();
 
-				.and(LocacaoSpecification.porIntervaloDataCriacao(filter.getDataLocacaoInicio(),
-						filter.getDataLocacaoFim()))
-				.and(LocacaoSpecification.porIntervaloHoraCriacao(filter.getHoraLocacaoInicio(),
-						filter.getHoraLocacaoFim()))
+            if (usuarioAnonimo.isPresent()) {
 
-				.and(LocacaoSpecification.porIntervaloDataCancelamento(filter.getDataCancelamentoLocacaoInicio(),
-						filter.getDataCancelamentoLocacaoFim()))
-				.and(LocacaoSpecification.porIntervaloHoraCancelamento(filter.getHoraCancelamentoLocacaoInicio(),
-						filter.getHoraCancelamentoLocacaoFim()))
+                filter.setIdUsuario(usuarioAnonimo.get().getId());
+            }
 
-				.and(LocacaoSpecification.porStatus(filter.getStatusLocacao()))
+        }
 
-				.and(LocacaoSpecification.porLivroId(filter.getIdExemplar()))
 
-				.and(LocacaoSpecification.porUsuarioId(filter.getIdUsuario())
-				);
-		// fim query
+        Specification<Locacoes> query = Specification.where(
 
-		return mapper.locacaoParaLocacaoVM(locacaoRepository.findAll(query));
+                LocacaoSpecification.porID(filter.getIdLocacao()))
 
-	}
+                .and(LocacaoSpecification.porUsuarioContexto(filter.getCreatedBy()))
+
+                .and(LocacaoSpecification.porIntervaloDataCriacao(filter.getDataLocacaoInicio(),
+                        filter.getDataLocacaoFim()))
+                .and(LocacaoSpecification.porIntervaloHoraCriacao(filter.getHoraLocacaoInicio(),
+                        filter.getHoraLocacaoFim()))
+
+                .and(LocacaoSpecification.porIntervaloDataCancelamento(filter.getDataCancelamentoLocacaoInicio(),
+                        filter.getDataCancelamentoLocacaoFim()))
+                .and(LocacaoSpecification.porIntervaloHoraCancelamento(filter.getHoraCancelamentoLocacaoInicio(),
+                        filter.getHoraCancelamentoLocacaoFim()))
+
+                .and(LocacaoSpecification.porStatus(filter.getStatusLocacao()))
+
+                .and(LocacaoSpecification.porLivroId(filter.getIdExemplar()))
+
+                .and(LocacaoSpecification.porUsuarioId(filter.getIdUsuario())
+                );
+        // fim query
+
+        return mapper.locacaoParaLocacaoVM(locacaoRepository.findAll(query));
+
+    }
 
 }

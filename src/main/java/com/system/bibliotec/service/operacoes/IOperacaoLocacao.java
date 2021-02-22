@@ -11,31 +11,20 @@ import com.system.bibliotec.service.vm.LocacaoCancelamentoVM;
 import com.system.bibliotec.service.vm.LocacaoDevolucaoVM;
 import com.system.bibliotec.service.vm.LocacaoVM;
 
-public interface IOperacaoLocacao extends IValidaDataOperacao, IAuditorTokenDeUsuarioDoContexto{
-
-	
-	public LocacaoVM despacharPedidoLocacao(DespachoSolicitacaoLocacaoDTO locacao);
-	
-	public void renovarLocacao(Long id);
-		
-	public LocacaoCancelamentoVM cancelarLocacao(CancelamentoLocacaoDTO dto);
-	
-	public LocacaoDevolucaoVM encerramento(DevolucaoLocacaoDTO dto);
-	
-	public void updatePropertyStatusLocacao(Long idLocacao, Status statusLocacao);
-
-	public LocacaoVM atenderLocacao(AtendimentoLocacaoDTO dto);
+public interface IOperacaoLocacao extends IValidaDataOperacao, IAuditorTokenDeUsuarioDoContexto {
 
 
-	
+    public LocacaoVM despacharPedidoLocacao(DespachoSolicitacaoLocacaoDTO locacao);
+
+    public void renovarLocacao(Long id);
+
+    public LocacaoCancelamentoVM cancelarLocacao(CancelamentoLocacaoDTO dto);
+
+    public LocacaoDevolucaoVM encerramento(DevolucaoLocacaoDTO dto);
+
+    public void updatePropertyStatusLocacao(Long idLocacao, Status statusLocacao);
+
+    public LocacaoVM atenderLocacao(AtendimentoLocacaoDTO dto);
 
 
-	
-
-	
-	
-	
-	
-
-	
 }

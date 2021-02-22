@@ -15,28 +15,27 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "autores")
-public class Autor extends AbstractAuditingEntity{
+public class Autor extends AbstractAuditingEntity {
 
-	
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 2294635258767344611L;
 
-	@NotBlank(message = "O nome é Obrigatorio")
-	@Size(min = 3, max = 60)
-	@Column(name = "nome")
-	private String nome;
-	
-	@NotBlank(message = "Uma descricao seria ideal")
-	@Size(max = 5000)
-	@Column(name = "descricao")
-	private String descricao;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 2294635258767344611L;
 
-	@JsonBackReference
-	@ManyToMany(mappedBy = "autores", fetch = FetchType.EAGER)
-	private List<Livro> livros;
+    @NotBlank(message = "O nome é Obrigatorio")
+    @Size(min = 3, max = 60)
+    @Column(name = "nome")
+    private String nome;
 
-	
+    @NotBlank(message = "Uma descricao seria ideal")
+    @Size(max = 5000)
+    @Column(name = "descricao")
+    private String descricao;
+
+    @JsonBackReference
+    @ManyToMany(mappedBy = "autores", fetch = FetchType.EAGER)
+    private List<Livro> livros;
+
+
 }

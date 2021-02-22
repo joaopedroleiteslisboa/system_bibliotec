@@ -33,7 +33,7 @@ public class AsyncConfigurationBibliotecSystem implements AsyncConfigurer, Appli
     @Autowired
     private TaskExecutionProperties taskExecutionProperties;
 
-    
+
     @Override
     public void setApplicationContext(final ApplicationContext applicationContext) throws BeansException {
         // TODO Auto-generated method stub
@@ -54,14 +54,12 @@ public class AsyncConfigurationBibliotecSystem implements AsyncConfigurer, Appli
     }
 
 
-
-@Override
-  public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
-    CustomAsyncExceptionHandler demoHandler = new CustomAsyncExceptionHandler(); 
-    demoHandler.setApplicationContext(applicationContext);
-    return demoHandler;
-  }
-
+    @Override
+    public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
+        CustomAsyncExceptionHandler demoHandler = new CustomAsyncExceptionHandler();
+        demoHandler.setApplicationContext(applicationContext);
+        return demoHandler;
+    }
 
 
 }

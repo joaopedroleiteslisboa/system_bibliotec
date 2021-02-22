@@ -1,5 +1,5 @@
 /**
-	Conjunto de Exceções  da Aplicação
-*/
+ * Conjunto de Exceções  da Aplicação
+ */
 
 package com.system.bibliotec.exception;

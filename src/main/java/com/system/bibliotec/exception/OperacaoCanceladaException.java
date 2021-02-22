@@ -4,9 +4,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
-public class OperacaoCanceladaException extends RuntimeException{
-	
-	public OperacaoCanceladaException(String message, Throwable cause) {
+public class OperacaoCanceladaException extends RuntimeException {
+
+    public OperacaoCanceladaException(String message, Throwable cause) {
         super(message, cause);
         // TODO Auto-generated constructor stub
     }
@@ -15,7 +15,6 @@ public class OperacaoCanceladaException extends RuntimeException{
         super(cause);
         // TODO Auto-generated constructor stub
     }
-
 
 
     public OperacaoCanceladaException(String string) {

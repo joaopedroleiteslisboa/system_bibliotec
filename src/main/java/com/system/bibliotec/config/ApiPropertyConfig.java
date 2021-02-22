@@ -7,38 +7,36 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties("bibliotec")
 public class ApiPropertyConfig {
 
-	private String originPermitida = "http://localhost:4200";
+    private String originPermitida = "http://localhost:4200";
 
-	private final Seguranca seguranca = new Seguranca();
+    private final Seguranca seguranca = new Seguranca();
 
 
+    public Seguranca getSeguranca() {
+        return seguranca;
+    }
 
-	public Seguranca getSeguranca() {
-		return seguranca;
-	}
+    public String getOriginPermitida() {
+        return originPermitida;
+    }
 
-	public String getOriginPermitida() {
-		return originPermitida;
-	}
+    public void setOriginPermitida(String originPermitida) {
+        this.originPermitida = originPermitida;
+    }
 
-	public void setOriginPermitida(String originPermitida) {
-		this.originPermitida = originPermitida;
-	}   
+    public static class Seguranca {
 
-	public static class Seguranca {
+        private boolean enableHttps;
 
-		private boolean enableHttps;
+        public boolean isEnableHttps() {
+            return enableHttps;
+        }
 
-		public boolean isEnableHttps() {
-			return enableHttps;
-		}
+        public void setEnableHttps(boolean enableHttps) {
+            this.enableHttps = enableHttps;
+        }
 
-		public void setEnableHttps(boolean enableHttps) {
-			this.enableHttps = enableHttps;
-		}
-
-	}
-
+    }
 
 
 }

@@ -40,139 +40,139 @@ import javax.servlet.http.HttpServletResponse;
 @Repository
 public class CustomAuditEventRepositoryService extends HandlerInterceptorAdapter implements AuditEventRepository {
 
-	private static final String AUTHORIZATION_FAILURE = "AUTHORIZATION_FAILURE";
+    private static final String AUTHORIZATION_FAILURE = "AUTHORIZATION_FAILURE";
 
-	private final Logger log = LoggerFactory.getLogger(CustomAuditEventRepositoryService.class);
+    private final Logger log = LoggerFactory.getLogger(CustomAuditEventRepositoryService.class);
 
-	protected static final int EVENT_DATA_COLUMN_MAX_LENGTH = 1000;
-		
-	@Value("#{new Boolean('${bibliotec.custom.audit.event.repository.service.requisicoes}')}")
-	private boolean auditarRequisicoes = false; //default false.
-	
-	@Value("#{new Boolean('${bibliotec.custom.audit.event.repository.service.http.completo}')}")
-	private boolean auditarHttpCompleto = false; //default false.
+    protected static final int EVENT_DATA_COLUMN_MAX_LENGTH = 1000;
 
-	@Autowired
-	private AcoesContextoEndPointsRepository acoesContextoEndPointsRepository;
+    @Value("#{new Boolean('${bibliotec.custom.audit.event.repository.service.requisicoes}')}")
+    private boolean auditarRequisicoes = false; //default false.
 
-	@PersistenceContext
-	private EntityManager entityManagerr;
+    @Value("#{new Boolean('${bibliotec.custom.audit.event.repository.service.http.completo}')}")
+    private boolean auditarHttpCompleto = false; //default false.
 
-	@Autowired
-	private PersistenceAuditEventRepository persistenceAuditEventRepository;
+    @Autowired
+    private AcoesContextoEndPointsRepository acoesContextoEndPointsRepository;
 
-	@Autowired
-	private ServicoDoSistema servicoDoSistema;
+    @PersistenceContext
+    private EntityManager entityManagerr;
 
-	@Autowired
-	private AuditEventConverter auditEventConverter;
+    @Autowired
+    private PersistenceAuditEventRepository persistenceAuditEventRepository;
 
-		
-	@Bean
-	public EntityManager entityManager() {
-		return entityManagerr;
-	}
+    @Autowired
+    private ServicoDoSistema servicoDoSistema;
 
-	@Override
-	public List<AuditEvent> find(String principal, Instant after, String type) {
-		Iterable<PersistentAuditEvent> persistentAuditEvents = persistenceAuditEventRepository
-				.findByPrincipalAndAuditEventDateAfterAndAuditEventType(principal, after, type);
-		return auditEventConverter.convertToAuditEvent(persistentAuditEvents);
-	}
+    @Autowired
+    private AuditEventConverter auditEventConverter;
 
-	@Override
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public void add(AuditEvent event) {
 
-		if (!AUTHORIZATION_FAILURE.equals(event.getType())
-				&& !ConstantsUtils.ANONYMOUS_USER.equals(event.getPrincipal())) {
+    @Bean
+    public EntityManager entityManager() {
+        return entityManagerr;
+    }
 
-			PersistentAuditEvent persistentAuditEvent = new PersistentAuditEvent();
-			persistentAuditEvent.setPrincipal(event.getPrincipal());
-			persistentAuditEvent.setAuditEventType(event.getType());
-			persistentAuditEvent.setAuditEventDate(event.getTimestamp());
-			Map<String, String> eventData = auditEventConverter.convertDataToStrings(event.getData());
-			persistentAuditEvent.setData(truncate(eventData));
-			persistenceAuditEventRepository.save(persistentAuditEvent);
-		}
-	}
+    @Override
+    public List<AuditEvent> find(String principal, Instant after, String type) {
+        Iterable<PersistentAuditEvent> persistentAuditEvents = persistenceAuditEventRepository
+                .findByPrincipalAndAuditEventDateAfterAndAuditEventType(principal, after, type);
+        return auditEventConverter.convertToAuditEvent(persistentAuditEvents);
+    }
 
-	@Override
-	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
-			throws Exception {
-		
-		if (auditarRequisicoes) {
-			saveAcoesContextoEndPoints(request, response, handler,
-					ServletUriComponentsBuilder.fromCurrentRequest().toUriString(),
-					ServletUriComponentsBuilder.fromCurrentRequestUri().toUriString());
-		}
-		return super.preHandle(request, response, handler);
-	}
+    @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void add(AuditEvent event) {
 
-	@Override
-	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
-			ModelAndView modelAndView) throws Exception {
-		
-		if (auditarRequisicoes) {
-			saveAcoesContextoEndPoints(request, response, handler,
-					ServletUriComponentsBuilder.fromCurrentRequest().toUriString(),
-					ServletUriComponentsBuilder.fromCurrentRequestUri().toUriString(), modelAndView);
-		}
-		super.postHandle(request, response, handler, modelAndView);
-	}
-	
-	@Async
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public void saveAcoesContextoEndPoints(HttpServletRequest request, HttpServletResponse response, Object handler,
-			String servletCurrentRequest, String serveletURICurrent) throws IOException {
+        if (!AUTHORIZATION_FAILURE.equals(event.getType())
+                && !ConstantsUtils.ANONYMOUS_USER.equals(event.getPrincipal())) {
 
-		VOAcoesContextoEndPoints requisicao = new VOAcoesContextoEndPoints();
+            PersistentAuditEvent persistentAuditEvent = new PersistentAuditEvent();
+            persistentAuditEvent.setPrincipal(event.getPrincipal());
+            persistentAuditEvent.setAuditEventType(event.getType());
+            persistentAuditEvent.setAuditEventDate(event.getTimestamp());
+            Map<String, String> eventData = auditEventConverter.convertDataToStrings(event.getData());
+            persistentAuditEvent.setData(truncate(eventData));
+            persistenceAuditEventRepository.save(persistentAuditEvent);
+        }
+    }
 
-		requisicao.setBody(IOUtils.toString(request.getInputStream()));
-		requisicao.setMethod(request.getMethod().toString());
-		if(auditarHttpCompleto) {
-			requisicao.setDataHeaders(auditEventConverter.convertDataToStringsHeader(request));
-			requisicao.setDataParans(auditEventConverter.convertDataToStringsParam(request));
-		}	
-		requisicao.setRecursoSolicitado(servletCurrentRequest);
-		requisicao.setAtividadeEsperada(serveletURICurrent);
-		
-		requisicao.setIp(request.getRemoteAddr().toString());
+    @Override
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+            throws Exception {
 
-		acoesContextoEndPointsRepository.save(requisicao);
-	}
+        if (auditarRequisicoes) {
+            saveAcoesContextoEndPoints(request, response, handler,
+                    ServletUriComponentsBuilder.fromCurrentRequest().toUriString(),
+                    ServletUriComponentsBuilder.fromCurrentRequestUri().toUriString());
+        }
+        return super.preHandle(request, response, handler);
+    }
 
-	@Async
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public void saveAcoesContextoEndPoints(HttpServletRequest request, HttpServletResponse response, Object handler,
-			String servletCurrentRequest, String serveletURICurrent, ModelAndView modelAndView) throws IOException {
+    @Override
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
+                           ModelAndView modelAndView) throws Exception {
 
-		VOAcoesContextoEndPoints requisicao = new VOAcoesContextoEndPoints();
+        if (auditarRequisicoes) {
+            saveAcoesContextoEndPoints(request, response, handler,
+                    ServletUriComponentsBuilder.fromCurrentRequest().toUriString(),
+                    ServletUriComponentsBuilder.fromCurrentRequestUri().toUriString(), modelAndView);
+        }
+        super.postHandle(request, response, handler, modelAndView);
+    }
 
-		requisicao.setBody(IOUtils.toString(request.getInputStream()));
-		requisicao.setMethod(request.getMethod().toString());
-		if(auditarHttpCompleto) {
-			requisicao.setDataHeaders(auditEventConverter.convertDataToStringsHeader(request));
-			requisicao.setDataParans(auditEventConverter.convertDataToStringsParam(request));
-		}	
-		requisicao.setRecursoSolicitado(servletCurrentRequest);
-		requisicao.setAtividadeEsperada(serveletURICurrent);
-		
-		requisicao.setIp(request.getRemoteAddr().toString());
-		
-		acoesContextoEndPointsRepository.save(requisicao);
-	}
+    @Async
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void saveAcoesContextoEndPoints(HttpServletRequest request, HttpServletResponse response, Object handler,
+                                           String servletCurrentRequest, String serveletURICurrent) throws IOException {
 
-	private Map<String, String> truncate(Map<String, String> data) {
-		Map<String, String> results = new HashMap<>();
+        VOAcoesContextoEndPoints requisicao = new VOAcoesContextoEndPoints();
 
-		if (data != null) {
-			for (Map.Entry<String, String> entry : data.entrySet()) {
-				String value = entry.getValue();			
-				results.put(entry.getKey(), value);
-			}
-		}
-		return results;
-	}
+        requisicao.setBody(IOUtils.toString(request.getInputStream()));
+        requisicao.setMethod(request.getMethod().toString());
+        if (auditarHttpCompleto) {
+            requisicao.setDataHeaders(auditEventConverter.convertDataToStringsHeader(request));
+            requisicao.setDataParans(auditEventConverter.convertDataToStringsParam(request));
+        }
+        requisicao.setRecursoSolicitado(servletCurrentRequest);
+        requisicao.setAtividadeEsperada(serveletURICurrent);
+
+        requisicao.setIp(request.getRemoteAddr().toString());
+
+        acoesContextoEndPointsRepository.save(requisicao);
+    }
+
+    @Async
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void saveAcoesContextoEndPoints(HttpServletRequest request, HttpServletResponse response, Object handler,
+                                           String servletCurrentRequest, String serveletURICurrent, ModelAndView modelAndView) throws IOException {
+
+        VOAcoesContextoEndPoints requisicao = new VOAcoesContextoEndPoints();
+
+        requisicao.setBody(IOUtils.toString(request.getInputStream()));
+        requisicao.setMethod(request.getMethod().toString());
+        if (auditarHttpCompleto) {
+            requisicao.setDataHeaders(auditEventConverter.convertDataToStringsHeader(request));
+            requisicao.setDataParans(auditEventConverter.convertDataToStringsParam(request));
+        }
+        requisicao.setRecursoSolicitado(servletCurrentRequest);
+        requisicao.setAtividadeEsperada(serveletURICurrent);
+
+        requisicao.setIp(request.getRemoteAddr().toString());
+
+        acoesContextoEndPointsRepository.save(requisicao);
+    }
+
+    private Map<String, String> truncate(Map<String, String> data) {
+        Map<String, String> results = new HashMap<>();
+
+        if (data != null) {
+            for (Map.Entry<String, String> entry : data.entrySet()) {
+                String value = entry.getValue();
+                results.put(entry.getKey(), value);
+            }
+        }
+        return results;
+    }
 
 }

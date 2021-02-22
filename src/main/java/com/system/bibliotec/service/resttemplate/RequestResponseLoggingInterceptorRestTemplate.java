@@ -26,177 +26,175 @@ import org.springframework.util.StreamUtils;
 
 public class RequestResponseLoggingInterceptorRestTemplate implements ClientHttpRequestInterceptor {
 
-	public static final Logger requestLogger = LoggerFactory
-			.getLogger(RequestResponseLoggingInterceptorRestTemplate.class);
-	public static final Logger responseLogger = LoggerFactory
-			.getLogger(RequestResponseLoggingInterceptorRestTemplate.class);
+    public static final Logger requestLogger = LoggerFactory
+            .getLogger(RequestResponseLoggingInterceptorRestTemplate.class);
+    public static final Logger responseLogger = LoggerFactory
+            .getLogger(RequestResponseLoggingInterceptorRestTemplate.class);
 
-	private String caminhoLog;
+    private String caminhoLog;
 
-	public RequestResponseLoggingInterceptorRestTemplate(String caminhoLog) {
-		this.caminhoLog = caminhoLog;
-	}
+    public RequestResponseLoggingInterceptorRestTemplate(String caminhoLog) {
+        this.caminhoLog = caminhoLog;
+    }
 
-	@Override
-	public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution)
-			throws IOException {
-		logRequest(request, body);
-		ClientHttpResponse response = execution.execute(request, body);
-		logResponse(request, response);
-		return response;
-	}
+    @Override
+    public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution)
+            throws IOException {
+        logRequest(request, body);
+        ClientHttpResponse response = execution.execute(request, body);
+        logResponse(request, response);
+        return response;
+    }
 
-	protected void logRequest(HttpRequest request, byte[] body) throws FileNotFoundException {
+    protected void logRequest(HttpRequest request, byte[] body) throws FileNotFoundException {
 
-		StringBuilder builder = new StringBuilder("Enviando ").append(request.getMethod()).append(" enviando para ")
-				.append(request.getURI());
-		
+        StringBuilder builder = new StringBuilder("Enviando ").append(request.getMethod()).append(" enviando para ")
+                .append(request.getURI());
 
-			String bodyText = new String(body, determineCharset(request.getHeaders()));
-			builder.append(": [").append(bodyText).append("]");
 
-			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
-			String dataHora = dateFormat.format(new Date());
+        String bodyText = new String(body, determineCharset(request.getHeaders()));
+        builder.append(": [").append(bodyText).append("]");
 
-			String hostName = (request.getURI() != null && request.getURI().getHost() != null)
-					? request.getURI().getHost().toString()
-					: "";
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
+        String dataHora = dateFormat.format(new Date());
 
-			String fileName = "request".concat("-").concat(hostName) + "-" + dataHora + "-" + ".json";
-			String currentFolder = format.format(new Date());
-			String basePath = caminhoLog + File.separator + currentFolder;
-			File basePathFile = new File(basePath);
+        String hostName = (request.getURI() != null && request.getURI().getHost() != null)
+                ? request.getURI().getHost().toString()
+                : "";
 
-			if (!basePathFile.exists()) {
-				basePathFile.mkdirs();
-			}
+        String fileName = "request".concat("-").concat(hostName) + "-" + dataHora + "-" + ".json";
+        String currentFolder = format.format(new Date());
+        String basePath = caminhoLog + File.separator + currentFolder;
+        File basePathFile = new File(basePath);
 
-			setAcessoFile(basePathFile);
-			File jsonFile = new File(basePath + File.separator + fileName);
-			setAcessoFile(jsonFile);
-			try (BufferedWriter out = new BufferedWriter(
-					new OutputStreamWriter(new FileOutputStream(jsonFile), StandardCharsets.UTF_8))) {
-				// É AutoCloseable
+        if (!basePathFile.exists()) {
+            basePathFile.mkdirs();
+        }
 
-				out.write(builder.toString());
+        setAcessoFile(basePathFile);
+        File jsonFile = new File(basePath + File.separator + fileName);
+        setAcessoFile(jsonFile);
+        try (BufferedWriter out = new BufferedWriter(
+                new OutputStreamWriter(new FileOutputStream(jsonFile), StandardCharsets.UTF_8))) {
+            // É AutoCloseable
 
-			} catch (IOException e) {
+            out.write(builder.toString());
 
-				e.printStackTrace();
-			}
+        } catch (IOException e) {
 
-		
+            e.printStackTrace();
+        }
 
-	}
 
-	protected void logResponse(HttpRequest request, ClientHttpResponse response) {
+    }
 
-		try {
-			StringBuilder builder = new StringBuilder(" Response da Requisição \"").append(response.getRawStatusCode()).append(" ")
-					.append(response.getStatusText()).append("\" Resposta da requisição para ").append(request.getMethod())
-					.append(" requisição para ").append(request.getURI());
-			HttpHeaders responseHeaders = response.getHeaders();
-			long contentLength = responseHeaders.getContentLength();
-			if (contentLength != 0) {
-				if (hasTextBody(responseHeaders) && !isMockedResponse(response)) {
-					String bodyText = StreamUtils.copyToString(response.getBody(), determineCharset(responseHeaders));
-					builder.append(": [").append(bodyText).append("]");
-				} else {
-					if (contentLength == -1) {
-						builder.append(" Corpo da requisição invalido ou vazio ");
-					} else {
-						builder.append(" Corpo da requisição com tamanho: ").append(contentLength);
-					}
-					MediaType contentType = responseHeaders.getContentType();
-					if (contentType != null) {
-						builder.append(" O tipo do conteúdo é ").append(contentType);
-					} else {
-						builder.append(" O tipo do conteúdo da requisição é invalido ou não informado");
-					}
-				}
+    protected void logResponse(HttpRequest request, ClientHttpResponse response) {
 
-				SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-				DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
-				String dataHora = dateFormat.format(new Date());
+        try {
+            StringBuilder builder = new StringBuilder(" Response da Requisição \"").append(response.getRawStatusCode()).append(" ")
+                    .append(response.getStatusText()).append("\" Resposta da requisição para ").append(request.getMethod())
+                    .append(" requisição para ").append(request.getURI());
+            HttpHeaders responseHeaders = response.getHeaders();
+            long contentLength = responseHeaders.getContentLength();
+            if (contentLength != 0) {
+                if (hasTextBody(responseHeaders) && !isMockedResponse(response)) {
+                    String bodyText = StreamUtils.copyToString(response.getBody(), determineCharset(responseHeaders));
+                    builder.append(": [").append(bodyText).append("]");
+                } else {
+                    if (contentLength == -1) {
+                        builder.append(" Corpo da requisição invalido ou vazio ");
+                    } else {
+                        builder.append(" Corpo da requisição com tamanho: ").append(contentLength);
+                    }
+                    MediaType contentType = responseHeaders.getContentType();
+                    if (contentType != null) {
+                        builder.append(" O tipo do conteúdo é ").append(contentType);
+                    } else {
+                        builder.append(" O tipo do conteúdo da requisição é invalido ou não informado");
+                    }
+                }
 
-				String hostName = (request.getURI() != null && request.getURI().getHost() != null)
-						? request.getURI().getHost().toString()
-						: "";
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
+                String dataHora = dateFormat.format(new Date());
 
-				String fileName = "response" + "-" + hostName + "-" + dataHora + ".json";
-				String currentFolder = format.format(new Date());
-				String basePath = caminhoLog + File.separator + currentFolder;
-				File basePathFile = new File(basePath);
+                String hostName = (request.getURI() != null && request.getURI().getHost() != null)
+                        ? request.getURI().getHost().toString()
+                        : "";
 
-				if (!basePathFile.exists()) {
-					basePathFile.mkdirs();
-				}
+                String fileName = "response" + "-" + hostName + "-" + dataHora + ".json";
+                String currentFolder = format.format(new Date());
+                String basePath = caminhoLog + File.separator + currentFolder;
+                File basePathFile = new File(basePath);
 
-				setAcessoFile(basePathFile);
-				File jsonFile = new File(basePath + File.separator + fileName);
-				setAcessoFile(jsonFile);
-				try (BufferedWriter out = new BufferedWriter(
-						new OutputStreamWriter(new FileOutputStream(jsonFile), StandardCharsets.UTF_8))) {
-					// É AutoCloseable
+                if (!basePathFile.exists()) {
+                    basePathFile.mkdirs();
+                }
 
-					out.write(builder.toString());
+                setAcessoFile(basePathFile);
+                File jsonFile = new File(basePath + File.separator + fileName);
+                setAcessoFile(jsonFile);
+                try (BufferedWriter out = new BufferedWriter(
+                        new OutputStreamWriter(new FileOutputStream(jsonFile), StandardCharsets.UTF_8))) {
+                    // É AutoCloseable
 
-				} catch (IOException e) {
+                    out.write(builder.toString());
 
-					e.printStackTrace();
-				}
+                } catch (IOException e) {
 
-			}
+                    e.printStackTrace();
+                }
 
-			responseLogger.debug(builder.toString());
-		} catch (IOException e) {
-			responseLogger.warn("Falha para registrar o log da resposta da Requisição: {} requisição para {}", request.getMethod(), request.getURI(),
-					e);
-		}
+            }
 
-	}
-	
-	private void setAcessoFile(File basePathFile) {
-		basePathFile.setReadable(true, false);
-		basePathFile.setExecutable(true, false);
-		basePathFile.setWritable(true, false);
-	}
+            responseLogger.debug(builder.toString());
+        } catch (IOException e) {
+            responseLogger.warn("Falha para registrar o log da resposta da Requisição: {} requisição para {}", request.getMethod(), request.getURI(),
+                    e);
+        }
 
-	protected boolean hasTextBody(HttpHeaders headers) {
-		MediaType contentType = headers.getContentType();
-		if (contentType != null) {
-			if ("text".equals(contentType.getType())) {
-				return true;
-			}
-			String subtype = contentType.getSubtype();
-			if (subtype != null) {
-				return "xml".equals(subtype) || "json".equals(subtype) || subtype.endsWith("+xml")
-						|| subtype.endsWith("+json");
-			}
-		}
-		return false;
-	}
+    }
 
-	protected Charset determineCharset(HttpHeaders headers) {
-		MediaType contentType = headers.getContentType();
-		if (contentType != null) {
-			try {
-				Charset charSet = contentType.getCharset();
-				if (charSet != null) {
-					return charSet;
-				}
-			} catch (UnsupportedCharsetException e) {
+    private void setAcessoFile(File basePathFile) {
+        basePathFile.setReadable(true, false);
+        basePathFile.setExecutable(true, false);
+        basePathFile.setWritable(true, false);
+    }
 
-			}
-		}
-		return StandardCharsets.UTF_8;
-	}
+    protected boolean hasTextBody(HttpHeaders headers) {
+        MediaType contentType = headers.getContentType();
+        if (contentType != null) {
+            if ("text".equals(contentType.getType())) {
+                return true;
+            }
+            String subtype = contentType.getSubtype();
+            if (subtype != null) {
+                return "xml".equals(subtype) || "json".equals(subtype) || subtype.endsWith("+xml")
+                        || subtype.endsWith("+json");
+            }
+        }
+        return false;
+    }
 
-	private boolean isMockedResponse(ClientHttpResponse response) {
-		return "MockClientHttpResponse".equals(response.getClass().getSimpleName());
-	}
+    protected Charset determineCharset(HttpHeaders headers) {
+        MediaType contentType = headers.getContentType();
+        if (contentType != null) {
+            try {
+                Charset charSet = contentType.getCharset();
+                if (charSet != null) {
+                    return charSet;
+                }
+            } catch (UnsupportedCharsetException e) {
 
-	
+            }
+        }
+        return StandardCharsets.UTF_8;
+    }
+
+    private boolean isMockedResponse(ClientHttpResponse response) {
+        return "MockClientHttpResponse".equals(response.getClass().getSimpleName());
+    }
+
 
 }

@@ -11,22 +11,20 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**
- * Interface de Repositorio das solicitações 
- * 
+ * Interface de Repositorio das solicitações
+ *
  * @author João Pedro
- * @since 10.09.2020
  * @see .. sql file > jpa-named-queries.properties
+ * @since 10.09.2020
  */
 @Repository
-public interface SolicitacaoRepository extends JpaRepository<Solicitacoes, Long>,  JpaSpecificationExecutor<Solicitacoes> {
-    
-
+public interface SolicitacaoRepository extends JpaRepository<Solicitacoes, Long>, JpaSpecificationExecutor<Solicitacoes> {
 
 
     @Query(nativeQuery = true)
     Optional<List<Solicitacoes>> findAllSolicitacoesByUserContextAndStatus(String status);
-                                                        
+
     @Query(nativeQuery = true)
-	Optional<List<Solicitacoes>> findAllSolicitacoesByUserContextAndStatus(String status, Long idUsuario);
+    Optional<List<Solicitacoes>> findAllSolicitacoesByUserContextAndStatus(String status, Long idUsuario);
 
 }

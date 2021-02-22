@@ -15,37 +15,36 @@ import com.system.bibliotec.model.Usuario;
 import com.system.bibliotec.repository.usuario.UsuarioRepositoryQueryEmail;
 
 
-
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Long>, UsuarioRepositoryQueryEmail {
 
-	public List<Usuario> findByPermissoesDescricao(String permissaoDescricao);
+    public List<Usuario> findByPermissoesDescricao(String permissaoDescricao);
 
-	String USERS_BY_LOGIN_CACHE = "usersByEmail";
+    String USERS_BY_LOGIN_CACHE = "usersByEmail";
 
-	String USERS_BY_EMAIL_CACHE = "usersByEmail";
+    String USERS_BY_EMAIL_CACHE = "usersByEmail";
 
-	Optional<Usuario> findOneByChaveAtivacao(String chaveAtivacao);
+    Optional<Usuario> findOneByChaveAtivacao(String chaveAtivacao);
 
-	List<Usuario> findAllByAtivoIsFalseAndChaveAtivacaoIsNotNullAndCreatedDateBefore(Instant dateTime);
+    List<Usuario> findAllByAtivoIsFalseAndChaveAtivacaoIsNotNullAndCreatedDateBefore(Instant dateTime);
 
-	Optional<Usuario> findOneByChaveRenovacao(String chaveRenovacao);
+    Optional<Usuario> findOneByChaveRenovacao(String chaveRenovacao);
 
-	Optional<Usuario> findOneByEmailIgnoreCase(String email);
+    Optional<Usuario> findOneByEmailIgnoreCase(String email);
 
-	Optional<Usuario> findOneByUserName(String username);
+    Optional<Usuario> findOneByUserName(String username);
 
-	@EntityGraph(attributePaths = "permissao")
-	Optional<Usuario> findOneWithPermissoesById(Long id);
+    @EntityGraph(attributePaths = "permissao")
+    Optional<Usuario> findOneWithPermissoesById(Long id);
 
-	@EntityGraph(attributePaths = "permissao")
-	@Cacheable(cacheNames = USERS_BY_EMAIL_CACHE)
-	Optional<Usuario> findOneWithPermissaoByEmail(String email);
+    @EntityGraph(attributePaths = "permissao")
+    @Cacheable(cacheNames = USERS_BY_EMAIL_CACHE)
+    Optional<Usuario> findOneWithPermissaoByEmail(String email);
 
-	@EntityGraph(attributePaths = "permissao")
-	@Cacheable(cacheNames = USERS_BY_EMAIL_CACHE)
-	Optional<Usuario> findOneWithPermissaoByEmailIgnoreCase(String email);
+    @EntityGraph(attributePaths = "permissao")
+    @Cacheable(cacheNames = USERS_BY_EMAIL_CACHE)
+    Optional<Usuario> findOneWithPermissaoByEmailIgnoreCase(String email);
 
-	Page<Usuario> findAllByEmailNot(Pageable pageable, String email);
+    Page<Usuario> findAllByEmailNot(Pageable pageable, String email);
 
 }

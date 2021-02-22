@@ -5,10 +5,10 @@ import org.apache.commons.lang3.text.WordUtils;
 
 public class ConverterStringCamelCase {
 
-	
-	public static String convertStringToCamelCase(String text) {
-		return StringUtils.remove(WordUtils.capitalizeFully(text, ' '), " ");
-	}
-	
-	
+
+    public static String convertStringToCamelCase(String text) {
+        return StringUtils.remove(WordUtils.capitalizeFully(text, ' '), " ");
+    }
+
+
 }

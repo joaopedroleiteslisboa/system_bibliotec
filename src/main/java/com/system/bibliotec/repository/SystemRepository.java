@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
  * SystemRepository
  */
 @Repository
-public interface SystemRepository extends JpaRepository<SystemError, Long>{
-    
-    
+public interface SystemRepository extends JpaRepository<SystemError, Long> {
+
+
 }

@@ -7,7 +7,7 @@ import org.springframework.core.io.Resource;
 @ConfigurationProperties("bibliotec-security-authorization-server")
 public class ApiSecurityAuthorizationServerProperties {
 
-	private JwtProperties jwt;
+    private JwtProperties jwt;
 
     public JwtProperties getJwt() {
         return jwt;

@@ -9,8 +9,8 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface CategoriaRepository extends JpaRepository<Categoria,Long>{
+public interface CategoriaRepository extends JpaRepository<Categoria, Long> {
 
-	@Query(value = "select c from Categoria c where c.nome =:nome")
-	public Optional<Categoria> findOneByNome(@Param(value = "nome") String nome);
+    @Query(value = "select c from Categoria c where c.nome =:nome")
+    public Optional<Categoria> findOneByNome(@Param(value = "nome") String nome);
 }

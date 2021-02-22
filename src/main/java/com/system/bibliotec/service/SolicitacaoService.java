@@ -33,7 +33,7 @@ public class SolicitacaoService {
     private final MapeadorSolicitacao mapper;
 
 
-    public SolicitacaoService(SolicitacaoRepository repository,  MapeadorSolicitacao mapper) {
+    public SolicitacaoService(SolicitacaoRepository repository, MapeadorSolicitacao mapper) {
         this.repository = repository;
         this.mapper = mapper;
     }
@@ -46,7 +46,7 @@ public class SolicitacaoService {
 
 
     @Transactional
-    public SolicitacaoVM solicitarLocacao(SolicitacaoLocacaoDTO dto){
+    public SolicitacaoVM solicitarLocacao(SolicitacaoLocacaoDTO dto) {
 
         Solicitacoes entity = mapper.dtoLocacaoParaEntidade(dto);
 
@@ -55,12 +55,12 @@ public class SolicitacaoService {
 
 
     @Transactional
-    public SolicitacaoVM solicitarCancelamentoDeSolicitacaoLocacao(FormCancelamentoSolicitacaoLocacao dto){
+    public SolicitacaoVM solicitarCancelamentoDeSolicitacaoLocacao(FormCancelamentoSolicitacaoLocacao dto) {
 
         Solicitacoes entity = findByIdSolicitacao(dto.getIdSolicitacao());
 
         triagemCancelamentoSolicitacaoLocacao(entity);
-      
+
         entity.setStatus(Status.CANCELADA);
 
         entity.setDescricao(dto.getMotivoCancelamento());
@@ -83,7 +83,7 @@ public class SolicitacaoService {
 
         contexto.setStatus(status);
 
-        repository.save(contexto); 
+        repository.save(contexto);
 
     }
 
@@ -94,7 +94,7 @@ public class SolicitacaoService {
 
         contexto.setStatus(status);
         contexto.setDescricao(descricao);
-        repository.saveAndFlush(contexto); 
+        repository.saveAndFlush(contexto);
 
     }
 
@@ -109,13 +109,13 @@ public class SolicitacaoService {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void updateStatusAndDescricao(Solicitacoes entityContext, Status status, String descricao,
-            boolean isRejeitado) {
+                                         boolean isRejeitado) {
 
         entityContext.setStatus(status);
         entityContext.setDescricao(descricao);
         entityContext.setRejeitado(isRejeitado);
 
-        repository.saveAndFlush(entityContext); 
+        repository.saveAndFlush(entityContext);
 
     }
 
@@ -127,59 +127,54 @@ public class SolicitacaoService {
         contexto.setStatus(status);
         contexto.setDescricao(descricao);
         contexto.setRejeitado(isRejeitado);
-        repository.saveAndFlush(contexto); 
+        repository.saveAndFlush(contexto);
 
     }
 
-   
 
     public List<SolicitacaoVM> filterQuery(SolicitacaoFilter filter) {
 
-		
 
-		Specification<Solicitacoes> query = Specification.where(SolicitacaoSpecification.porID(filter.getIdSolicitacao()))
+        Specification<Solicitacoes> query = Specification.where(SolicitacaoSpecification.porID(filter.getIdSolicitacao()))
 
-				.and(SolicitacaoSpecification.porUsuarioContexto(filter.getCreatedBy())) // valor definido no construtor de
-																						// LocacaoFilter para deixar
-																						// esta consulta dinamica com
-																						// base no usuario
+                .and(SolicitacaoSpecification.porUsuarioContexto(filter.getCreatedBy())) // valor definido no construtor de
+                // LocacaoFilter para deixar
+                // esta consulta dinamica com
+                // base no usuario
 
-				.and(SolicitacaoSpecification.porIntervaloDataSolicitacao(filter.getDataSolicitacaoInicio(),
+                .and(SolicitacaoSpecification.porIntervaloDataSolicitacao(filter.getDataSolicitacaoInicio(),
                         filter.getDataSolicitacaoFim()))
-                        
-				.and(SolicitacaoSpecification.porIntervaloHoraSolicitacao(filter.getHoraSolicitacaoInicio(),
-						filter.getHoraSolicitacaoFim()))
+
+                .and(SolicitacaoSpecification.porIntervaloHoraSolicitacao(filter.getHoraSolicitacaoInicio(),
+                        filter.getHoraSolicitacaoFim()))
 
                 .and(SolicitacaoSpecification.porStatus(filter.getStatus()))
-                
+
                 .and(SolicitacaoSpecification.porTipo(filter.getTipo()))
 
-				.and(SolicitacaoSpecification.porLivroId(filter.getIdExemplar()))
+                .and(SolicitacaoSpecification.porLivroId(filter.getIdExemplar()))
 
-				.and(SolicitacaoSpecification.porUsuarioId(filter.getIdUsuario()));
-		// fim query
+                .and(SolicitacaoSpecification.porUsuarioId(filter.getIdUsuario()));
+        // fim query
 
-		return mapper.entytiParaEntidadeVM(repository.findAll(query));
+        return mapper.entytiParaEntidadeVM(repository.findAll(query));
 
-	}
+    }
 
 
+    private void triagemCancelamentoSolicitacaoLocacao(Solicitacoes entity) {
 
-    private void triagemCancelamentoSolicitacaoLocacao(Solicitacoes entity){
-
-        if(entity.getStatus() == Status.CANCELADA){
+        if (entity.getStatus() == Status.CANCELADA) {
 
             throw new OperacaoCanceladaException("Operação não permitida. Esta Solicitação já se encontra em estado de Cancelamento");
         }
 
-        if(entity.getStatusProcessamento() == StatusProcessamento.EM_PROCESSAMENTO){
+        if (entity.getStatusProcessamento() == StatusProcessamento.EM_PROCESSAMENTO) {
 
             throw new OperacaoCanceladaException("Operação não permitida. Esta  Solicitação já se encontra em Processamento para homologação. Aguarde mais alguns instantes que poderá cancelar a Locação em sequida");
         }
-        
+
     }
-
-
 
 
 }

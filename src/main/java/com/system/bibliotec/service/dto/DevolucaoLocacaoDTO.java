@@ -9,13 +9,13 @@ import lombok.Setter;
 @Setter
 public class DevolucaoLocacaoDTO {
 
-	@NotNull(message = "É necessario informar o codigo da Locação")
-	private Long idLocacao;
-	
-	private String observacoesDevolucao;
+    @NotNull(message = "É necessario informar o codigo da Locação")
+    private Long idLocacao;
 
-	@NotNull(message = "É necessario informar o codigo do Cliente Solicitante")
-	private Long idClienteSolicitante;
-	
+    private String observacoesDevolucao;
+
+    @NotNull(message = "É necessario informar o codigo do Cliente Solicitante")
+    private Long idClienteSolicitante;
+
 }
 

@@ -37,63 +37,61 @@ import com.system.bibliotec.service.vm.ReservaVM;
 @RequestMapping(value = "atendimento/reserva", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class ReservaResource {
 
-	
-	private final ReservaRepository reservaRepository;
 
-	
-	private final ReservaService reservaService;
-
-	
-	private final ApplicationEventPublisher publisher;
-
-	
-	private final EndPointUtil endPointUtil;
-
-	@Autowired
-	public ReservaResource(ReservaRepository reservaRepository, ReservaService reservaService,
-			ApplicationEventPublisher publisher, EndPointUtil endPointUtil) {
-		this.reservaRepository = reservaRepository;
-		this.reservaService = reservaService;
-		this.publisher = publisher;
-		this.endPointUtil = endPointUtil;
-	}
+    private final ReservaRepository reservaRepository;
 
 
+    private final ReservaService reservaService;
 
 
-	@PreAuthorize("hasAnyRole('ROLE_USER_ANONIMO','ROLE_ADMIN', 'ROLE_USER_SYSTEM') and #oauth2.hasScope('read')")
-	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public List<ReservaVM> pesquisar(ReservaFilter filter) {
-		
-		return reservaService.filterQuery(filter);
-
-	}
+    private final ApplicationEventPublisher publisher;
 
 
-	@PreAuthorize("hasAnyRole('ROLE_CADASTRAR_RESERVA','ROLE_ADMIN', 'ROLE_USER_SYSTEM', 'ROLE_USER_ANONIMO') and #oauth2.hasScope('write')")
-	@PostMapping
-	public ResponseEntity<ReservaVM> create(@Valid @RequestBody SolicitacaoReservaDTO reservaDTO, HttpServletResponse response) {
+    private final EndPointUtil endPointUtil;
 
-		ReservaVM reservaSalved = reservaService.reservaLivro(reservaDTO);
+    @Autowired
+    public ReservaResource(ReservaRepository reservaRepository, ReservaService reservaService,
+                           ApplicationEventPublisher publisher, EndPointUtil endPointUtil) {
+        this.reservaRepository = reservaRepository;
+        this.reservaService = reservaService;
+        this.publisher = publisher;
+        this.endPointUtil = endPointUtil;
+    }
 
-		publisher.publishEvent(new RecursoCriadorEvent(this, response, reservaSalved.getCodigo()));
-		return ResponseEntity.status(HttpStatus.CREATED).body(reservaSalved);
 
-	}
+    @PreAuthorize("hasAnyRole('ROLE_USER_ANONIMO','ROLE_ADMIN', 'ROLE_USER_SYSTEM') and #oauth2.hasScope('read')")
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public List<ReservaVM> pesquisar(ReservaFilter filter) {
 
-	@PreAuthorize("hasAnyRole('ROLE_CADASTRAR_RESERVA','ROLE_ADMIN', 'ROLE_USER_SYSTEM', 'ROLE_USER_ANONIMO') and #oauth2.hasScope('write')")
-	@DeleteMapping
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public ReservaCanceladaVM cancelarReserva(@Valid @RequestBody CancelamentoReservaDTO dto) {
+        return reservaService.filterQuery(filter);
 
-		return reservaService.cancelarReserva(dto.getIdReserva());
-	}
+    }
 
-	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER_SYSTEM') and #oauth2.hasScope('read')")
-	@GetMapping("/{id}")
-	public ResponseEntity<?> findById(@PathVariable Long id) {
-		return endPointUtil.returnObjectOrNotFound(reservaService.findByIdReservaDoUsuario(id));
 
-	}
+    @PreAuthorize("hasAnyRole('ROLE_CADASTRAR_RESERVA','ROLE_ADMIN', 'ROLE_USER_SYSTEM', 'ROLE_USER_ANONIMO') and #oauth2.hasScope('write')")
+    @PostMapping
+    public ResponseEntity<ReservaVM> create(@Valid @RequestBody SolicitacaoReservaDTO reservaDTO, HttpServletResponse response) {
+
+        ReservaVM reservaSalved = reservaService.reservaLivro(reservaDTO);
+
+        publisher.publishEvent(new RecursoCriadorEvent(this, response, reservaSalved.getCodigo()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(reservaSalved);
+
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_CADASTRAR_RESERVA','ROLE_ADMIN', 'ROLE_USER_SYSTEM', 'ROLE_USER_ANONIMO') and #oauth2.hasScope('write')")
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ReservaCanceladaVM cancelarReserva(@Valid @RequestBody CancelamentoReservaDTO dto) {
+
+        return reservaService.cancelarReserva(dto.getIdReserva());
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER_SYSTEM') and #oauth2.hasScope('read')")
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findById(@PathVariable Long id) {
+        return endPointUtil.returnObjectOrNotFound(reservaService.findByIdReservaDoUsuario(id));
+
+    }
 
 }

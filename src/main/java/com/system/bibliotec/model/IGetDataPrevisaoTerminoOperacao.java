@@ -5,7 +5,7 @@ import java.time.LocalDate;
 public interface IGetDataPrevisaoTerminoOperacao {
 
 
-    default LocalDate getDataPrevisaoTermino(){
+    default LocalDate getDataPrevisaoTermino() {
         return LocalDate.MIN;
     }
 

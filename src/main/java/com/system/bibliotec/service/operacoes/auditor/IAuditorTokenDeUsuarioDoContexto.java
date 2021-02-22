@@ -13,61 +13,75 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-public interface IAuditorTokenDeUsuarioDoContexto{
-	
+public interface IAuditorTokenDeUsuarioDoContexto {
 
-	default String obterUsuarioDoContextoPeloToken() {
-		SecurityContext securityContext = SecurityContextHolder.getContext();
-		return Optional.of(securityContext.getAuthentication()).map(authentication -> {
-			if (authentication.getPrincipal() instanceof UserSystem) {
-				UserSystem springSecurityUser = (UserSystem) authentication.getPrincipal();
-				return springSecurityUser.getUsername();
-			} else if (authentication.getPrincipal() instanceof String) {
-				return (String) authentication.getPrincipal();
-			}
-			return null;
-		}).orElseThrow(() -> new UsuarioNaoEncontrado("Usuario não encontrado. Error Interno da Aplicação"));
-	}
 
-	 default Optional<String> obterUsuarioDoContextoPeloTokenOptional() {
-		SecurityContext securityContext = SecurityContextHolder.getContext();
-		return Optional.ofNullable(securityContext.getAuthentication()).map(authentication -> {
-			if (authentication.getPrincipal() instanceof UserSystem) {
-				UserSystem springSecurityUser = (UserSystem) authentication.getPrincipal();
-				return springSecurityUser.getUsername();
-			} else if (authentication.getPrincipal() instanceof String) {
-				return (String) authentication.getPrincipal();
-			}
-			return null;
-		});
-	}
+    default String obterUsernameDoUsuarioDoContextoPeloToken() {
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        return Optional.of(securityContext.getAuthentication()).map(authentication -> {
+            if (authentication.getPrincipal() instanceof UserSystem) {
+                UserSystem springSecurityUser = (UserSystem) authentication.getPrincipal();
+                return springSecurityUser.getUsername();
+            } else if (authentication.getPrincipal() instanceof String) {
+                return (String) authentication.getPrincipal();
+            }
+            return null;
+        }).orElseThrow(() -> new UsuarioNaoEncontrado("Usuario não encontrado. Error Interno da Aplicação"));
+    }
 
-	public static Optional<String> getCurrentTokenJWT() {
-		SecurityContext securityContext = SecurityContextHolder.getContext();
-		return Optional.ofNullable(securityContext.getAuthentication())
-				.filter(authentication -> authentication.getCredentials() instanceof String)
-				.map(authentication -> (String) authentication.getCredentials());
-	}
+    default Object obterUsuarioPeloToken() {
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        return Optional.of(securityContext.getAuthentication()).map(authentication -> {
+            if (authentication.getPrincipal() instanceof UserSystem) {
+                UserSystem springSecurityUser = (UserSystem) authentication.getPrincipal();
+                return springSecurityUser; //return principal object
+            } else if (authentication.getPrincipal() instanceof String) {
+                return (String) authentication.getPrincipal();
+            }
+            return null;
+        }).orElseThrow(() -> new UsuarioNaoEncontrado("Usuario não encontrado. Error Interno da Aplicação"));
+    }
 
-	default boolean isAuthenticated() {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		return authentication != null
-				&& getAuthorities(authentication).noneMatch(AuthoritiesConstantsUltis.ROLE_USER_ANONIMO::equalsIgnoreCase);
-	}
 
-	default boolean isCurrentUserInRole(String authority) {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		return authentication != null && getAuthorities(authentication).anyMatch(authority::equals);
-	}
+    default Optional<String> obterUsuarioDoContextoPeloTokenOptional() {
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        return Optional.ofNullable(securityContext.getAuthentication()).map(authentication -> {
+            if (authentication.getPrincipal() instanceof UserSystem) {
+                UserSystem springSecurityUser = (UserSystem) authentication.getPrincipal();
+                return springSecurityUser.getUsername();
+            } else if (authentication.getPrincipal() instanceof String) {
+                return (String) authentication.getPrincipal();
+            }
+            return null;
+        });
+    }
 
-	default Stream<String> getAuthorities(Authentication authentication) {
-		return authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority);
-	}
+    public static Optional<String> getCurrentTokenJWT() {
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        return Optional.ofNullable(securityContext.getAuthentication())
+                .filter(authentication -> authentication.getCredentials() instanceof String)
+                .map(authentication -> (String) authentication.getCredentials());
+    }
 
-	default List<String> getAuthorities() {
-		return SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
-				.map(GrantedAuthority::getAuthority).collect(Collectors.toList());
-	}
+    default boolean isAuthenticated() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication != null
+                && getAuthorities(authentication).noneMatch(AuthoritiesConstantsUltis.ROLE_USER_ANONIMO::equalsIgnoreCase);
+    }
+
+    default boolean isCurrentUserInRole(String authority) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication != null && getAuthorities(authentication).anyMatch(authority::equals);
+    }
+
+    default Stream<String> getAuthorities(Authentication authentication) {
+        return authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority);
+    }
+
+    default List<String> getAuthorities() {
+        return SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority).collect(Collectors.toList());
+    }
 
 
 }

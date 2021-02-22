@@ -2,25 +2,22 @@ package com.system.bibliotec.model.enums;
 
 public enum TipoFuncionario {
 
-	ATENDENTE("Atendente"),
+    ATENDENTE("Atendente"),
 
-	BIBLIOTECARIO("Bibliotecario"),
+    BIBLIOTECARIO("Bibliotecario"),
 
-	DOCENTE("Docente");
+    DOCENTE("Docente");
 
-	private String tipoFuncionariodo;
+    private String tipoFuncionariodo;
 
-	TipoFuncionario(String tipoFuncionariodo) {
+    TipoFuncionario(String tipoFuncionariodo) {
 
-		this.tipoFuncionariodo = tipoFuncionariodo;
-	}
+        this.tipoFuncionariodo = tipoFuncionariodo;
+    }
 
-	public String gettipoFuncionariodo() {
-		return tipoFuncionariodo;
-	}
-
-	
-
+    public String gettipoFuncionariodo() {
+        return tipoFuncionariodo;
+    }
 
 
 }

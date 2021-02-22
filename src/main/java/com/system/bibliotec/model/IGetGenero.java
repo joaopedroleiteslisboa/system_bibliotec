@@ -4,13 +4,13 @@ import org.apache.commons.lang3.StringUtils;
 
 public interface IGetGenero {
 
-	default <T> T getGenero() {
-		return (T) StringUtils.EMPTY;
-	}
+    default <T> T getGenero() {
+        return (T) StringUtils.EMPTY;
+    }
 
-	default String saudacoes() {
+    default String saudacoes() {
 
-		return StringUtils.EMPTY;
-	}
+        return StringUtils.EMPTY;
+    }
 
 }

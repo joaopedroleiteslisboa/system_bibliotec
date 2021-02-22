@@ -11,8 +11,8 @@ import com.system.bibliotec.model.Permissao;
 
 
 @Repository
-public interface PermissoesRepositorio extends JpaRepository<Permissao, String>{
+public interface PermissoesRepositorio extends JpaRepository<Permissao, String> {
 
-	@Query(value = "select * from permissao where permissao.descricao = :descricao", nativeQuery = true)
-	Optional<Permissao> findOneByDescricaoIgnoreCase(@Param("descricao")String descricao);
+    @Query(value = "select * from permissao where permissao.descricao = :descricao", nativeQuery = true)
+    Optional<Permissao> findOneByDescricaoIgnoreCase(@Param("descricao") String descricao);
 }

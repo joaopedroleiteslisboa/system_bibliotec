@@ -8,17 +8,17 @@ import com.system.bibliotec.service.ultis.CpfUtilsValidator;
 @Component
 public class ValidaCpfImpl implements IValidaCpf {
 
-	
-	private CpfUtilsValidator utils;
-	
-	@Override
-	public void validaCpf(String cpf) {
-		// TODO Auto-generated method stub
-		
-		if(!utils.isCPF(cpf)) {
-			throw new CpfInvalidoException("Operação não realizada. CPF do Cliente invalido.");
-		}
-		
-	}
+
+    private CpfUtilsValidator utils;
+
+    @Override
+    public void validaCpf(String cpf) {
+        // TODO Auto-generated method stub
+
+        if (!utils.isCPF(cpf)) {
+            throw new CpfInvalidoException("Operação não realizada. CPF do Cliente invalido.");
+        }
+
+    }
 
 }

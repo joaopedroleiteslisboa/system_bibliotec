@@ -9,21 +9,21 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 /**
- * Interface de Repositorio das locações 
- * 
+ * Interface de Repositorio das locações
+ *
  * @author João Pedro
- * @since 10.09.2020
  * @see .. sql file > jpa-named-queries.properties
+ * @since 10.09.2020
  */
 @Repository
-public interface LocacaoRepository extends JpaRepository<Locacoes, Long>, GenericRepository<Locacoes, Long>, 
-																				JpaSpecificationExecutor<Locacoes>{
+public interface LocacaoRepository extends JpaRepository<Locacoes, Long>, GenericRepository<Locacoes, Long>,
+        JpaSpecificationExecutor<Locacoes> {
 
-	Optional<Locacoes> findById(Long id);
+    Optional<Locacoes> findById(Long id);
 
-	boolean existsById(Long id);
+    boolean existsById(Long id);
 
-	@Query(nativeQuery = true)
-	int isLivroLocadoAndAtivoToUserContext(String statusLocacao,  Long idLivro, Long idUsuario);
+    @Query(nativeQuery = true)
+    int isLivroLocadoAndAtivoToUserContext(String statusLocacao, Long idLivro, Long idUsuario);
 
 }

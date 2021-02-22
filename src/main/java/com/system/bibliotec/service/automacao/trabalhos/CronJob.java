@@ -19,43 +19,36 @@ import com.system.bibliotec.service.automacao.QuartzService;
 import com.system.bibliotec.service.validation.ICronJob;
 
 
+public class CronJob extends QuartzJobBean implements InterruptableJob, ICronJob {
 
-public class CronJob extends QuartzJobBean implements InterruptableJob, ICronJob{
-	
-	private volatile boolean toStopFlag = true;
-	
-	@Autowired
-	QuartzService jobService;
-	
-	@Override
-	protected void executeInternal(JobExecutionContext jobExecutionContext) throws JobExecutionException {
-		JobKey key = jobExecutionContext.getJobDetail().getKey();
-		System.out.println("Cron Job started with key :" + key.getName() + ", Group :"+key.getGroup() + " , Thread Name :"+Thread.currentThread().getName() + " ,Time now :"+new Date());
-		
-		System.out.println("======================================");
-		
-		List<Map<String, Object>> list = null;
-		try {
-			list = (List<Map<String, Object>>) jobService.getAllJobs().getBody();
-		} catch (SchedulerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		System.out.println("Job list :"+list);
-		System.out.println("======================================");
-		
-		//*********** For retrieving stored key-value pairs ***********/
-		JobDataMap dataMap = jobExecutionContext.getMergedJobDataMap();
-		String myValue = dataMap.getString("myKey");
-		System.out.println("Value:" + myValue);
+    private volatile boolean toStopFlag = true;
 
-		System.out.println("Thread: "+ Thread.currentThread().getName() +" stopped.");
-	}
+    @Autowired
+    QuartzService jobService;
 
-	@Override
-	public void interrupt() throws UnableToInterruptJobException {
-		System.out.println("Stopping thread... ");
-		toStopFlag = false;
-	}
+    @Override
+    protected void executeInternal(JobExecutionContext jobExecutionContext) throws JobExecutionException {
+
+        JobKey key = jobExecutionContext.getJobDetail().getKey();
+        System.out.println("Cron Job started with key :" + key.getName() + ", Group :" + key.getGroup() + " , Thread Name :" + Thread.currentThread().getName() + " ,Time now :" + new Date());
+
+        System.out.println("======================================");
+
+
+        System.out.println("======================================");
+
+        //*********** For retrieving stored key-value pairs ***********/
+        JobDataMap dataMap = jobExecutionContext.getMergedJobDataMap();
+        String myValue = dataMap.getString("myKey");
+        System.out.println("Value:" + myValue);
+
+        System.out.println("Thread: " + Thread.currentThread().getName() + " stopped.");
+    }
+
+    @Override
+    public void interrupt() throws UnableToInterruptJobException {
+        System.out.println("Stopping thread... ");
+        toStopFlag = false;
+    }
 
 }

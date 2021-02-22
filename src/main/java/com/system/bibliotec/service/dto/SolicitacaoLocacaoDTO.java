@@ -18,18 +18,18 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class SolicitacaoLocacaoDTO {
-    
-    
+
+
     @NotNull(message = "É necessario informa um Livro para Locar um exemplar")
-	private Long idLivro;
+    private Long idLivro;
 
 
-	private Long idUsuarioAnonimo; 
+    private Long idUsuarioAnonimo;
 
-	
+
     private LocalDate dataRetiradaExemplar;
 
-    
+
     private LocalTime horaRetiradaExemplar;
 
 

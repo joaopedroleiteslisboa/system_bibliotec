@@ -1,13 +1,16 @@
 package com.system.bibliotec.service.automacao;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Pattern;
 
+import com.system.bibliotec.config.ConstantsUtils;
+import com.system.bibliotec.exception.AgendadorException;
+import com.system.bibliotec.model.enums.TipoErrorSistema;
+import com.system.bibliotec.security.SecurityUtils;
+import com.system.bibliotec.security.UserSystem;
+import com.system.bibliotec.service.vo.*;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.text.WordUtils;
 import org.quartz.JobDetail;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobKey;
@@ -42,733 +45,956 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
-public class QuartzServiceImpl implements QuartzService, IAuditorTokenDeUsuarioDoContexto {
+public class QuartzServiceImpl implements QuartzService {
 
-	private final SchedulerFactoryBean schedulerFactoryBean;
+    private final SchedulerFactoryBean schedulerFactoryBean;
 
-	private final ApplicationContext context;
+    private final ApplicationContext context;
 
-	private final ServicoDoSistema servicoSistema;
+    private final ServicoDoSistema servicoSistema;
 
-	private final SpringSecurityAuditorAware auditorAware;
 
-	@Autowired
-	public QuartzServiceImpl(@Lazy SchedulerFactoryBean schedulerFactoryBean, ApplicationContext context,
-			ServicoDoSistema servicoSistema, SpringSecurityAuditorAware auditorAware) {
-		super();
-		this.schedulerFactoryBean = schedulerFactoryBean;
-		this.context = context;
-		this.servicoSistema = servicoSistema;
-		this.auditorAware = auditorAware;
+    public QuartzServiceImpl(SchedulerFactoryBean schedulerFactoryBean, ApplicationContext context, ServicoDoSistema servicoSistema) {
+        this.schedulerFactoryBean = schedulerFactoryBean;
+        this.context = context;
+        this.servicoSistema = servicoSistema;
 
-	}
+    }
 
-	private static final String excecaoImplementacaoTarefaNaoEncontrada = "ClassNotFoundException: Exceção ao procurar implementação da Tarefa";
 
-	private static final String trabalhoNaoEncontrado = "Tarefa Não localizada: ";
+    //===================================================DATE TIME JOB =======================================================================
 
-	private static final String excecaoNovoTrabalho = "SchedulerException: Exceção ao agendar o trabalho sob Nome: ";
+    public AgendamentoTarefaVO criarTarefaPorData(Class<? extends QuartzJobBean> jobClass, String jobName, Date jobScheduleTime, TipoTrabalhoEnum tipoServicoTrabalho) {
 
-	private static final String excecaoNovoTrabalhoCron = "SchedulerException: Exceção ao agendar o trabalho CRON sob Nome: ";
 
-	private static final String excecaoAtualizarTrabalho = "Exception: Exceção na atualização do trabalho sob Nome: ";
+        Optional<UserSystem> usuarioAnonimo = SecurityUtils.getCurrentUserPrincipal();
 
-	private static final String excecaoAtualizarTrabalhoCron = "Exception: Exceção na atualização do trabalho CRON sob Nome: ";
+        String emailSolicitante = usuarioAnonimo.isPresent() ? usuarioAnonimo.get().getEmail() : null;
+        String nomeSolicitante = usuarioAnonimo.isPresent() ? usuarioAnonimo.get().getNome() : null;
 
-	private static final String excecaoCancelamentoTrabalho = "SchedulerException: Exceção no cancelamento do trabalho sob Nome: ";
+        log.info(
+                "########################################################################################################################");
 
-	private static final String excecaoDeletarTrabalho = "SchedulerException: Exceção para deletar o trabalho sob Nome: ";
+        log.debug("INICIANDO PROCESSO DE CRIAÇÃO DE NOVA TAREFA DE ", jobClass.getClass().getName().toString()
+                + "USUARIO SOLICITANTE: " + emailSolicitante);
 
-	private static final String excecaoPausarTrabalho = "SchedulerException: Exceção para Pausar o trabalho sob Nome: ";
+        log.info(
+                "########################################################################################################################");
 
-	private static final String excecaoAoRetornarTrabalhoPausado = "SchedulerException: Exceção para Retornar o trabalho Pausado sob Nome: ";
+        triagemNegocio(jobName, emailSolicitante, tipoServicoTrabalho);
 
-	private static final String excecaoParaIniciarTrabalho = "SchedulerException: Exceção para Iniciar o trabalho sob Nome: ";
+        triagemNovaTarefa(jobName);
 
-	private static final String excecaoParaChecarTrabalhoEmExcecucao = "SchedulerException: Exceção para checar trabalho em execucao sob Nome: ";
 
-	private static final String excecaoParaChecarListaDeTrabalhos = "SchedulerException: Exceção para checar Lista de trabalhos. Mensagem: ";
+        boolean agendado = internalScheduleOneTimeJob(jobName, jobClass, jobScheduleTime, emailSolicitante, nomeSolicitante, tipoServicoTrabalho);
 
-	private static final String excecaoParaChecarSeOTrabalhoExiste = "SchedulerException: Exceção para checar se um determinado trabalho exsite. Nome do trabalho consultado: ";
+        return AgendamentoTarefaVO.builder().agendado(agendado).dataRetorno(new Date()).build();
 
-	private static final String excecaoParaChecarStatusDoTrabalho = "SchedulerException: Exceção para checar o status de um determinado trabalho. Nome do trabalho consultado: ";
+    }
 
-	private static final String excecaoParaPararUmTrabalho = "SchedulerException: Exceção para Parar um Trabalho. Nome do trabalho solicitado para Parar: ";
 
-//===================================================DATE JOB =======================================================================	
+    //===================================================CROM JOB =======================================================================
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public ResponseEntity<AgendamentoVM> scheduleDate(String jobName, Date jobScheduleTime) throws SchedulerException {
 
-		log.debug("Iniciando processo de criação de nova Tarefa do tipo Data e Hora de rotina da Aplicação."
-				+ "Usuario solicitante: " + obterUsuarioDoContextoPeloToken());
+    /**
+     * Criar trabalho com base em CRON
+     *
+     * @throws SchedulerException
+     */
 
-		triagemNovaTarefa(jobName);
+    public AgendamentoTarefaVO criarTarefaPorCron(Class<? extends QuartzJobBean> jobClass, String jobName, Date date, String cronExpression, TipoTrabalhoEnum tipoServicoTrabalho) {
 
-		@SuppressWarnings("rawtypes")
-		Class classe = getClassForName(jobName);
 
-		scheduleOneTimeJob(jobName, classe, jobScheduleTime);
+        Optional<UserSystem> usuarioAnonimo = SecurityUtils.getCurrentUserPrincipal();
 
-		return MapeadorAgendamento.mapperResponse(getAllJobs(), HttpStatus.OK);
+        String emailSolicitante = usuarioAnonimo.isPresent() ? usuarioAnonimo.get().getEmail() : null;
+        String nomeSolicitante = usuarioAnonimo.isPresent() ? usuarioAnonimo.get().getNome() : null;
 
-	}
 
-	/**
-	 * Criar trabalho com base em Data
-	 * 
-	 * @throws SchedulerException
-	 */
-	private boolean scheduleOneTimeJob(String jobName, Class<? extends QuartzJobBean> jobClass, Date date)
-			throws SchedulerException {
+        log.info(
+                "########################################################################################################################");
 
-		String jobKey = jobName;
-		String groupKey = "SampleGroup";
-		String triggerKey = jobName;
+        log.info("INICIANDO PROCESSO DE CRIAÇÃO DE NOVA TAREFA DE ", jobClass.getClass().getName().toString()
+                + "USUARIO SOLICITANTE: " + emailSolicitante);
 
-		JobDetail jobDetail = JobUtil.createJob(jobClass, true, context, jobKey, groupKey);
+        log.info(
+                "########################################################################################################################");
 
-		Trigger cronTriggerBean = JobUtil.createSingleTrigger(triggerKey, date,
-				SimpleTrigger.MISFIRE_INSTRUCTION_FIRE_NOW);
-		// Trigger cronTriggerBean = JobUtil.createSingleTrigger(triggerKey, date,
-		// SimpleTrigger.MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_REMAINING_COUNT);
+        triagemNegocio(jobName, emailSolicitante, tipoServicoTrabalho);
 
-		try {
-			Scheduler scheduler = schedulerFactoryBean.getScheduler();
-			Date dt = scheduler.scheduleJob(jobDetail, cronTriggerBean);
-			System.out.println("Job with key jobKey :" + jobKey + " and group :" + groupKey
-					+ " scheduled successfully for date :" + dt);
-			return true;
-		} catch (SchedulerException e) {
+        triagemNovaTarefa(jobName);
 
-			log.error(excecaoNovoTrabalho + jobKey, e);
+        Date agendado = internalScheduleCronJob(jobClass, jobName, date, cronExpression, emailSolicitante, nomeSolicitante, tipoServicoTrabalho);
 
-			servicoSistema.saveContextErrorDefault(e, Thread.currentThread().getStackTrace()[1].getMethodName(),
-					auditorAware.getCurrentAuditor().get(), excecaoNovoTrabalho + jobKey);
+        return AgendamentoTarefaVO.builder().agendado(true).dataRetorno(agendado).build();
 
-			throw new SchedulerException(excecaoNovoTrabalho);
+    }
 
-		}
 
-	}
-//===================================================DATE JOB =======================================================================	
+    private boolean internalScheduleOneTimeJob(String jobName, Class<? extends QuartzJobBean> jobClass, Date date, String emailSolicitante,
+                                               String nomeSolicitante, TipoTrabalhoEnum tipoServicoTrabalho) {
 
-//===================================================CROM JOB =======================================================================	
-	@Override
-	public ResponseEntity<AgendamentoVM> scheduleCron(String jobName, Date jobScheduleTime, String cronExpression)
-			throws SchedulerException {
+        String jobKey = jobName;
+        String groupKey = "SampleGroup"; // valor padrão adotado pela comunidade quatz em caso de não definição de grupo de trabalhos para a Trigger...
+        String triggerKey = jobName;
 
-		triagemNovaTarefa(jobName);
+        JobDetail jobDetail = JobUtilQuartz.createJob(jobClass, true, context, jobKey, groupKey, emailSolicitante, nomeSolicitante, tipoServicoTrabalho);
 
-		Class classe = getClassForName(jobName);
 
-		scheduleCronJob(jobName, CronJob.class, jobScheduleTime, cronExpression);
+        Trigger cronTriggerBean = JobUtilQuartz.createSingleTrigger(triggerKey, date, SimpleTrigger.MISFIRE_INSTRUCTION_FIRE_NOW);
 
-		return MapeadorAgendamento.mapperResponse(getAllJobs(), HttpStatus.OK);
 
-	}
+        try {
+            Scheduler scheduler = schedulerFactoryBean.getScheduler();
+            Date dt = scheduler.scheduleJob(jobDetail, cronTriggerBean);
 
-	/**
-	 * Criar trabalho com base em CRON
-	 * 
-	 * @throws SchedulerException
-	 */
-	private boolean scheduleCronJob(String jobName, Class<? extends QuartzJobBean> jobClass, Date date,
-			String cronExpression) throws SchedulerException {
+            log.info(
+                    "########################################################################################################################");
 
-		String jobKey = jobName;
-		String groupKey = "SampleGroup";
-		String triggerKey = jobName;
 
-		JobDetail jobDetail = JobUtil.createJob(jobClass, false, context, jobKey, groupKey);
+            log.info("########################  JOB " + jobName + " CRIADO COM SUCESSO ########################");
 
-		Trigger cronTriggerBean = JobUtil.createCronTrigger(triggerKey, date, cronExpression,
-				SimpleTrigger.MISFIRE_INSTRUCTION_FIRE_NOW);
+            log.info(
+                    "########################################################################################################################");
 
-		try {
-			Scheduler scheduler = schedulerFactoryBean.getScheduler();
-			Date dt = scheduler.scheduleJob(jobDetail, cronTriggerBean);
 
-			return true;
-		} catch (SchedulerException e) {
+            return true;
+        } catch (SchedulerException e) {
 
-			log.error(excecaoNovoTrabalhoCron + jobKey, e);
+            log.info(
+                    "########################################################################################################################");
+            log.error(ConstantsUtils.excecaoNovoTrabalho.concat(jobName), e);
 
-			servicoSistema.saveContextErrorDefault(e, Thread.currentThread().getStackTrace()[1].getMethodName(),
-					auditorAware.getCurrentAuditor().get(), excecaoNovoTrabalhoCron + jobKey);
-			throw new SchedulerException(excecaoNovoTrabalhoCron);
-		}
+            log.info(
+                    "########################################################################################################################");
 
-	}
+            servicoSistema.salvarErrorContextoGenerico(e, Thread.currentThread().getStackTrace()[1].getMethodName(),
+                    TipoErrorSistema.TAREFA_SERVICE, emailSolicitante, ConstantsUtils.excecaoNovoTrabalho.concat(jobName));
 
-//===================================================CROM JOB =======================================================================
+            throw new AgendadorException(ConstantsUtils.excecaoNovoTrabalho);
 
-	@Override
-	public ResponseEntity<AgendamentoVM> updateOneTimeJob(String jobName, Date date) throws Exception {
+        }
 
-		String jobKey = jobName;
+    }
 
-		try {
-			// Trigger newTrigger = JobUtil.createSingleTrigger(jobKey, date,
-			// SimpleTrigger.MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_REMAINING_COUNT);
-			Trigger newTrigger = JobUtil.createSingleTrigger(jobKey, date, SimpleTrigger.MISFIRE_INSTRUCTION_FIRE_NOW);
+    private Date internalScheduleCronJob(Class<? extends QuartzJobBean> jobClass, String jobName, Date date,
+                                         String cronExpression, String emailSolicitante, String nomeSolicitante,
+                                         TipoTrabalhoEnum tipoServicoTrabalho) {
 
-			Date dt = schedulerFactoryBean.getScheduler().rescheduleJob(TriggerKey.triggerKey(jobKey), newTrigger);
+        String jobKey = jobName;
+        String groupKey = "SampleGroup"; // valor padrão adotado pela comunidade quatz em caso de não definição de grupo de trabalhos para a Trigger...
+        String triggerKey = jobName;
 
-			return MapeadorAgendamento.mapperResponse(true, HttpStatus.OK);
 
-		} catch (Exception e) {
+        JobDetail jobDetail = JobUtilQuartz.createJob(jobClass, true, context, jobKey, groupKey, emailSolicitante, nomeSolicitante, tipoServicoTrabalho);
 
-			log.error(excecaoAtualizarTrabalho + jobKey, e);
 
-			servicoSistema.saveContextErrorDefault(e, Thread.currentThread().getStackTrace()[1].getMethodName(),
-					auditorAware.getCurrentAuditor().get(), excecaoAtualizarTrabalho + jobKey);
+        Trigger cronTriggerBean = JobUtilQuartz.createCronTrigger(triggerKey, date, cronExpression, SimpleTrigger.MISFIRE_INSTRUCTION_FIRE_NOW);
 
-			throw new Exception(excecaoAtualizarTrabalho, e);
-		}
-	}
+        try {
 
-	/**
-	 * deleta um trabalho
-	 * 
-	 * @throws SchedulerException
-	 */
-	@Override
-	public boolean deleteJob(String jobName) throws SchedulerException {
 
-		log.debug("Iniciando processo de exclusão de Tarefa de rotina da Aplicação." + "Usuario solicitante: "
-				+ obterUsuarioDoContextoPeloToken());
+            Scheduler scheduler = schedulerFactoryBean.getScheduler();
+            Date dt = scheduler.scheduleJob(jobDetail, cronTriggerBean);
 
-		triagemExclusãoTarefa(jobName);
+            return dt;
 
-		String jobKey = jobName;
-		String groupKey = "SampleGroup";
+        } catch (SchedulerException e) {
 
-		JobKey jkey = new JobKey(jobKey, groupKey);
+            log.info(
+                    "########################################################################################################################");
 
-		try {
-			return schedulerFactoryBean.getScheduler().deleteJob(jkey);
+            log.error(ConstantsUtils.excecaoNovoTrabalhoCron.concat(jobName), e);
 
-		} catch (SchedulerException e) {
+            log.info(
+                    "########################################################################################################################");
 
-			log.error(excecaoDeletarTrabalho + jobKey, e);
 
-			servicoSistema.saveContextErrorDefault(e, Thread.currentThread().getStackTrace()[1].getMethodName(),
-					auditorAware.getCurrentAuditor().get(), excecaoDeletarTrabalho + jobKey);
+            servicoSistema.salvarErrorContextoGenerico(e, Thread.currentThread().getStackTrace()[1].getMethodName(),
+                    TipoErrorSistema.TAREFA_SERVICE, emailSolicitante, ConstantsUtils.excecaoNovoTrabalhoCron.concat(jobName));
 
-			throw new SchedulerException(excecaoDeletarTrabalho, e);
-		}
-	}
+            throw new AgendadorException(ConstantsUtils.excecaoNovoTrabalhoCron.concat(jobName));
+        }
 
-	/**
-	 * Atualizar trabalhos definidos por CRON
-	 * 
-	 * @throws SchedulerException
-	 */
-	@Override
-	public ResponseEntity<AgendamentoVM> updateCronJob(String jobName, Date date, String cronExpression)
-			throws SchedulerException {
+    }
 
-		String jobKey = jobName;
+    //===================================================CROM JOB =======================================================================
 
-		try {
-			// Trigger newTrigger = JobUtil.createSingleTrigger(jobKey, date,
-			// SimpleTrigger.MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_REMAINING_COUNT);
-			Trigger newTrigger = JobUtil.createCronTrigger(jobKey, date, cronExpression,
-					SimpleTrigger.MISFIRE_INSTRUCTION_FIRE_NOW);
 
-			schedulerFactoryBean.getScheduler().rescheduleJob(TriggerKey.triggerKey(jobKey), newTrigger);
+    /**
+     * deleta um trabalho
+     *
+     * @throws SchedulerException
+     */
 
-			return MapeadorAgendamento.mapperResponse(true, HttpStatus.OK);
-		} catch (Exception e) {
+    public boolean deleteJob(String jobName) {
 
-			log.error(excecaoAtualizarTrabalhoCron + jobKey, e);
+        Optional<UserSystem> usuarioAnonimo = SecurityUtils.getCurrentUserPrincipal();
 
-			servicoSistema.saveContextErrorDefault(e, Thread.currentThread().getStackTrace()[1].getMethodName(),
-					auditorAware.getCurrentAuditor().get(), excecaoAtualizarTrabalhoCron + jobKey);
+        String emailSolicitante = usuarioAnonimo.isPresent() ? usuarioAnonimo.get().getEmail() : null;
 
-			throw new SchedulerException(excecaoAtualizarTrabalhoCron, e);
-		}
-	}
+        log.info(
+                "########################################################################################################################");
 
-	/**
-	 * cancelar trabalho
-	 */
-	@Override
-	public boolean unScheduleJob(String jobName) {
+        log.info("INICIANDO PROCESSO DE EXCLUSÃO DE TAREFA DE ROTINA DA APLICAÇÃO. " + "USUARIO SOLICITANTE: "
+                + emailSolicitante);
+        log.info(
+                "########################################################################################################################");
 
-		String jobKey = jobName;
+        triagemExclusãoTarefa(jobName);
 
-		TriggerKey tkey = new TriggerKey(jobKey);
+        String jobKey = jobName;
+        String groupKey = "SampleGroup"; // valor padrão adotado pela comunidade quatz em caso de não definição de grupo de trabalhos para a Trigger...
 
-		try {
-			boolean status = schedulerFactoryBean.getScheduler().unscheduleJob(tkey);
-			System.out.println("Trigger associated with jobKey :" + jobKey + " unscheduled with status :" + status);
-			return status;
-		} catch (SchedulerException e) {
+        JobKey jkey = new JobKey(jobKey, groupKey);
 
-			log.error(excecaoCancelamentoTrabalho + jobKey, e);
+        try {
+            return schedulerFactoryBean.getScheduler().deleteJob(jkey);
 
-			servicoSistema.saveContextErrorDefault(e, Thread.currentThread().getStackTrace()[1].getMethodName(),
-					auditorAware.getCurrentAuditor().get(), excecaoCancelamentoTrabalho + jobKey);
+        } catch (SchedulerException e) {
 
-			return false;
-		}
-	}
+            log.info(
+                    "########################################################################################################################");
 
-	@Override
-	public ResponseEntity<AgendamentoVM> pauseJob(String jobName) throws SchedulerException {
+            log.error(ConstantsUtils.excecaoDeletarTrabalho + jobKey, e);
 
-		if (jobExistente(jobName)) {
+            log.info(
+                    "########################################################################################################################");
 
-			String jobKey = jobName;
-			String groupKey = "SampleGroup";
-			JobKey jkey = new JobKey(jobKey, groupKey);
-			System.out.println("Parameters received for pausing job : jobKey :" + jobKey + ", groupKey :" + groupKey);
+            servicoSistema.salvarErrorContextoGenerico(e, Thread.currentThread().getStackTrace()[1].getMethodName(),
+                    TipoErrorSistema.TAREFA_SERVICE, emailSolicitante, ConstantsUtils.excecaoDeletarTrabalho.concat(jobName));
 
-			try {
-				schedulerFactoryBean.getScheduler().pauseJob(jkey);
-				System.out.println("Job with jobKey :" + jobKey + " paused succesfully.");
+            throw new AgendadorException(ConstantsUtils.excecaoDeletarTrabalho.concat(jobName));
+        }
+    }
 
-				return MapeadorAgendamento.mapperResponse(true, HttpStatus.OK);
-			} catch (SchedulerException e) {
+    /**
+     * Atualizar trabalhos definidos por DATETIME
+     */
 
-				log.error(excecaoPausarTrabalho + jobKey, e);
+    public AgendamentoTarefaVO updateOneTimeJob(String jobName, Date date) {
 
-				servicoSistema.saveContextErrorDefault(e, Thread.currentThread().getStackTrace()[1].getMethodName(),
-						auditorAware.getCurrentAuditor().get(), excecaoPausarTrabalho + jobKey);
+        Optional<UserSystem> usuarioAnonimo = SecurityUtils.getCurrentUserPrincipal();
 
-				throw new SchedulerException("Não foi possivel Pausar o Trabalho. Error Interno da Aplicação.", e);
-			}
+        String emailSolicitante = usuarioAnonimo.isPresent() ? usuarioAnonimo.get().getEmail() : null;
 
-		} else { // Caso não existir a tarefa...
-			return MapeadorAgendamento.mapperResponse(trabalhoNaoEncontrado, HttpStatus.NOT_FOUND);
-		}
-	}
+        String jobKey = jobName;
 
-	/**
-	 * Retornar trabalho pausado
-	 * 
-	 * @throws SchedulerException
-	 */
-	@Override
-	public ResponseEntity<AgendamentoVM> resumeJob(String jobName) throws SchedulerException {
-		log.debug("Iniciando processo de reinicio de Tarefa Pausada" + jobName + "de rotina da Aplicação."
-				+ "Usuario solicitante: " + obterUsuarioDoContextoPeloToken());
+        try {
 
-		if (jobExistente(jobName)) {
+            Trigger newTrigger = JobUtilQuartz.createSingleTrigger(jobKey, date, SimpleTrigger.MISFIRE_INSTRUCTION_FIRE_NOW);
 
-			String jobState = getJobState(jobName);
+            Date atualizado = schedulerFactoryBean.getScheduler().rescheduleJob(TriggerKey.triggerKey(jobKey), newTrigger);
 
-			if (TriggerState.PAUSED.equals(jobState)) {
-				log.debug("Iniciando novamente Tarefa " + jobName
-						+ "com estado em Pausa para Processamento. Usuario solicitante: "
-						+ obterUsuarioDoContextoPeloToken());
+            return AgendamentoTarefaVO.builder().dataRetorno(atualizado).agendado(true).build();
 
-				String jobKey = jobName;
-				String groupKey = "SampleGroup";
+        } catch (Exception e) {
 
-				JobKey jKey = new JobKey(jobKey, groupKey);
-				System.out.println("Parameters received for resuming job : jobKey :" + jobKey);
+            log.info(
+                    "########################################################################################################################");
+            log.error(ConstantsUtils.excecaoAtualizarTrabalho.concat(jobName), e);
+            log.info(
+                    "########################################################################################################################");
+            servicoSistema.salvarErrorContextoGenerico(e, Thread.currentThread().getStackTrace()[1].getMethodName(),
+                    TipoErrorSistema.TAREFA_SERVICE, emailSolicitante, ConstantsUtils.excecaoAtualizarTrabalho.concat(jobName));
 
-				try {
-					schedulerFactoryBean.getScheduler().resumeJob(jKey);
+            throw new AgendadorException(ConstantsUtils.excecaoAtualizarTrabalho.concat(jobName));
+        }
+    }
 
-					return MapeadorAgendamento.mapperResponse("Tarefa iniciada com Sucesso.", HttpStatus.OK);
 
-				} catch (SchedulerException e) {
+    /**
+     * Atualizar trabalhos definidos por CRON
+     *
+     * @throws SchedulerException
+     */
 
-					log.error(excecaoAoRetornarTrabalhoPausado + jobKey, e);
+    public AgendamentoTarefaVO updateCronJob(String jobName, Date date, String cronExpression) {
 
-					servicoSistema.saveContextErrorDefault(e, Thread.currentThread().getStackTrace()[1].getMethodName(),
-							auditorAware.getCurrentAuditor().get(), excecaoAoRetornarTrabalhoPausado + jobKey);
+        Optional<UserSystem> usuarioAnonimo = SecurityUtils.getCurrentUserPrincipal();
 
-					throw new SchedulerException(excecaoAoRetornarTrabalhoPausado, e);
+        String emailSolicitante = usuarioAnonimo.isPresent() ? usuarioAnonimo.get().getEmail() : null;
 
-				}
+        String jobKey = jobName;
 
-			} else {
-				throw new TrabalhoException(
-						" Operação não realizada. O trabalho não encontra-se em um estado de Pausa");
-			}
+        try {
 
-		} else {
-			return MapeadorAgendamento.mapperResponse(trabalhoNaoEncontrado, HttpStatus.NOT_FOUND);
-		}
-	}
+            Trigger newTrigger = JobUtilQuartz.createCronTrigger(jobKey, date, cronExpression, SimpleTrigger.MISFIRE_INSTRUCTION_FIRE_NOW);
 
-	/**
-	 * Forçar inicio ou inciar trabalho
-	 * 
-	 * @throws SchedulerException
-	 */
-	@Override
-	public boolean startJobNow(String jobName) throws SchedulerException {
+            Date atualizado = schedulerFactoryBean.getScheduler().rescheduleJob(TriggerKey.triggerKey(jobKey), newTrigger);
 
-		triagemSolicitacaoStart(jobName);
+            return AgendamentoTarefaVO.builder().dataRetorno(atualizado).agendado(true).build();
 
-		String jobKey = jobName;
-		String groupKey = "SampleGroup";
+        } catch (Exception e) {
 
-		JobKey jKey = new JobKey(jobKey, groupKey);
+            log.info(
+                    "########################################################################################################################");
 
-		try {
-			schedulerFactoryBean.getScheduler().triggerJob(jKey);
-			System.out.println("Job with jobKey :" + jobKey + " started now succesfully.");
-			return true;
-		} catch (SchedulerException e) {
+            log.error(ConstantsUtils.excecaoAtualizarTrabalhoCron.concat(jobName), e);
 
-			log.error(excecaoParaIniciarTrabalho + jobKey, e);
+            log.info(
+                    "########################################################################################################################");
 
-			servicoSistema.saveContextErrorDefault(e, Thread.currentThread().getStackTrace()[1].getMethodName(),
-					auditorAware.getCurrentAuditor().get(), excecaoParaIniciarTrabalho + jobKey);
-			throw new SchedulerException(excecaoParaIniciarTrabalho, e);
-		}
-	}
+            servicoSistema.salvarErrorContextoGenerico(e, Thread.currentThread().getStackTrace()[1].getMethodName(),
+                    TipoErrorSistema.TAREFA_SERVICE, emailSolicitante, ConstantsUtils.excecaoAtualizarTrabalhoCron.concat(jobName));
 
-	@Override
-	public ResponseEntity<AgendamentoVM> isJobRunning(String jobName) throws SchedulerException {
 
-		boolean isJobRunning = false;
-		String jobKey = jobName;
-		String groupKey = "SampleGroup";
+            throw new AgendadorException(ConstantsUtils.excecaoAtualizarTrabalhoCron.concat(jobName));
+        }
+    }
 
-		try {
 
-			List<JobExecutionContext> currentJobs = schedulerFactoryBean.getScheduler().getCurrentlyExecutingJobs();
+    /**
+     * cancelar trabalho agendado
+     */
 
-			if (currentJobs != null) {
+    public boolean unScheduleJob(String jobName) {
 
-				for (JobExecutionContext jobCtx : currentJobs) {
-					String jobNameDB = jobCtx.getJobDetail().getKey().getName();
-					String groupNameDB = jobCtx.getJobDetail().getKey().getGroup();
+        Optional<UserSystem> usuarioAnonimo = SecurityUtils.getCurrentUserPrincipal();
 
-					if (jobKey.equalsIgnoreCase(jobNameDB) && groupKey.equalsIgnoreCase(groupNameDB)) {
-						isJobRunning = true;
-					}
-				}
+        String emailSolicitante = usuarioAnonimo.isPresent() ? usuarioAnonimo.get().getEmail() : null;
 
-			} else {
-				return MapeadorAgendamento.mapperResponse("Nenhuma atividade se encontra em Execução", HttpStatus.OK);
-			}
+        boolean status = false;
 
-		} catch (SchedulerException e) {
+        if (isJobWithNamePresent(jobName)) {
 
-			log.error(excecaoParaChecarTrabalhoEmExcecucao + jobKey, e);
+            String jobKey = jobName;
 
-			servicoSistema.saveContextErrorDefault(e, Thread.currentThread().getStackTrace()[1].getMethodName(),
-					auditorAware.getCurrentAuditor().get(), excecaoParaChecarTrabalhoEmExcecucao + jobKey);
+            TriggerKey tkey = new TriggerKey(jobKey);
 
-			throw new SchedulerException(excecaoParaChecarTrabalhoEmExcecucao, e);
-		}
+            try {
+                status = schedulerFactoryBean.getScheduler().unscheduleJob(tkey);
 
-		return MapeadorAgendamento.mapperResponse(isJobRunning, HttpStatus.OK);
+                return status;
 
-	}
+            } catch (SchedulerException e) {
+                log.info(
+                        "########################################################################################################################");
 
-	@Override
-	public ResponseEntity<AgendamentoVM> getAllJobs() throws SchedulerException {
-		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+                log.error(ConstantsUtils.excecaoCancelamentoTrabalho.concat(jobName), e);
+                log.info(
+                        "########################################################################################################################");
+                servicoSistema.salvarErrorContextoGenerico(e, Thread.currentThread().getStackTrace()[1].getMethodName(),
+                        TipoErrorSistema.TAREFA_SERVICE, emailSolicitante, ConstantsUtils.excecaoCancelamentoTrabalho.concat(jobName));
 
-		try {
-			Scheduler scheduler = schedulerFactoryBean.getScheduler();
+                throw new AgendadorException(ConstantsUtils.excecaoCancelamentoTrabalho.concat(jobName));
 
-			for (String groupName : scheduler.getJobGroupNames()) {
-				for (JobKey jobKey : scheduler.getJobKeys(GroupMatcher.jobGroupEquals(groupName))) {
+            }
 
-					String jobName = jobKey.getName();
-					String jobGroup = jobKey.getGroup();
+        }
 
-					// get job's trigger
-					List<Trigger> triggers = (List<Trigger>) scheduler.getTriggersOfJob(jobKey);
-					
-					Date scheduleTime = (triggers != null && triggers.size() > 0)?  triggers.get(0).getStartTime(): null;
-					Date nextFireTime = (triggers != null && triggers.size() > 0)?  triggers.get(0).getNextFireTime(): null;
-					Date lastFiredTime= (triggers != null && triggers.size() > 0)?  triggers.get(0).getPreviousFireTime(): null;
+        return status;
+    }
 
-					Map<String, Object> map = new HashMap<String, Object>();
-					map.put("jobName", jobName);
-					map.put("groupName", jobGroup);
-					map.put("scheduleTime", scheduleTime);
-					map.put("lastFiredTime", lastFiredTime);
-					map.put("nextFireTime", nextFireTime);
 
-					if (jobEmExecucao(jobName)) {
-						map.put("jobStatus", "RUNNING");
-					} else {
-						String jobState = getJobState(jobName);
-						map.put("jobStatus", jobState);
-					}
+    public boolean pauseJob(String jobName) {
 
-					/*
-					 * Date currentDate = new Date(); if (scheduleTime.compareTo(currentDate) > 0) {
-					 * map.put("jobStatus", "scheduled"); } else if
-					 * (scheduleTime.compareTo(currentDate) < 0) { map.put("jobStatus", "Running");
-					 * } else if (scheduleTime.compareTo(currentDate) == 0) { map.put("jobStatus",
-					 * "Running"); }
-					 */
+        Optional<UserSystem> usuarioAnonimo = SecurityUtils.getCurrentUserPrincipal();
 
-					list.add(map);
-				}
+        String emailSolicitante = usuarioAnonimo.isPresent() ? usuarioAnonimo.get().getEmail() : null;
 
-			}
-		} catch (SchedulerException e) {
+        if (jobExistente(jobName)) {
 
-			log.error(excecaoParaChecarTrabalhoEmExcecucao, e);
+            String jobKey = jobName;
+            String groupKey = "SampleGroup"; // valor padrão adotado pela comunidade quatz em caso de não definição de grupo de trabalhos para a Trigger...
+            JobKey jkey = new JobKey(jobKey, groupKey);
 
-			servicoSistema.saveContextErrorDefault(e, Thread.currentThread().getStackTrace()[1].getMethodName(),
-					auditorAware.getCurrentAuditor().get(), excecaoParaChecarTrabalhoEmExcecucao);
+            try {
+                schedulerFactoryBean.getScheduler().pauseJob(jkey);
 
-			throw new SchedulerException(excecaoParaChecarListaDeTrabalhos, e);
-		}
-		return MapeadorAgendamento.mapperResponse(list, HttpStatus.OK);
-	}
 
-	@Override
-	public ResponseEntity<AgendamentoVM> isJobWithNamePresent(String jobName) throws SchedulerException {
+                return true;
 
-		boolean exists = false;
+            } catch (SchedulerException e) {
 
-		if (jobName == null || jobName.trim().equals("")) {
-			throw new TrabalhoException("Nome do trabalho Invalido");
-		} else {
+                log.info(
+                        "########################################################################################################################");
+                log.error(ConstantsUtils.excecaoPausarTrabalho.concat(jobName), e);
 
-			try {
-				String groupKey = "SampleGroup";
-				JobKey jobKey = new JobKey(jobName, groupKey);
-				Scheduler scheduler = schedulerFactoryBean.getScheduler();
+                log.info(
+                        "########################################################################################################################");
 
-				exists = (scheduler.checkExists(jobKey)) ? true : false;
+                servicoSistema.salvarErrorContextoGenerico(e, Thread.currentThread().getStackTrace()[1].getMethodName(),
+                        TipoErrorSistema.TAREFA_SERVICE, emailSolicitante, ConstantsUtils.excecaoPausarTrabalho.concat(jobName));
 
-			} catch (SchedulerException e) {
 
-				log.error(excecaoParaChecarSeOTrabalhoExiste + jobName, e);
+                throw new AgendadorException("Não foi possivel Pausar o Trabalho. Error Interno da Aplicação.");
+            }
 
-				servicoSistema.saveContextErrorDefault(e, Thread.currentThread().getStackTrace()[1].getMethodName(),
-						auditorAware.getCurrentAuditor().get(), excecaoParaChecarSeOTrabalhoExiste);
+        } else { // Caso não existir a tarefa...
+            throw new AgendadorException("Operação não realizada. Não foi localizado o Job atribuido a esse nome: " + jobName);
+        }
+    }
 
-				throw new SchedulerException(excecaoParaChecarSeOTrabalhoExiste, e);
-			}
-		}
-		return MapeadorAgendamento.mapperResponse(exists, HttpStatus.OK);
-	}
 
-	/**
-	 * Get the current state of job
-	 */
-	public String getJobState(String jobName) {
+    public AgendamentoTarefaVO resumeJob(String jobName) {
 
-		try {
-			String groupKey = "SampleGroup";
-			JobKey jobKey = new JobKey(jobName, groupKey);
+        Optional<UserSystem> usuarioAnonimo = SecurityUtils.getCurrentUserPrincipal();
 
-			Scheduler scheduler = schedulerFactoryBean.getScheduler();
-			JobDetail jobDetail = scheduler.getJobDetail(jobKey);
+        String emailSolicitante = usuarioAnonimo.isPresent() ? usuarioAnonimo.get().getEmail() : null;
 
-			List<? extends Trigger> triggers = scheduler.getTriggersOfJob(jobDetail.getKey());
-			if (triggers != null && triggers.size() > 0) {
-				for (Trigger trigger : triggers) {
-					TriggerState triggerState = scheduler.getTriggerState(trigger.getKey());
+        log.debug("INICIANDO PROCESSO PAUSADO DO JOB SOB NOME : " + jobName + " USUARIO SOLICITANTE: " + emailSolicitante);
 
-					if (TriggerState.PAUSED.equals(triggerState)) {
-						return "PAUSED";
-					} else if (TriggerState.BLOCKED.equals(triggerState)) {
-						return "BLOCKED";
-					} else if (TriggerState.COMPLETE.equals(triggerState)) {
-						return "COMPLETE";
-					} else if (TriggerState.ERROR.equals(triggerState)) {
-						return "ERROR";
-					} else if (TriggerState.NONE.equals(triggerState)) {
-						return "NONE";
-					} else if (TriggerState.NORMAL.equals(triggerState)) {
-						return "SCHEDULED";
-					}
-				}
-			}
-		} catch (SchedulerException e) {
+        if (jobExistente(jobName)) {
 
-			log.error(excecaoParaChecarStatusDoTrabalho + jobName, e);
+            String jobState = getJobState(jobName);
 
-			servicoSistema.saveContextErrorDefault(e, Thread.currentThread().getStackTrace()[1].getMethodName(),
-					auditorAware.getCurrentAuditor().get(), excecaoParaChecarStatusDoTrabalho);
+            if (Trigger.TriggerState.PAUSED.equals(jobState)) {
 
-		}
-		return StringUtils.EMPTY;
-	}
 
-	@Override
-	public ResponseEntity<AgendamentoVM> stopJob(String jobName) throws SchedulerException {
+                String jobKey = jobName;
+                String groupKey = "SampleGroup"; // valor padrão adotado pela comunidade quatz em caso de não definição de grupo de trabalhos para a Trigger...
 
-		boolean stop = false;
+                JobKey jKey = new JobKey(jobKey, groupKey);
 
-		triagemSolicitacaoStop(jobName);
 
-		try {
-			String jobKey = jobName;
-			String groupKey = "SampleGroup";
+                try {
+                    schedulerFactoryBean.getScheduler().resumeJob(jKey);
 
-			Scheduler scheduler = schedulerFactoryBean.getScheduler();
-			JobKey jkey = new JobKey(jobKey, groupKey);
+                    return AgendamentoTarefaVO.builder().agendado(true).dataRetorno(new Date()).build();
 
-			stop = scheduler.interrupt(jkey);
+                } catch (SchedulerException e) {
 
-		} catch (SchedulerException e) {
+                    log.info(
+                            "########################################################################################################################");
+                    log.error(ConstantsUtils.excecaoAoRetornarTrabalhoPausado + jobKey, e);
 
-			log.error(excecaoParaPararUmTrabalho + jobName, e);
+                    log.info(
+                            "########################################################################################################################");
+                    servicoSistema.salvarErrorContextoGenerico(e, Thread.currentThread().getStackTrace()[1].getMethodName(),
+                            TipoErrorSistema.TAREFA_SERVICE, emailSolicitante, ConstantsUtils.excecaoAoRetornarTrabalhoPausado.concat(jobName));
 
-			servicoSistema.saveContextErrorDefault(e, Thread.currentThread().getStackTrace()[1].getMethodName(),
-					auditorAware.getCurrentAuditor().get(), excecaoParaPararUmTrabalho);
 
-			throw new SchedulerException(excecaoParaPararUmTrabalho, e);
-		}
-		return MapeadorAgendamento.mapperResponse(stop, HttpStatus.OK);
-	}
+                    throw new AgendadorException(ConstantsUtils.excecaoAoRetornarTrabalhoPausado);
 
-	// PRIVATES UTILS METHODOS >>>>>
 
-	private Class<?> getClassForName(String nameJob) {
+                }
 
-		String camelCaseNameClass = ConverterStringCamelCase.convertStringToCamelCase(nameJob);
+            } else {
 
-		String classPackage = "com.system.bibliotec.service.automacao.trabalhos.".concat(camelCaseNameClass);
+                throw new AgendadorException(" Operação não realizada. O Job:  " + jobName + " não encontra-se em um estado de Pausa");
+            }
 
-		Class job = null;
-		try {
+        } else {
+            throw new AgendadorException(" Operação não realizada. O Job:  " + jobName + " não encontrado");
+        }
+    }
 
-			job = getClass().forName(classPackage);
 
-			if (!job.getSuperclass().equals(QuartzJobBean.class)) {
+    public boolean startJobNow(String jobName) {
 
-				throw new TrabalhoExistenteException(
-						"Exceção: Implementação do Trabalho inexistente ou invalida. Informa outra valida e existente.");
-			}
+        Optional<UserSystem> usuarioAnonimo = SecurityUtils.getCurrentUserPrincipal();
 
-		} catch (ClassNotFoundException e) {
+        String emailSolicitante = usuarioAnonimo.isPresent() ? usuarioAnonimo.get().getEmail() : null;
 
-			servicoSistema.saveContextErrorDefault(e, Thread.currentThread().getStackTrace()[1].getMethodName(),
-					obterUsuarioDoContextoPeloToken(), excecaoImplementacaoTarefaNaoEncontrada);
+        triagemSolicitacaoStart(jobName);
 
-			throw new TrabalhoExistenteException(
-					"Exceção Interna: Implementação do Trabalho inexistente ou invalida. Informa outra valida e existente.");
-		}
+        String jobKey = jobName;
+        String groupKey = "SampleGroup"; // valor padrão adotado pela comunidade quatz em caso de não definição de grupo de trabalhos para a Trigger...
 
-		return job;
+        JobKey jKey = new JobKey(jobKey, groupKey);
 
-	}
+        try {
 
-	private void triagemSolicitacaoStart(String jobName) {
+            schedulerFactoryBean.getScheduler().triggerJob(jKey);
 
-		if (jobExistente(jobName)) {
+            return true;
 
-			if (jobEmExecucao(jobName)) {
-				throw new TrabalhoException("Tarefa já estar em Estado de Execução");
-			}
+        } catch (SchedulerException e) {
 
-		}
-	}
+            log.info(
+                    "########################################################################################################################");
+            log.error(ConstantsUtils.excecaoParaIniciarTrabalho + jobKey, e);
 
-	private void triagemSolicitacaoStop(String jobName) {
-		// TODO Auto-generated method stub
+            log.info(
+                    "########################################################################################################################");
 
-		if (jobExistente(jobName)) {
+            servicoSistema.salvarErrorContextoGenerico(e, Thread.currentThread().getStackTrace()[1].getMethodName(),
+                    TipoErrorSistema.TAREFA_SERVICE, emailSolicitante, ConstantsUtils.excecaoParaIniciarTrabalho.concat(jobName));
 
-			if (jobEmExecucao(jobName)) {
 
-			} else {
-				throw new TrabalhoException("Tarefa não estar em estado de  Execução");
-			}
-		}
-	}
+            throw new AgendadorException(ConstantsUtils.excecaoParaIniciarTrabalho.concat(jobName));
 
-	private void triagemExclusãoTarefa(String jobName) {
+        }
+    }
 
-		if (isContainsSpecialChar(jobName) || !jobNameIsCamelCaseValid(jobName) || !qtdEspacosValidos(jobName)) {
-			throw new TrabalhoInvalidoException(
-					"Nome do trabalho invalido. Informar um nome valido e com espaçamento.");
-		}
 
-		if (jobExistente(jobName)) {
+    public boolean isJobRunning(String jobName) {
 
-			if (jobEmExecucao(jobName)) {
+        Optional<UserSystem> usuarioAnonimo = SecurityUtils.getCurrentUserPrincipal();
 
-				throw new TrabalhoExistenteException(
-						"Operação não realizada. Trabalho em Execução no momento. Será necessario mudar o estado para solicitar esta operação.");
-			} else {
-				throw new TrabalhoExistenteException("Trabalho já cadastrado. Informar um outro valido e existente.");
-			}
+        String emailSolicitante = usuarioAnonimo.isPresent() ? usuarioAnonimo.get().getEmail() : null;
 
-		} else {
-			throw new TrabalhoException(excecaoImplementacaoTarefaNaoEncontrada);
+        boolean isJobRunning = false;
+        String jobKey = jobName;
+        String groupKey = "SampleGroup";   // valor padrão adotado pela comunidade quatz em caso de não definição de grupo de trabalhos para a Trigger...
 
-		}
-	}
+        try {
 
-	private void triagemNovaTarefa(String jobName) throws SchedulerException {
+            List<JobExecutionContext> currentJobs = schedulerFactoryBean.getScheduler().getCurrentlyExecutingJobs();
 
-		if (isContainsSpecialChar(jobName) || !jobNameIsCamelCaseValid(jobName) || !qtdEspacosValidos(jobName)) {
-			throw new TrabalhoInvalidoException(
-					"Nome do trabalho invalido. Informar um nome valido,com espaçamento valido e Sem caractere especial.");
-		}
+            if (currentJobs != null) {
 
-		if (Boolean.parseBoolean(isJobWithNamePresent(jobName).getBody().toString())) {
+                for (JobExecutionContext jobCtx : currentJobs) {
+                    String jobNameDB = jobCtx.getJobDetail().getKey().getName();
+                    String groupNameDB = jobCtx.getJobDetail().getKey().getGroup();
 
-			if (jobEmExecucao(jobName)) {
+                    if (jobKey.equalsIgnoreCase(jobNameDB) && groupKey.equalsIgnoreCase(groupNameDB)) {
+                        isJobRunning = true;
+                    }
+                }
 
-				throw new TrabalhoExistenteException(
-						"Trabalho já cadastrado e em execução no momento. É necessario Informar outro valido e existente.");
-			} else {
-				throw new TrabalhoExistenteException("Trabalho já cadastrado. Informar um outro valido e existente.");
-			}
+            } else {
+                return isJobRunning;
+            }
 
-		}
+        } catch (SchedulerException e) {
 
-	}
+            log.info(
+                    "########################################################################################################################");
+            log.error(ConstantsUtils.excecaoParaChecarTrabalhoEmExcecucao + jobKey, e);
 
-	private boolean isContainsSpecialChar(String msg) {
-		Pattern regex = Pattern.compile("[$&+,:;=\\\\?@#|/'<>.^*()%!-]");
+            log.info(
+                    "########################################################################################################################");
 
-		return (regex.matcher(msg).find()) ? true : false;
-	}
+            servicoSistema.salvarErrorContextoGenerico(e, Thread.currentThread().getStackTrace()[1].getMethodName(),
+                    TipoErrorSistema.TAREFA_SERVICE, emailSolicitante, ConstantsUtils.excecaoParaChecarTrabalhoEmExcecucao.concat(jobName));
 
-	private boolean qtdEspacosValidos(String texto) {
-		return (texto.length() - texto.replaceAll(" ", "").length() > 1) ? false : true;
-	}
+            throw new AgendadorException(ConstantsUtils.excecaoParaChecarTrabalhoEmExcecucao.concat(jobName));
+        }
 
-	private boolean jobNameIsCamelCaseValid(String jobName) {
-		// TODO Auto-generated method stub
+        return isJobRunning;
 
-		return (jobName != null && !jobName.isEmpty() && jobName.contains(" ")) ? true : false;
-	}
+    }
 
-	private boolean jobExistente(String jobName) {
-		// TODO Auto-generated method stub
-		boolean exist = false;
 
-		try {
-			if (Boolean.parseBoolean(isJobWithNamePresent(jobName).getBody().getData().toString())) {
-				exist = true;
-			} else {
-				throw new TrabalhoInvalidoException("Trabalho invalido ou inexistente");
-			}
-		} catch (SchedulerException e) {
-			// TODO Auto-generated catch block
-			throw new TrabalhoInvalidoException("Exceção interna da Aplicação.", e);
-		}
-		return exist;
-	}
+    public RelacaoTarefasVO getAllJobs() {
 
-	private boolean jobEmExecucao(String jobName) {
-		// TODO Auto-generated method stub
-		boolean emExecucao = false;
+        Optional<UserSystem> usuarioAnonimo = SecurityUtils.getCurrentUserPrincipal();
 
-		try {
-			emExecucao = Boolean.parseBoolean(isJobRunning(jobName).getBody().getData().toString());
-		} catch (SchedulerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return emExecucao;
-	}
+        String emailSolicitante = usuarioAnonimo.isPresent() ? usuarioAnonimo.get().getEmail() : null;
 
+        RelacaoTarefasVO relacaoTrabalhos = new RelacaoTarefasVO();
+
+        try {
+
+            Scheduler scheduler = schedulerFactoryBean.getScheduler();
+
+            for (String groupName : scheduler.getJobGroupNames()) {
+
+
+                List<TrabalhoVO> relacaoDoGrupo = capturarTrabalhosDoGrupos(groupName, scheduler);
+
+                relacaoTrabalhos.setRelacaoTrabalhos(relacaoDoGrupo);
+
+            }
+
+        } catch (SchedulerException e) {
+
+            log.info(
+                    "########################################################################################################################");
+            log.error(ConstantsUtils.excecaoParaChecarTrabalhoEmExcecucao, e);
+
+            log.info(
+                    "########################################################################################################################");
+
+            servicoSistema.salvarErrorContextoGenerico(e, Thread.currentThread().getStackTrace()[1].getMethodName(),
+                    TipoErrorSistema.TAREFA_SERVICE, emailSolicitante, ConstantsUtils.excecaoParaChecarListaDeTrabalhos);
+
+            throw new AgendadorException(ConstantsUtils.excecaoParaChecarListaDeTrabalhos);
+
+        }
+
+        return relacaoTrabalhos;
+    }
+
+    private List<TrabalhoVO> capturarTrabalhosDoGrupos(String nomeGrupo, Scheduler scheduler) throws SchedulerException {
+
+        List<TrabalhoVO> subRetorno = new ArrayList<TrabalhoVO>();
+
+        for (JobKey jobKey : scheduler.getJobKeys(GroupMatcher.jobGroupEquals(nomeGrupo))) {
+
+            TrabalhoVO t = capturarTodosJobsAgrupadosPorTrigger(jobKey, scheduler);
+            subRetorno.add(t);
+
+        }
+        return subRetorno;
+
+    }
+
+
+    private TrabalhoVO capturarTodosJobsAgrupadosPorTrigger(JobKey jobKey, Scheduler scheduler) throws SchedulerException {
+
+        TrabalhoVO subRetorno = new TrabalhoVO();
+
+        List<GatilhosVO> gatilhosViewList = new ArrayList<GatilhosVO>();
+
+        String jobName = jobKey.getName();
+        String jobGroup = jobKey.getGroup();
+
+        boolean emExecucao = jobEmExecucao(jobName);
+
+        String status = getJobState(jobName);
+
+        @SuppressWarnings("unchecked")
+        List<Trigger> triggers = (List<Trigger>) scheduler.getTriggersOfJob(jobKey);
+
+        subRetorno.setNomeDoTrabalho(jobName);
+        subRetorno.setNomeGrupo(jobGroup);
+
+        for (Trigger t : triggers) {
+
+            Date scheduleTime = t.getStartTime();
+            Date nextFireTime = t.getNextFireTime();
+            Date lastFiredTime = t.getPreviousFireTime();
+
+
+            GatilhosVO g = GatilhosVO.builder()
+                    .ultimaExecucao(lastFiredTime)
+                    .proximaExecucao(nextFireTime)
+                    .agendamentoDoTrabalho(scheduleTime)
+                    .status(status)
+                    .emExecucao(emExecucao)
+                    .build();
+
+            gatilhosViewList.add(g);
+        }
+        subRetorno.setGatilhosDoJob(gatilhosViewList);
+
+        return subRetorno;
+    }
+
+
+    public boolean isJobWithNamePresent(String jobName) {
+
+        Optional<UserSystem> usuarioAnonimo = SecurityUtils.getCurrentUserPrincipal();
+
+        String emailSolicitante = usuarioAnonimo.isPresent() ? usuarioAnonimo.get().getEmail() : null;
+
+        boolean exists = false;
+
+        if (jobName == null || jobName.trim().equals("")) {
+            throw new AgendadorException("Nome do trabalho Informado é Invalido");
+        } else {
+
+            try {
+                String groupKey = "SampleGroup";  // valor padrão adotado pela comunidade quatz em caso de não definição de grupo de trabalhos para a Trigger...
+                JobKey jobKey = new JobKey(jobName, groupKey);
+                Scheduler scheduler = schedulerFactoryBean.getScheduler();
+
+                exists = (scheduler.checkExists(jobKey)) ? true : false;
+
+            } catch (SchedulerException e) {
+
+                log.info(
+                        "########################################################################################################################");
+                log.error(ConstantsUtils.excecaoParaChecarSeOTrabalhoExiste + jobName, e);
+
+                log.info(
+                        "########################################################################################################################");
+
+                servicoSistema.salvarErrorContextoGenerico(e, Thread.currentThread().getStackTrace()[1].getMethodName(),
+                        TipoErrorSistema.TAREFA_SERVICE, emailSolicitante, ConstantsUtils.excecaoParaChecarSeOTrabalhoExiste.concat(jobName));
+
+
+                throw new AgendadorException(ConstantsUtils.excecaoParaChecarSeOTrabalhoExiste.concat(jobName));
+            }
+        }
+
+        return exists;
+    }
+
+
+    public String getJobState(String jobName) {
+
+        Optional<UserSystem> usuarioAnonimo = SecurityUtils.getCurrentUserPrincipal();
+
+        String emailSolicitante = usuarioAnonimo.isPresent() ? usuarioAnonimo.get().getEmail() : null;
+
+
+        try {
+            String groupKey = "SampleGroup";  // valor padrão adotado pela comunidade quatz em caso de não definição de grupo de trabalhos para a Trigger...
+            JobKey jobKey = new JobKey(jobName, groupKey);
+
+            Scheduler scheduler = schedulerFactoryBean.getScheduler();
+
+            JobDetail jobDetail = scheduler.getJobDetail(jobKey);
+
+            List<? extends Trigger> triggers = scheduler.getTriggersOfJob(jobDetail.getKey());
+
+            if (triggers != null && triggers.size() > 0) {
+
+                for (Trigger trigger : triggers) {
+
+                    Trigger.TriggerState triggerState = scheduler.getTriggerState(trigger.getKey());
+
+                    if (Trigger.TriggerState.PAUSED.equals(triggerState)) {
+                        return "PAUSADO";
+                    } else if (Trigger.TriggerState.BLOCKED.equals(triggerState)) {
+                        return "BLOQUEADO";
+                    } else if (Trigger.TriggerState.COMPLETE.equals(triggerState)) {
+                        return "COMPLETO";
+                    } else if (Trigger.TriggerState.ERROR.equals(triggerState)) {
+                        return "COM ERROR";
+                    } else if (Trigger.TriggerState.NONE.equals(triggerState)) {
+                        return "NAO LOCALIZADO";
+                    } else if (Trigger.TriggerState.NORMAL.equals(triggerState)) {
+                        return "AGENDADO";
+                    }
+                }
+            } else {
+
+                return "COMPLETO OU SEM TRIGGER DE EXECUÇÃO";
+            }
+
+
+        } catch (SchedulerException e) {
+
+
+            log.info(
+                    "########################################################################################################################");
+            log.error(ConstantsUtils.excecaoParaChecarStatusDoTrabalho.concat(jobName), e);
+
+
+            log.info(
+                    "########################################################################################################################");
+
+
+            servicoSistema.salvarErrorContextoGenerico(e, Thread.currentThread().getStackTrace()[1].getMethodName(),
+                    TipoErrorSistema.TAREFA_SERVICE, emailSolicitante, ConstantsUtils.excecaoParaChecarStatusDoTrabalho.concat(jobName));
+
+            throw new AgendadorException(ConstantsUtils.excecaoParaChecarStatusDoTrabalho.concat(jobName));
+        }
+        return org.apache.commons.lang3.StringUtils.EMPTY;
+    }
+
+
+    public boolean stopJob(String jobName) {
+
+        Optional<UserSystem> usuarioAnonimo = SecurityUtils.getCurrentUserPrincipal();
+
+        String emailSolicitante = usuarioAnonimo.isPresent() ? usuarioAnonimo.get().getEmail() : null;
+
+        boolean stop = false;
+
+        triagemSolicitacaoStop(jobName);
+
+        try {
+            String jobKey = jobName;
+            String groupKey = "SampleGroup"; // valor padrão adotado pela comunidade quatz em caso de não definição de grupo de trabalhos para a Trigger...
+
+            Scheduler scheduler = schedulerFactoryBean.getScheduler();
+            JobKey jkey = new JobKey(jobKey, groupKey);
+
+            stop = scheduler.interrupt(jkey);
+
+        } catch (SchedulerException e) {
+
+
+            log.info(
+                    "########################################################################################################################");
+            log.error(ConstantsUtils.excecaoParaPararUmTrabalho + jobName, e);
+
+
+            log.info(
+                    "########################################################################################################################");
+
+            servicoSistema.salvarErrorContextoGenerico(e, Thread.currentThread().getStackTrace()[1].getMethodName(),
+                    TipoErrorSistema.TAREFA_SERVICE, emailSolicitante, ConstantsUtils.excecaoParaChecarStatusDoTrabalho.concat(jobName));
+
+            throw new AgendadorException(ConstantsUtils.excecaoParaPararUmTrabalho.concat(jobName));
+        }
+
+        return stop;
+    }
+
+
+    private Class<?> getClassForName(String nameJob) {
+
+        Optional<UserSystem> usuarioAnonimo = SecurityUtils.getCurrentUserPrincipal();
+
+        String emailSolicitante = usuarioAnonimo.isPresent() ? usuarioAnonimo.get().getEmail() : null;
+
+        String camelCaseNameClass = convertStringToCamelCase(nameJob);
+
+        String classPackage = "com.agendador.tarefas.service.jobs.".concat(camelCaseNameClass);
+
+        Class job = null;
+        try {
+
+            job = getClass().forName(classPackage);
+
+            if (!job.getSuperclass().equals(QuartzJobBean.class)) {
+
+                throw new AgendadorException(
+                        "Exceção: Implementação do Trabalho inexistente ou invalida. Informa outra valida e existente.");
+            }
+
+        } catch (ClassNotFoundException e) {
+
+            log.info(
+                    "########################################################################################################################");
+
+            log.error("EXCEÇÃO PARA CAPTURAR A CLASSE DE IMPLEMENTAÇÃO DO JOB" + nameJob, e);
+
+            log.info(
+                    "########################################################################################################################");
+
+            servicoSistema.salvarErrorContextoGenerico(e, Thread.currentThread().getStackTrace()[1].getMethodName(),
+                    TipoErrorSistema.TAREFA_SERVICE, "CAPTURA DE CLASSE DE TRABALHO", "EXCEÇÃO PARA CAPTURAR A CLASSE DE IMPLEMENTAÇÃO DO JOB" + nameJob);
+
+
+            throw new AgendadorException(
+                    "Exceção Interna: Implementação do Trabalho " + nameJob + "inexistente ou invalida. Informa outra valida e existente.");
+        }
+
+        return job;
+
+    }
+
+    private void triagemSolicitacaoStart(String jobName) {
+
+        Optional<UserSystem> usuarioAnonimo = SecurityUtils.getCurrentUserPrincipal();
+
+        String emailSolicitante = usuarioAnonimo.isPresent() ? usuarioAnonimo.get().getEmail() : null;
+
+        if (jobExistente(jobName)) {
+
+            if (jobEmExecucao(jobName)) {
+                throw new AgendadorException("Tarefa já estar em Estado de Execução");
+            }
+
+        }
+    }
+
+    private void triagemSolicitacaoStop(String jobName) {
+        // TODO Auto-generated method stub
+
+        Optional<UserSystem> usuarioAnonimo = SecurityUtils.getCurrentUserPrincipal();
+
+        String emailSolicitante = usuarioAnonimo.isPresent() ? usuarioAnonimo.get().getEmail() : null;
+
+        if (jobExistente(jobName)) {
+
+            if (jobEmExecucao(jobName)) {
+
+            } else {
+                throw new AgendadorException("Tarefa não estar em estado de  Execução");
+            }
+        }
+    }
+
+    private void triagemExclusãoTarefa(String jobName) {
+
+        Optional<UserSystem> usuarioAnonimo = SecurityUtils.getCurrentUserPrincipal();
+
+        String emailSolicitante = usuarioAnonimo.isPresent() ? usuarioAnonimo.get().getEmail() : null;
+
+        if (isContainsSpecialChar(jobName) || !jobNameIsCamelCaseValid(jobName) || !qtdEspacosValidos(jobName)) {
+            throw new AgendadorException(
+                    "Nome do trabalho invalido. Informar um nome valido e com espaçamento.");
+        }
+
+        if (jobExistente(jobName)) {
+
+            if (jobEmExecucao(jobName)) {
+
+                throw new AgendadorException(
+                        "Operação não realizada. Trabalho em Execução no momento. Será necessario mudar o estado para solicitar esta operação.");
+            } else {
+                throw new AgendadorException("Trabalho já cadastrado. Informar um outro valido e existente.");
+            }
+
+        } else {
+            throw new AgendadorException(ConstantsUtils.excecaoImplementacaoTarefaNaoEncontrada);
+
+        }
+    }
+
+
+    private void triagemNovaTarefa(String jobName) {
+
+        Optional<UserSystem> usuarioAnonimo = SecurityUtils.getCurrentUserPrincipal();
+
+        String emailSolicitante = usuarioAnonimo.isPresent() ? usuarioAnonimo.get().getEmail() : null;
+
+
+        if (isJobWithNamePresent(jobName)) {
+
+            if (jobEmExecucao(jobName)) {
+
+                throw new AgendadorException(
+                        "Trabalho já cadastrado e em execução no momento. É necessario Informar outro valido e existente.");
+            } else {
+                throw new AgendadorException("Trabalho já cadastrado. Informar um outro nome valido.");
+            }
+
+        }
+
+    }
+
+    private boolean isContainsSpecialChar(String msg) {
+
+        Optional<UserSystem> usuarioAnonimo = SecurityUtils.getCurrentUserPrincipal();
+
+        String emailSolicitante = usuarioAnonimo.isPresent() ? usuarioAnonimo.get().getEmail() : null;
+
+
+        Pattern regex = Pattern.compile("[$&+,:;=\\\\?@#|/'<>.^*()%!-]");
+
+        return (regex.matcher(msg).find()) ? true : false;
+    }
+
+    private boolean qtdEspacosValidos(String texto) {
+        return (texto.length() - texto.replaceAll(" ", "").length() > 1) ? false : true;
+    }
+
+    private boolean jobNameIsCamelCaseValid(String jobName) {
+        // TODO Auto-generated method stub
+
+        return (jobName != null && !jobName.isEmpty() && jobName.contains(" ")) ? true : false;
+    }
+
+    private boolean jobExistente(String jobName) {
+        // TODO Auto-generated method stub
+        boolean exist = false;
+
+        if (isJobWithNamePresent(jobName)) {
+            exist = true;
+        } else {
+            return exist;
+        }
+        return exist;
+    }
+
+    private boolean jobEmExecucao(String jobName) {
+        // TODO Auto-generated method stub
+        boolean emExecucao = false;
+
+        emExecucao = isJobRunning(jobName);
+        return emExecucao;
+    }
+
+
+    private void triagemNegocio(String jobName, String emailSolicitante,
+                                TipoTrabalhoEnum tipoServicoTrabalho) {
+
+
+        if (emailSolicitante == null || emailSolicitante.isEmpty())
+            throw new AgendadorException("Não é possivel agendar um trabalho sem informar o Email do Solicitante. Este recurso é necessario para acompanhamento do status da Tarefa");
+
+        if (tipoServicoTrabalho == null)
+            throw new AgendadorException("Não é possivel agendar um trabalho de Relatorio sem informar o Tipo de Serviço a ser utilizado pelo Trabalho agendado");
+
+
+        if (jobName == null)
+            throw new AgendadorException("Não é possivel agendar um trabalho de Relatorio sem informar o nome");
+
+
+    }
+
+
+    private String convertStringToCamelCase(String text) {
+        return org.apache.commons.lang3.StringUtils.remove(WordUtils.capitalizeFully(text, ' '), " ");
+    }
 }

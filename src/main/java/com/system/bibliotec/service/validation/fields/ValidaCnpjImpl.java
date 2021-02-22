@@ -8,17 +8,17 @@ import com.system.bibliotec.service.ultis.CnpjUtilsValidator;
 import com.system.bibliotec.service.ultis.CpfUtilsValidator;
 
 @Component
-public class ValidaCnpjImpl implements IvalidaCnpj{
+public class ValidaCnpjImpl implements IvalidaCnpj {
 
-	private CnpjUtilsValidator utils;
-	
-	@Override
-	public void validaCnpj(String cnpj) {
-		// TODO Auto-generated method stub
-		
-		if(!utils.isCNPJ(cnpj)) {
-			throw new CnpjInvalidoException("Operação Não realizada. Cnpj do Cliente Invalido");
-		}
-	}
+    private CnpjUtilsValidator utils;
+
+    @Override
+    public void validaCnpj(String cnpj) {
+        // TODO Auto-generated method stub
+
+        if (!utils.isCNPJ(cnpj)) {
+            throw new CnpjInvalidoException("Operação Não realizada. Cnpj do Cliente Invalido");
+        }
+    }
 
 }

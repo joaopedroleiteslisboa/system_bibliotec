@@ -8,8 +8,8 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.scheduling.quartz.SpringBeanJobFactory;
 
 public class AutowiringSpringBeanJobFactory extends SpringBeanJobFactory implements ApplicationContextAware {
-	
-	private transient AutowireCapableBeanFactory beanFactory;
+
+    private transient AutowireCapableBeanFactory beanFactory;
 
     @Override
     public void setApplicationContext(final ApplicationContext context) {

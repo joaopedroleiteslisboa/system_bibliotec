@@ -23,92 +23,92 @@ import com.system.bibliotec.repository.filter.LivroFilter;
 
 public class LivroRepositoryQueryImpl implements LivroRepositoryQuery {
 
-	@PersistenceContext
-	private EntityManager manager;
+    @PersistenceContext
+    private EntityManager manager;
 
-	@Override
-	public Page<Livro> filtrar(LivroFilter livroFilter, Pageable pageable) {
-		// TODO Auto-generated method stub
-		CriteriaBuilder builder = manager.getCriteriaBuilder();
-		CriteriaQuery<Livro> criteria = builder.createQuery(Livro.class);
-		Root<Livro> root = criteria.from(Livro.class);
+    @Override
+    public Page<Livro> filtrar(LivroFilter livroFilter, Pageable pageable) {
+        // TODO Auto-generated method stub
+        CriteriaBuilder builder = manager.getCriteriaBuilder();
+        CriteriaQuery<Livro> criteria = builder.createQuery(Livro.class);
+        Root<Livro> root = criteria.from(Livro.class);
 
-		Predicate[] predicates = criarRestricoes(livroFilter, builder, root);
-		criteria.where(predicates);
+        Predicate[] predicates = criarRestricoes(livroFilter, builder, root);
+        criteria.where(predicates);
 
-		TypedQuery<Livro> query = manager.createQuery(criteria);
-		adicionarRestricoesDePaginacao(query, pageable);
+        TypedQuery<Livro> query = manager.createQuery(criteria);
+        adicionarRestricoesDePaginacao(query, pageable);
 
-		return new PageImpl<>(query.getResultList(), pageable, total(livroFilter));
-	}
+        return new PageImpl<>(query.getResultList(), pageable, total(livroFilter));
+    }
 
-	private Predicate[] criarRestricoes(LivroFilter livroFilter, CriteriaBuilder builder, Root<Livro> root) {
-		List<Predicate> predicates = new ArrayList<>();
+    private Predicate[] criarRestricoes(LivroFilter livroFilter, CriteriaBuilder builder, Root<Livro> root) {
+        List<Predicate> predicates = new ArrayList<>();
 
-		if (!StringUtils.isEmpty(livroFilter.getNome())) {
-			predicates.add(builder.like(builder.lower(root.get(Livro_.nome)),
-					"%" + livroFilter.getNome().toLowerCase() + "%"));
-		}
+        if (!StringUtils.isEmpty(livroFilter.getNome())) {
+            predicates.add(builder.like(builder.lower(root.get(Livro_.nome)),
+                    "%" + livroFilter.getNome().toLowerCase() + "%"));
+        }
 
-		if (!StringUtils.isEmpty(livroFilter.getIsbn())) {
-			predicates.add(builder.like(builder.lower(root.get(Livro_.isbn13)),
-					"%" + livroFilter.getIsbn().toLowerCase() + "%"));
-		}
+        if (!StringUtils.isEmpty(livroFilter.getIsbn())) {
+            predicates.add(builder.like(builder.lower(root.get(Livro_.isbn13)),
+                    "%" + livroFilter.getIsbn().toLowerCase() + "%"));
+        }
 
-		if (livroFilter.getDataPublicacaoDe() != null) {
-			predicates.add(
-					builder.greaterThanOrEqualTo(root.get(Livro_.dataPublicacao), livroFilter.getDataPublicacaoDe()));
-		}
+        if (livroFilter.getDataPublicacaoDe() != null) {
+            predicates.add(
+                    builder.greaterThanOrEqualTo(root.get(Livro_.dataPublicacao), livroFilter.getDataPublicacaoDe()));
+        }
 
-		if (livroFilter.getDataPublicacaoAte() != null) {
-			predicates.add(
-					builder.lessThanOrEqualTo(root.get(Livro_.dataPublicacao), livroFilter.getDataPublicacaoAte()));
-		}
+        if (livroFilter.getDataPublicacaoAte() != null) {
+            predicates.add(
+                    builder.lessThanOrEqualTo(root.get(Livro_.dataPublicacao), livroFilter.getDataPublicacaoAte()));
+        }
 
-		return predicates.toArray(new Predicate[predicates.size()]);
-	}
+        return predicates.toArray(new Predicate[predicates.size()]);
+    }
 
-	private void adicionarRestricoesDePaginacao(TypedQuery<?> query, Pageable pageable) {
-		int paginaAtual = pageable.getPageNumber();
-		int totalRegistrosPorPagina = pageable.getPageSize();
-		int primeiroRegistroDaPagina = paginaAtual * totalRegistrosPorPagina;
+    private void adicionarRestricoesDePaginacao(TypedQuery<?> query, Pageable pageable) {
+        int paginaAtual = pageable.getPageNumber();
+        int totalRegistrosPorPagina = pageable.getPageSize();
+        int primeiroRegistroDaPagina = paginaAtual * totalRegistrosPorPagina;
 
-		query.setFirstResult(primeiroRegistroDaPagina);
-		query.setMaxResults(totalRegistrosPorPagina);
-		
-	}
+        query.setFirstResult(primeiroRegistroDaPagina);
+        query.setMaxResults(totalRegistrosPorPagina);
 
-	private Long total(LivroFilter LivroFilter) {
-		CriteriaBuilder builder = manager.getCriteriaBuilder();
-		CriteriaQuery<Long> criteria = builder.createQuery(Long.class);
-		Root<Livro> root = criteria.from(Livro.class);
+    }
 
-		Predicate[] predicates = criarRestricoes(LivroFilter, builder, root);
-		criteria.where(predicates);
+    private Long total(LivroFilter LivroFilter) {
+        CriteriaBuilder builder = manager.getCriteriaBuilder();
+        CriteriaQuery<Long> criteria = builder.createQuery(Long.class);
+        Root<Livro> root = criteria.from(Livro.class);
 
-		criteria.select(builder.count(root));
-		return manager.createQuery(criteria).getSingleResult();
-	}
+        Predicate[] predicates = criarRestricoes(LivroFilter, builder, root);
+        criteria.where(predicates);
 
- 
-	@Override
-	public Page<ResumoLivro> resumo(LivroFilter livroFilter, Pageable pageable) {
-		// TODO Auto-generated method stub
-		CriteriaBuilder builder = manager.getCriteriaBuilder();
-		CriteriaQuery<ResumoLivro> criteria = builder.createQuery(ResumoLivro.class);
-		Root<Livro> root = criteria.from(Livro.class);
+        criteria.select(builder.count(root));
+        return manager.createQuery(criteria).getSingleResult();
+    }
 
-		criteria.select(builder.construct(ResumoLivro.class, root.get(Livro_.id), root.get(Livro_.nome),
-				root.get(Livro_.edicao), root.get(Livro_.descricao), root.get(Livro_.isbn13),
-				root.get(Livro_.numeroPaginas), root.get(Livro_.dataPublicacao), root.get(Livro_.valorUnitario)));
 
-		Predicate[] predicates = criarRestricoes(livroFilter, builder, root);
-		criteria.where(predicates);
+    @Override
+    public Page<ResumoLivro> resumo(LivroFilter livroFilter, Pageable pageable) {
+        // TODO Auto-generated method stub
+        CriteriaBuilder builder = manager.getCriteriaBuilder();
+        CriteriaQuery<ResumoLivro> criteria = builder.createQuery(ResumoLivro.class);
+        Root<Livro> root = criteria.from(Livro.class);
 
-		TypedQuery<ResumoLivro> query = manager.createQuery(criteria);
-		adicionarRestricoesDePaginacao(query, pageable);
+        criteria.select(builder.construct(ResumoLivro.class, root.get(Livro_.id), root.get(Livro_.nome),
+                root.get(Livro_.edicao), root.get(Livro_.descricao), root.get(Livro_.isbn13),
+                root.get(Livro_.numeroPaginas), root.get(Livro_.dataPublicacao), root.get(Livro_.valorUnitario)));
 
-		return new PageImpl<>(query.getResultList(), pageable, total(livroFilter));
-	}
+        Predicate[] predicates = criarRestricoes(livroFilter, builder, root);
+        criteria.where(predicates);
+
+        TypedQuery<ResumoLivro> query = manager.createQuery(criteria);
+        adicionarRestricoesDePaginacao(query, pageable);
+
+        return new PageImpl<>(query.getResultList(), pageable, total(livroFilter));
+    }
 
 }

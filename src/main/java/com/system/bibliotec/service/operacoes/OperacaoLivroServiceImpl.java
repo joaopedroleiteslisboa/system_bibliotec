@@ -21,106 +21,106 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class OperacaoLivroServiceImpl implements IOperacaoLivro {
 
-	@Autowired
-	private IValidaLivro validador;
+    @Autowired
+    private IValidaLivro validador;
 
-	@Autowired
-	private LivroRepository livroRepository;
+    @Autowired
+    private LivroRepository livroRepository;
 
-	@Transactional
-	@Override
-	public Livro save(Livro livro) {
-				
-		livro.setImagenUrl(ConstantsUtils.DEFAULT_VALUE_URL_PHOTOS_BOOK + RandomUtils.randomIntForUrlPic()
-				+ ConstantsUtils.PHOTOS_BOOK_LENGTH_WIDTH_200_X_300);
-		livro.setCodBarras(RandomUtils.randomCodBarras()); // TODO: Modificar essa implementação em um ambiente de produção
+    @Transactional
+    @Override
+    public Livro save(Livro livro) {
 
-		log.info("Iniciando processo de Persistencia de Livro: " + livro.getNome());
-		return livroRepository.save(livro);
-	}
+        livro.setImagenUrl(ConstantsUtils.DEFAULT_VALUE_URL_PHOTOS_BOOK + RandomUtils.randomIntForUrlPic()
+                + ConstantsUtils.PHOTOS_BOOK_LENGTH_WIDTH_200_X_300);
+        livro.setCodBarras(RandomUtils.randomCodBarras()); // TODO: Modificar essa implementação em um ambiente de produção
 
-	@Transactional
-	@Override
-	public Livro updateLivro(Long id, Livro livro) {
-		
-		Livro livroSalvo = findByIdLivro(id);
-		validador.validaLivro(livroSalvo);
+        log.info("Iniciando processo de Persistencia de Livro: " + livro.getNome());
+        return livroRepository.save(livro);
+    }
 
-		BeanUtils.copyProperties(livro, livroSalvo, "id", "codBarras", "imagenUrl", "statusLivro");
+    @Transactional
+    @Override
+    public Livro updateLivro(Long id, Livro livro) {
 
-		return livroRepository.save(livroSalvo);
-	}
+        Livro livroSalvo = findByIdLivro(id);
+        validador.validaLivro(livroSalvo);
 
-	/*
-	 * @Transactional
-	 * 
-	 * @Override public void updateStatusLivro(Long id, StatusLivro statusLivro) {
-	 *  validador.validaLivro(id); Livro
-	 * livroSalvo = findByIdLivro(id); //livroSalvo.setStatusLivro(statusLivro);
-	 * livroRepository.save(livroSalvo); }
-	 */
-	
+        BeanUtils.copyProperties(livro, livroSalvo, "id", "codBarras", "imagenUrl", "statusLivro");
 
-	@Transactional
-	@Override
-	public void updatePropertyIsbn13Livro(Long id, String isbn13) {
+        return livroRepository.save(livroSalvo);
+    }
 
-		Livro livroSalvo = findByIdLivro(id);
+    /*
+     * @Transactional
+     *
+     * @Override public void updateStatusLivro(Long id, StatusLivro statusLivro) {
+     *  validador.validaLivro(id); Livro
+     * livroSalvo = findByIdLivro(id); //livroSalvo.setStatusLivro(statusLivro);
+     * livroRepository.save(livroSalvo); }
+     */
 
-		validador.validaLivro(livroSalvo);
 
-		livroRepository.save(livroSalvo);
-	}
+    @Transactional
+    @Override
+    public void updatePropertyIsbn13Livro(Long id, String isbn13) {
 
-	@Transactional
-	@Override
-	public void deleteLivro(Long id) {
-		
-		Livro livroSalvo = findByIdLivro(id);
-		livroRepository.deleteById(id);
-	}
+        Livro livroSalvo = findByIdLivro(id);
 
-	
-	@Override
-	public Livro findByIdLivro(Long id) {
-		
-		return livroRepository.findById(id)
-				.orElseThrow(
-						() -> new LivroInvalidoOuInexistenteException("Livro Invalido ou Inexistente. Informe um Livro Valido"));
+        validador.validaLivro(livroSalvo);
 
-	}
+        livroRepository.save(livroSalvo);
+    }
 
-	@Transactional
-	@Override
-	public void acrescentarEstoque(Long idLivro, int quantidade) {
-		
-		if(quantidade > 999) {
-			throw new QuantidadeInvalidaException("Quantidade Invalida! Informe uma quantidade valida");
-		}
-		
-		Livro livroSalvo = findByIdLivro(idLivro);
+    @Transactional
+    @Override
+    public void deleteLivro(Long id) {
 
-		livroSalvo.setQuantidade(livroSalvo.getQuantidade() + quantidade);
-		
-		livroRepository.save(livroSalvo);
-	}
+        Livro livroSalvo = findByIdLivro(id);
+        livroRepository.deleteById(id);
+    }
 
-	@Transactional
-	@Override
-	public void decrescentarEstoque(Long idLivro, int quantidade) {
-		
-		
-		Livro livroSalvo = findByIdLivro(idLivro);
 
-		int novaQuantidade = livroSalvo.getQuantidade() - quantidade;
+    @Override
+    public Livro findByIdLivro(Long id) {
 
-		if (novaQuantidade <= 2) {
-			throw new EstoqueInsuficienteException("Estoque insuficiente. Quantidade Limite de dispensa atingida. Operação não realizada");
-		}
-		livroSalvo.setQuantidade(novaQuantidade);
-		
-		livroRepository.save(livroSalvo);
-	}
+        return livroRepository.findById(id)
+                .orElseThrow(
+                        () -> new LivroInvalidoOuInexistenteException("Livro Invalido ou Inexistente. Informe um Livro Valido"));
 
-	
+    }
+
+    @Transactional
+    @Override
+    public void acrescentarEstoque(Long idLivro, int quantidade) {
+
+        if (quantidade > 999) {
+            throw new QuantidadeInvalidaException("Quantidade Invalida! Informe uma quantidade valida");
+        }
+
+        Livro livroSalvo = findByIdLivro(idLivro);
+
+        livroSalvo.setQuantidade(livroSalvo.getQuantidade() + quantidade);
+
+        livroRepository.save(livroSalvo);
+    }
+
+    @Transactional
+    @Override
+    public void decrescentarEstoque(Long idLivro, int quantidade) {
+
+
+        Livro livroSalvo = findByIdLivro(idLivro);
+
+        int novaQuantidade = livroSalvo.getQuantidade() - quantidade;
+
+        if (novaQuantidade <= 2) {
+            throw new EstoqueInsuficienteException("Estoque insuficiente. Quantidade Limite de dispensa atingida. Operação não realizada");
+        }
+        livroSalvo.setQuantidade(novaQuantidade);
+
+        livroRepository.save(livroSalvo);
+    }
+
+
 }

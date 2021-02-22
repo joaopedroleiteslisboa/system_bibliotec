@@ -37,51 +37,51 @@ import com.system.bibliotec.security.AppUserDetailsService;
 @EnableConfigurationProperties(ApiSecurityAuthorizationServerProperties.class)
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
-	private final DataSource dataSource;
-	private final PasswordEncoder passwordEncoder;
-	private final AuthenticationManager authenticationManager;
-	private final ApiSecurityAuthorizationServerProperties securityProperties;
-	private final AppUserDetailsService userDetailsService;
+    private final DataSource dataSource;
+    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final ApiSecurityAuthorizationServerProperties securityProperties;
+    private final AppUserDetailsService userDetailsService;
 
-	private final CustomJwtAccessTokenConverter jwtAccessTokenConverter;
+    private final CustomJwtAccessTokenConverter jwtAccessTokenConverter;
 
-	private final TokenStore tokenStore;
+    private final TokenStore tokenStore;
 
-	@Autowired
-	public AuthorizationServerConfig( DataSource dataSource,  PasswordEncoder passwordEncoder,
-									  AuthenticationManager authenticationManager,  ApiSecurityAuthorizationServerProperties securityProperties,
-									  AppUserDetailsService userDetailsService,
-									  CustomJwtAccessTokenConverter jwtAccessTokenConverter,
-									  TokenStore tokenStore) {
-		this.dataSource = dataSource;
-		this.passwordEncoder = passwordEncoder;
-		this.authenticationManager = authenticationManager;
-		this.securityProperties = securityProperties;
-		this.userDetailsService = userDetailsService;
-		this.jwtAccessTokenConverter = jwtAccessTokenConverter;
-		this.tokenStore = tokenStore;
-	}
+    @Autowired
+    public AuthorizationServerConfig(DataSource dataSource, PasswordEncoder passwordEncoder,
+                                     AuthenticationManager authenticationManager, ApiSecurityAuthorizationServerProperties securityProperties,
+                                     AppUserDetailsService userDetailsService,
+                                     CustomJwtAccessTokenConverter jwtAccessTokenConverter,
+                                     TokenStore tokenStore) {
+        this.dataSource = dataSource;
+        this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
+        this.securityProperties = securityProperties;
+        this.userDetailsService = userDetailsService;
+        this.jwtAccessTokenConverter = jwtAccessTokenConverter;
+        this.tokenStore = tokenStore;
+    }
 
-	@Bean
-	public TokenEnhancer tokenEnhancer() {
-		return new CustomAccessTokenEnhancer();
-	}
+    @Bean
+    public TokenEnhancer tokenEnhancer() {
+        return new CustomAccessTokenEnhancer();
+    }
 
-	@Bean
-	public TokenStore tokenStore() {
-		return new JwtTokenStore(jwtAccessTokenConverter());
-	}
+    @Bean
+    public TokenStore tokenStore() {
+        return new JwtTokenStore(jwtAccessTokenConverter());
+    }
 
-	@Bean
-	public DefaultTokenServices tokenServices( TokenStore tokenStore,
-											   ClientDetailsService clientDetailsService) {
-		DefaultTokenServices tokenServices = new DefaultTokenServices();
-		tokenServices.setSupportRefreshToken(true);
-		tokenServices.setTokenStore(tokenStore);
-		tokenServices.setClientDetailsService(clientDetailsService);
-		tokenServices.setAuthenticationManager(this.authenticationManager);
-		return tokenServices;
-	}
+    @Bean
+    public DefaultTokenServices tokenServices(TokenStore tokenStore,
+                                              ClientDetailsService clientDetailsService) {
+        DefaultTokenServices tokenServices = new DefaultTokenServices();
+        tokenServices.setSupportRefreshToken(true);
+        tokenServices.setTokenStore(tokenStore);
+        tokenServices.setClientDetailsService(clientDetailsService);
+        tokenServices.setAuthenticationManager(this.authenticationManager);
+        return tokenServices;
+    }
 
 //	@Bean
 //	public JwtAccessTokenConverter jwtAccessTokenConverter() {
@@ -97,51 +97,50 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 //		return jwtAccessTokenConverter;
 //	}
 
-	@Bean
-	public JwtAccessTokenConverter jwtAccessTokenConverter() {
+    @Bean
+    public JwtAccessTokenConverter jwtAccessTokenConverter() {
 
-		if(jwtAccessTokenConverter != null){
-			return jwtAccessTokenConverter;
-		}
+        if (jwtAccessTokenConverter != null) {
+            return jwtAccessTokenConverter;
+        }
 
-		ApiSecurityAuthorizationServerProperties.JwtProperties jwtProperties = securityProperties.getJwt();
-		KeyPair keyPair = keyPair(jwtProperties, keyStoreKeyFactory(jwtProperties));
-		jwtAccessTokenConverter.setKeyPair(keyPair);
-		return jwtAccessTokenConverter;
-	}
+        ApiSecurityAuthorizationServerProperties.JwtProperties jwtProperties = securityProperties.getJwt();
+        KeyPair keyPair = keyPair(jwtProperties, keyStoreKeyFactory(jwtProperties));
+        jwtAccessTokenConverter.setKeyPair(keyPair);
+        return jwtAccessTokenConverter;
+    }
 
 
+    @Override
+    public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
+        clients.jdbc(this.dataSource);
+    }
 
-	@Override
-	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-		clients.jdbc(this.dataSource);
-	}
+    @Override
+    public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
+        TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
+        tokenEnhancerChain.setTokenEnhancers(Arrays.asList(tokenEnhancer(), jwtAccessTokenConverter()));
 
-	@Override
-	public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
-		TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
-		tokenEnhancerChain.setTokenEnhancers(Arrays.asList(tokenEnhancer(), jwtAccessTokenConverter()));
+        endpoints.authenticationManager(this.authenticationManager)
+                .userDetailsService(this.userDetailsService)
+                //.accessTokenConverter(jwtAccessTokenConverter())
+                .tokenEnhancer(tokenEnhancerChain)
+                .tokenStore(tokenStore());
+    }
 
-		endpoints.authenticationManager(this.authenticationManager)
-				.userDetailsService(this.userDetailsService)
-				//.accessTokenConverter(jwtAccessTokenConverter())
-				.tokenEnhancer(tokenEnhancerChain)
-				.tokenStore(tokenStore());
-	}
+    @Override
+    public void configure(AuthorizationServerSecurityConfigurer oauthServer) {
+        oauthServer.passwordEncoder(this.passwordEncoder).tokenKeyAccess("permitAll()")
+                .allowFormAuthenticationForClients()
+                .checkTokenAccess("isAuthenticated()");
+    }
 
-	@Override
-	public void configure(AuthorizationServerSecurityConfigurer oauthServer) {
-		oauthServer.passwordEncoder(this.passwordEncoder).tokenKeyAccess("permitAll()")
-				.allowFormAuthenticationForClients()
-				.checkTokenAccess("isAuthenticated()");
-	}
+    private KeyPair keyPair(ApiSecurityAuthorizationServerProperties.JwtProperties jwtProperties, KeyStoreKeyFactory keyStoreKeyFactory) {
+        return keyStoreKeyFactory.getKeyPair(jwtProperties.getKeyPairAlias(), jwtProperties.getKeyPairPassword().toCharArray());
+    }
 
-	private KeyPair keyPair(ApiSecurityAuthorizationServerProperties.JwtProperties jwtProperties, KeyStoreKeyFactory keyStoreKeyFactory) {
-		return keyStoreKeyFactory.getKeyPair(jwtProperties.getKeyPairAlias(), jwtProperties.getKeyPairPassword().toCharArray());
-	}
-
-	private KeyStoreKeyFactory keyStoreKeyFactory(ApiSecurityAuthorizationServerProperties.JwtProperties jwtProperties) {
-		return new KeyStoreKeyFactory(jwtProperties.getKeyStore(), jwtProperties.getKeyStorePassword().toCharArray());
-	}
+    private KeyStoreKeyFactory keyStoreKeyFactory(ApiSecurityAuthorizationServerProperties.JwtProperties jwtProperties) {
+        return new KeyStoreKeyFactory(jwtProperties.getKeyStore(), jwtProperties.getKeyStorePassword().toCharArray());
+    }
 
 }

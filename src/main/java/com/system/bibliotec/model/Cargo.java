@@ -19,20 +19,19 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "cargos" )
-public class Cargo extends AbstractAuditingEntity{
+@Table(name = "cargos")
+public class Cargo extends AbstractAuditingEntity {
 
-	
-	@NotBlank(message = "Um codigo do Ministerio do trabalho é necessario")
-	@Size(max = 80)
-	@Column(name = "codigo")
-	private String codigo;
-	
-	@NotBlank(message = "Um nome é necessario")
-	@Size(max = 80, min = 3)
-	@Column(name = "nome")
-	private String nome;
-	
-	
-	
+
+    @NotBlank(message = "Um codigo do Ministerio do trabalho é necessario")
+    @Size(max = 80)
+    @Column(name = "codigo")
+    private String codigo;
+
+    @NotBlank(message = "Um nome é necessario")
+    @Size(max = 80, min = 3)
+    @Column(name = "nome")
+    private String nome;
+
+
 }

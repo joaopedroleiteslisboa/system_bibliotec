@@ -23,24 +23,21 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserAnonimoDTO extends PessoaDTO {
-	
-	
-	public String userName;
-	
-	@NotNull(message = "O seu email é Obrigatorio")
-	public String email;
-	
-	public String email2;
 
-	public String imageUrl;
-	
-	public String langKey = DEFAULT_LANGUAGE;
-	
-	@NotNull(message = "É necessario informar sua modalidade se é Jurdica ou Fisica")
-	public String tipoPessoa;
-	
-	
 
-		
+    public String userName;
+
+    @NotNull(message = "O seu email é Obrigatorio")
+    public String email;
+
+    public String email2;
+
+    public String imageUrl;
+
+    public String langKey = DEFAULT_LANGUAGE;
+
+    @NotNull(message = "É necessario informar sua modalidade se é Jurdica ou Fisica")
+    public String tipoPessoa;
+
 
 }

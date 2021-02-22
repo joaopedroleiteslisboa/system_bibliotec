@@ -33,77 +33,77 @@ import com.system.bibliotec.service.UserService;
 @RequestMapping("/livros")
 public class LivroResource {
 
-	private final LivroRepository livroRepository;
+    private final LivroRepository livroRepository;
 
-	private final LivroService livroService;
+    private final LivroService livroService;
 
-	private final ApplicationEventPublisher publisher;
+    private final ApplicationEventPublisher publisher;
 
-	private final UsuarioRepository uRepos;
+    private final UsuarioRepository uRepos;
 
-	private final UserService services;
+    private final UserService services;
 
-	@Autowired
-	public LivroResource(LivroRepository livroRepository, LivroService livroService,
-			ApplicationEventPublisher publisher, UsuarioRepository uRepos, UserService services) {
-		
-		this.livroRepository = livroRepository;
-		this.livroService = livroService;
-		this.publisher = publisher;
-		this.uRepos = uRepos;
-		this.services = services;
-	}
+    @Autowired
+    public LivroResource(LivroRepository livroRepository, LivroService livroService,
+                         ApplicationEventPublisher publisher, UsuarioRepository uRepos, UserService services) {
 
-	@PreAuthorize("permitAll()")
-	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public Page<Livro> pesquisar(LivroFilter livroFilter, Pageable page) {
+        this.livroRepository = livroRepository;
+        this.livroService = livroService;
+        this.publisher = publisher;
+        this.uRepos = uRepos;
+        this.services = services;
+    }
 
-		return livroRepository.filtrar(livroFilter, page);
-	}
+    @PreAuthorize("permitAll()")
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public Page<Livro> pesquisar(LivroFilter livroFilter, Pageable page) {
 
-	@PreAuthorize("hasAnyRole('ROLE_PESQUISAR_LIVRO','ROLE_ADMIN', 'ROLE_USER_SYSTEM', 'ROLE_USER_ANONIMO') and #oauth2.hasScope('read')")
-	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE, params = "resumo")
-	public Page<ResumoLivro> resumo(LivroFilter livroFilter, Pageable page) {
-		return livroRepository.resumo(livroFilter, page);
-	}
+        return livroRepository.filtrar(livroFilter, page);
+    }
 
-	@PreAuthorize("hasAnyRole('ROLE_CADASTRAR_LIVRO','ROLE_ADMIN', 'ROLE_USER_SYSTEM') and #oauth2.hasScope('write')")
-	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<Livro> create(@Valid @RequestBody Livro livro, HttpServletResponse response) {
-		Livro livroSalvo = livroService.save(livro);
-		publisher.publishEvent(new RecursoCriadorEvent(this, response, livroSalvo.getId()));
-		return ResponseEntity.status(HttpStatus.CREATED).body(livroSalvo);
-	}
+    @PreAuthorize("hasAnyRole('ROLE_PESQUISAR_LIVRO','ROLE_ADMIN', 'ROLE_USER_SYSTEM', 'ROLE_USER_ANONIMO') and #oauth2.hasScope('read')")
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE, params = "resumo")
+    public Page<ResumoLivro> resumo(LivroFilter livroFilter, Pageable page) {
+        return livroRepository.resumo(livroFilter, page);
+    }
 
-	@PreAuthorize("hasAnyRole('ROLE_PESQUISAR_LIVRO','ROLE_ADMIN', 'ROLE_USER_SYSTEM', 'ROLE_USER_ANONIMO') and #oauth2.hasScope('read')")
-	@ResponseStatus(HttpStatus.NOT_FOUND)
-	@RequestMapping(method = RequestMethod.GET, value = "/{id}")
-	public ResponseEntity<Livro> findById(@PathVariable Long id) {
-		Livro livro = livroService.findByIdLivro(id);
+    @PreAuthorize("hasAnyRole('ROLE_CADASTRAR_LIVRO','ROLE_ADMIN', 'ROLE_USER_SYSTEM') and #oauth2.hasScope('write')")
+    @RequestMapping(method = RequestMethod.POST)
+    public ResponseEntity<Livro> create(@Valid @RequestBody Livro livro, HttpServletResponse response) {
+        Livro livroSalvo = livroService.save(livro);
+        publisher.publishEvent(new RecursoCriadorEvent(this, response, livroSalvo.getId()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(livroSalvo);
+    }
 
-		return (livro != null) ? ResponseEntity.ok(livro) : ResponseEntity.notFound().build();
+    @PreAuthorize("hasAnyRole('ROLE_PESQUISAR_LIVRO','ROLE_ADMIN', 'ROLE_USER_SYSTEM', 'ROLE_USER_ANONIMO') and #oauth2.hasScope('read')")
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}")
+    public ResponseEntity<Livro> findById(@PathVariable Long id) {
+        Livro livro = livroService.findByIdLivro(id);
 
-	}
+        return (livro != null) ? ResponseEntity.ok(livro) : ResponseEntity.notFound().build();
 
-	@PreAuthorize("hasAnyRole('ROLE_ADMIN') and #oauth2.hasScope('write')")
-	@RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void delete(@PathVariable Long id) {
-		livroService.deleteLivro(id);
-	}
+    }
 
-	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_LIVRO') and #oauth2.hasScope('write')")
-	@RequestMapping(method = RequestMethod.PUT, value = "/{id}")
-	public ResponseEntity<Livro> update(@PathVariable Long id, @Valid @RequestBody Livro Livro) {
-		Livro livroSalvo = livroService.updateLivro(id, Livro);
-		return ResponseEntity.ok(livroSalvo);
-	}
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN') and #oauth2.hasScope('write')")
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
+        livroService.deleteLivro(id);
+    }
 
-	@PreAuthorize("hasAnyRole('ROLE_CADASTRAR_LIVRO','ROLE_ADMIN', 'ROLE_USER_SYSTEM') and #oauth2.hasScope('write')")
-	@RequestMapping(method = RequestMethod.PUT, value = "/{id}/isbn13")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void updatePropertyIsbn13Livro(@PathVariable Long id, @RequestBody String isbn13) {
-		livroService.updatePropertyIsbn13Livro(id, isbn13);
-	}
+    @PreAuthorize("hasAuthority('ROLE_CADASTRAR_LIVRO') and #oauth2.hasScope('write')")
+    @RequestMapping(method = RequestMethod.PUT, value = "/{id}")
+    public ResponseEntity<Livro> update(@PathVariable Long id, @Valid @RequestBody Livro Livro) {
+        Livro livroSalvo = livroService.updateLivro(id, Livro);
+        return ResponseEntity.ok(livroSalvo);
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_CADASTRAR_LIVRO','ROLE_ADMIN', 'ROLE_USER_SYSTEM') and #oauth2.hasScope('write')")
+    @RequestMapping(method = RequestMethod.PUT, value = "/{id}/isbn13")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updatePropertyIsbn13Livro(@PathVariable Long id, @RequestBody String isbn13) {
+        livroService.updatePropertyIsbn13Livro(id, isbn13);
+    }
 
 }

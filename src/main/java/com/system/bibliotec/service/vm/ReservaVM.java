@@ -11,40 +11,43 @@ import lombok.ToString;
 
 @ToString
 @Getter
-@Setter			/* View Model*/
+@Setter            /* View Model*/
 public class ReservaVM {
 
-	private Long codigo;
+    private String titularReserva;
 
-	private String statusReserva;
+    private Long codigo;
 
-	private String horaReserva;
+    private String statusReserva;
 
-	private String dataReserva;
+    private String horaReserva;
 
-	private String dataLimite;
+    private String dataReserva;
 
-	private String livro;
+    private String dataLimite;
 
-	private String ed;
+    private String livro;
 
-	private String editora;
+    private String ed;
 
-	private List<String> autor;
-	
+    private String editora;
 
-	public ReservaVM(Reservas entidade) {
+    private List<String> autor;
 
-		this.codigo = entidade.getId();
-		this.statusReserva = entidade.getStatus().toString();
-		this.horaReserva = entidade.getHoraReserva().toString();
-		this.dataReserva = entidade.getDataReserva().toString();
-		this.dataLimite = entidade.getDataPrevisaoTermino().toString();
-		this.livro = entidade.getLivro().getNome();
-		this.ed = entidade.getLivro().getEdicao();
-		this.editora = entidade.getLivro().getEditora().getNome();
-		this.autor =  entidade.getLivro().getAutores().stream().map(a -> a.getNome()).collect(Collectors.toList());
 
-	}
+    public ReservaVM(Reservas entidade) {
+
+        this.titularReserva = entidade.getUsuario().getNome();
+        this.codigo = entidade.getId();
+        this.statusReserva = entidade.getStatus().toString();
+        this.horaReserva = entidade.getHoraReserva().toString();
+        this.dataReserva = entidade.getDataReserva().toString();
+        this.dataLimite = entidade.getDataPrevisaoTermino().toString();
+        this.livro = entidade.getLivro().getNome();
+        this.ed = entidade.getLivro().getEdicao();
+        this.editora = entidade.getLivro().getEditora().getNome();
+        this.autor = entidade.getLivro().getAutores().stream().map(a -> a.getNome()).collect(Collectors.toList());
+
+    }
 
 }

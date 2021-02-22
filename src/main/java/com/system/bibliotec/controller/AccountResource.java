@@ -44,79 +44,79 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping(ConstantsUtilsEndPoint.END_POINT_RELATIVO_CONTA)
 public class AccountResource {
 
-	
-	private final MailService mailService;
 
-	
-	private final UserService usuarioService;
-
-	
-	private final UsuarioRepository usuarioRepository;
-	
-	
-	private final EndPointUtil endPointUtil;
-	
-	
-	private final ApplicationEventPublisher publisher;
-
-	
-	@Autowired
-	public AccountResource(MailService mailService, UserService usuarioService, UsuarioRepository usuarioRepository,
-	EndPointUtil endPointUtil, ApplicationEventPublisher publisher) {
-		this.mailService = mailService;
-		this.usuarioService = usuarioService;
-		this.usuarioRepository = usuarioRepository;
-		this.endPointUtil = endPointUtil;
-		this.publisher = publisher;
-}
-	
-	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER_SYSTEM', 'ROLE_USER_ANONIMO') and #oauth2.hasScope('read')")
-	@GetMapping
-	public ResponseEntity<?> getAccount() {
-		return endPointUtil.returnObjectOrNotFound(usuarioService.obterUsuarioOnline());
-
-	}
-
-	@GetMapping("/principal")
-	public ResponseEntity<?> gerPrincipal() {
-
-		return ResponseEntity.ok().body(SecurityContextHolder.getContext()
-				.getAuthentication()
-				.getPrincipal());
-	}
-
-	@GetMapping("/me")
-	public ResponseEntity<Principal> get(final Principal principal) {
-		OAuth2Authentication auth = (OAuth2Authentication) principal;
-
-		return ResponseEntity.ok(auth);
-	}
+    private final MailService mailService;
 
 
-	@PostMapping("/register")
-	@ResponseStatus(code = HttpStatus.CREATED)
-	public void registerAccount(@Valid @RequestBody ManagedUserDTO managedUserVM, HttpServletResponse response) {
-		if (!checkPasswordLength(managedUserVM.getPassword())) {
-			throw new SenhaInvalidaException("Senha Invalida. Informe uma senha valida");
-		}		
-		Usuario Usuario = usuarioService.registrarUsuarioAnonimo(managedUserVM);		
-		mailService.sendActivationEmail(Usuario, criarPathRelativo(ConstantsUtilsEndPoint.END_POINT_RELATIVO_ATIVACAO_CONTA));
-	}
+    private final UserService usuarioService;
 
-	@GetMapping("/activate")
-	public void activateAccount(@RequestParam(value = "key") String key) {
-		usuarioService.activateRegistration(key);
 
-	//Todo: verificar implementação de status de confirmaççao de ativação...
-	}
+    private final UsuarioRepository usuarioRepository;
 
-	@GetMapping("/authenticate")
-	public String isAuthenticated(HttpServletRequest request) {
-		log.debug("REST request to check if the current Usuario is authenticated");
-		return request.getRemoteUser();
-	}
 
-	//Todo: melhorar implementação para abranger todos os dados do usuario
+    private final EndPointUtil endPointUtil;
+
+
+    private final ApplicationEventPublisher publisher;
+
+
+    @Autowired
+    public AccountResource(MailService mailService, UserService usuarioService, UsuarioRepository usuarioRepository,
+                           EndPointUtil endPointUtil, ApplicationEventPublisher publisher) {
+        this.mailService = mailService;
+        this.usuarioService = usuarioService;
+        this.usuarioRepository = usuarioRepository;
+        this.endPointUtil = endPointUtil;
+        this.publisher = publisher;
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER_SYSTEM', 'ROLE_USER_ANONIMO') and #oauth2.hasScope('read')")
+    @GetMapping
+    public ResponseEntity<?> getAccount() {
+        return endPointUtil.returnObjectOrNotFound(usuarioService.obterUsuarioOnline());
+
+    }
+
+    @GetMapping("/principal")
+    public ResponseEntity<?> gerPrincipal() {
+
+        return ResponseEntity.ok().body(SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal());
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<Principal> get(final Principal principal) {
+        OAuth2Authentication auth = (OAuth2Authentication) principal;
+
+        return ResponseEntity.ok(auth);
+    }
+
+
+    @PostMapping("/register")
+    @ResponseStatus(code = HttpStatus.CREATED)
+    public void registerAccount(@Valid @RequestBody ManagedUserDTO managedUserVM, HttpServletResponse response) {
+        if (!checkPasswordLength(managedUserVM.getPassword())) {
+            throw new SenhaInvalidaException("Senha Invalida. Informe uma senha valida");
+        }
+        Usuario Usuario = usuarioService.registrarUsuarioAnonimo(managedUserVM);
+        mailService.sendActivationEmail(Usuario, criarPathRelativo(ConstantsUtilsEndPoint.END_POINT_RELATIVO_ATIVACAO_CONTA));
+    }
+
+    @GetMapping("/activate")
+    public void activateAccount(@RequestParam(value = "key") String key) {
+        usuarioService.activateRegistration(key);
+
+        //Todo: verificar implementação de status de confirmaççao de ativação...
+    }
+
+    @GetMapping("/authenticate")
+    public String isAuthenticated(HttpServletRequest request) {
+        log.debug("REST request to check if the current Usuario is authenticated");
+        return request.getRemoteUser();
+    }
+
+    //Todo: melhorar implementação para abranger todos os dados do usuario
 	/*@PostMapping
 	public void saveAccount(@Valid @RequestBody UserAnonimoDTO usuarioDTO) {
 		String usuarioLogin = SecurityUtils.getCurrentUserLogin()
@@ -128,43 +128,42 @@ public class AccountResource {
 			//Todo: melhorar implementação para abranger todos os dados do usuario
 		usuarioService.updateUserAnonimo(usuarioDTO);
 	}*/
-	
-	@PostMapping(path = "/change-password")
-	public void changePassword(@RequestBody  PasswordChangeDTO passwordChangeDto) {
-		if (!checkPasswordLength(passwordChangeDto.getNewPassword())) {
-			throw new SenhaInvalidaException("Senha informada Invalida");
-		}
-		usuarioService.changePassword(passwordChangeDto.getCurrentPassword(), passwordChangeDto.getNewPassword());
-	}
 
-	@PostMapping(path = "/reset-password/init")
-	public void requestPasswordReset(@Valid @RequestBody String mail, HttpServletRequest req) {
-		mailService.sendPasswordResetMail(usuarioService.requestPasswordReset(mail)
-				.orElseThrow(() -> new EmailInvalidoException("Login invalido ou inexistente")));
-	}
+    @PostMapping(path = "/change-password")
+    public void changePassword(@RequestBody PasswordChangeDTO passwordChangeDto) {
+        if (!checkPasswordLength(passwordChangeDto.getNewPassword())) {
+            throw new SenhaInvalidaException("Senha informada Invalida");
+        }
+        usuarioService.changePassword(passwordChangeDto.getCurrentPassword(), passwordChangeDto.getNewPassword());
+    }
 
-	@PostMapping(path = "/reset-password/finish")
-	public void finishPasswordReset(@RequestBody KeyAndPasswordDTO keyAndPassword) {
-		if (!checkPasswordLength(keyAndPassword.getNewPassword()) && !checkPasswordLength(keyAndPassword.getConfirmPassword())) {
-			throw new SenhaInvalidaException("Senha invalida. Operação não realizada");
-		}
-		Optional<Usuario> Usuario = usuarioService.completePasswordReset(keyAndPassword.getNewPassword(), keyAndPassword.getConfirmPassword(),
-				keyAndPassword.getKey());
+    @PostMapping(path = "/reset-password/init")
+    public void requestPasswordReset(@Valid @RequestBody String mail, HttpServletRequest req) {
+        mailService.sendPasswordResetMail(usuarioService.requestPasswordReset(mail)
+                .orElseThrow(() -> new EmailInvalidoException("Login invalido ou inexistente")));
+    }
 
-		if (!Usuario.isPresent()) {
-			throw new UsuarioNaoEncontrado("Nenhum usuario encontrado para este chave de redefinição");
-		}
-	}
+    @PostMapping(path = "/reset-password/finish")
+    public void finishPasswordReset(@RequestBody KeyAndPasswordDTO keyAndPassword) {
+        if (!checkPasswordLength(keyAndPassword.getNewPassword()) && !checkPasswordLength(keyAndPassword.getConfirmPassword())) {
+            throw new SenhaInvalidaException("Senha invalida. Operação não realizada");
+        }
+        Optional<Usuario> Usuario = usuarioService.completePasswordReset(keyAndPassword.getNewPassword(), keyAndPassword.getConfirmPassword(),
+                keyAndPassword.getKey());
 
-	private static boolean checkPasswordLength(String password) {
-		return !StringUtils.isEmpty(password) && password.length() >= ManagedUserDTO.PASSWORD_MIN_LENGTH
-				&& password.length() <= ManagedUserDTO.PASSWORD_MAX_LENGTH;
-	}
-	
-	private String criarPathRelativo(String pathAcao) {		
-		return ServletUriComponentsBuilder.fromCurrentRequest().replacePath(pathAcao).toUriString();
-	}
+        if (!Usuario.isPresent()) {
+            throw new UsuarioNaoEncontrado("Nenhum usuario encontrado para este chave de redefinição");
+        }
+    }
 
+    private static boolean checkPasswordLength(String password) {
+        return !StringUtils.isEmpty(password) && password.length() >= ManagedUserDTO.PASSWORD_MIN_LENGTH
+                && password.length() <= ManagedUserDTO.PASSWORD_MAX_LENGTH;
+    }
+
+    private String criarPathRelativo(String pathAcao) {
+        return ServletUriComponentsBuilder.fromCurrentRequest().replacePath(pathAcao).toUriString();
+    }
 
 
 }

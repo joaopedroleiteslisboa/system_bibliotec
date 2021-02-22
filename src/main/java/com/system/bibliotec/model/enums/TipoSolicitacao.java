@@ -9,14 +9,12 @@ import lombok.Setter;
 public enum TipoSolicitacao {
 
     RESERVA("Reserva"),
-     LOCACAO("Locacao"),
-      MUDANCA_DOCUMENTO("Mudancao_Documento"), 
-      OUTROS("Outros");
+    LOCACAO("Locacao"),
+    MUDANCA_DOCUMENTO("Mudancao_Documento"),
+    OUTROS("Outros");
 
 
     private String tipoSolicitacao;
 
 
-
-    
 }

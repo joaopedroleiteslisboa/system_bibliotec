@@ -9,9 +9,8 @@ import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.task.AsyncTaskExecutor;
 
-public class ExceptionHandlingAsyncTaskExecutor implements AsyncTaskExecutor, 
-	InitializingBean, DisposableBean {
-
+public class ExceptionHandlingAsyncTaskExecutor implements AsyncTaskExecutor,
+        InitializingBean, DisposableBean {
 
 
     private final Logger log = LoggerFactory.getLogger(ExceptionHandlingAsyncTaskExecutor.class);
@@ -82,7 +81,6 @@ public class ExceptionHandlingAsyncTaskExecutor implements AsyncTaskExecutor,
             bean.afterPropertiesSet();
         }
     }
-
 
 
 }

@@ -82,7 +82,7 @@ public abstract class Pessoa extends AbstractAuditingEntity {
 
     @Column(name = "ativo")
     @NotNull
-    private boolean ativo;
+    private Boolean ativo;
 
 
     @NotNull

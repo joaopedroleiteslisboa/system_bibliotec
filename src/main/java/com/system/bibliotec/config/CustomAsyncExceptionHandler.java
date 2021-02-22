@@ -3,7 +3,9 @@ package com.system.bibliotec.config;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
+import com.system.bibliotec.model.enums.TipoErrorSistema;
 import com.system.bibliotec.service.operacoes.auditor.IAuditorTokenDeUsuarioDoContexto;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
@@ -14,15 +16,12 @@ import org.springframework.context.ApplicationContext;
 import com.system.bibliotec.service.ServicoDoSistema;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
-public class CustomAsyncExceptionHandler implements AsyncUncaughtExceptionHandler, IAuditorTokenDeUsuarioDoContexto {
+public class CustomAsyncExceptionHandler implements AsyncUncaughtExceptionHandler {
 
     @Autowired
     private ApplicationContext applicationContext;
-
-
-    private final Logger log = LoggerFactory.getLogger(CustomAsyncExceptionHandler.class);
-
 
     public void setApplicationContext(final ApplicationContext applicationContext) throws BeansException {
         // TODO Auto-generated method stub
@@ -30,25 +29,24 @@ public class CustomAsyncExceptionHandler implements AsyncUncaughtExceptionHandle
         this.applicationContext = applicationContext;
     }
 
-
     @Override
     public void handleUncaughtException(final Throwable ex, final Method method, final Object... objects) {
-        final String msg = "Async Biliotec Exception**************************************************************"
-                + "\nmethod happen: " + method
-                + "\nmethod params: " + Arrays.toString(objects)
-                + "\nException class: {}" + ex.getClass().getName()
-                + "\nex.getMessage(): {}" + ex.getMessage()
-                + "\n***************************************************************************************************";
 
-        ServicoDoSistema serviceSystemError = this.applicationContext.getBean("servicoDoSistema", ServicoDoSistema.class);
-        log.error(msg, ex);
-        serviceSystemError.saveContextErrorAssyncException(ex, method, getCurrentAuditorUser(), objects);
+        log.error(
+                "###########################################################################################################################################");
+
+        log.error(
+                " EXCEÇÃO NO CONTEXTO ASSINCRONO DA APLICAÇÃO CAPTURADA. INICIANDO PROCESSO DE PERSISTÊNCIA EM BANCO DE DADOS PARA ANALISE FUTURA DA FUNCIONABILIDADE "
+                        + method.getName().toString(),
+                ex);
+        log.error(
+                "############################################################################################################################################");
+
+        ServicoDoSistema servicoErrors = this.applicationContext.getBean("servicoDoSistema",
+                ServicoDoSistema.class);
+
+        servicoErrors.salvarErrorContextoAssync(ex, method, objects, TipoErrorSistema.PROCESSAMENTO_ASSINCRONO);
+
     }
-
-
-    private String getCurrentAuditorUser() {
-        return obterUsernameDoUsuarioDoContextoPeloToken();
-    }
-
 
 }

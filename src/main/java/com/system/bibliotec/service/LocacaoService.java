@@ -101,7 +101,7 @@ public class LocacaoService {
         Optional<UserSystem> usuarioAnonimo = Optional.empty();
 
 
-        if (!SecurityUtils.isCurrentUserInRole(AuthoritiesConstantsUltis.ROLE_ADMIN) || //caso for ADM ou USER SYSTEM listar todas solicitações/locação...
+        if (!SecurityUtils.isCurrentUserInRole(AuthoritiesConstantsUltis.ROLE_ADMIN) || //caso não for ADM ou USER SYSTEM listar apenas os dados vinculado ao principal online
                 !SecurityUtils.isCurrentUserInRole(AuthoritiesConstantsUltis.ROLE_USER_SYSTEM)) {
 
             usuarioAnonimo = SecurityUtils.getCurrentUserPrincipal();

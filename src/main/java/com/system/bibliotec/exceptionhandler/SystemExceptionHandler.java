@@ -39,7 +39,7 @@ public class SystemExceptionHandler extends ResponseEntityExceptionHandler {
     private static final String mensagem_error_interno_usuario = "ERROR INTERNO NA APLICAÇÃO";
 
     @ExceptionHandler({NotFoundException.class})
-    public ResponseEntity<Object> NotFoundException(RuntimeException ex, WebRequest request) {
+    public ResponseEntity<Object> handleNotFoundException(RuntimeException ex, WebRequest request) {
         String mensagemUsuario = messageSource.getMessage("recurso.nao-encontrado", null,
                 LocaleContextHolder.getLocale());
         String mensagemDesenvolvedor = ExceptionUtils.getRootCauseMessage(ex);
@@ -58,12 +58,23 @@ public class SystemExceptionHandler extends ResponseEntityExceptionHandler {
 
 
     @ExceptionHandler({TrabalhoException.class})
-    public ResponseEntity<Object> trabalhoException(TrabalhoException ex, WebRequest request) {
+    public ResponseEntity<Object> handleTrabalhoException(TrabalhoException ex, WebRequest request) {
         String mensagemUsuario = ex.getMessage();
         String mensagemDesenvolvedor = ExceptionUtils.getRootCauseMessage(ex);
         List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));
         return handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
+
+    @ExceptionHandler({RequisicaoException.class})
+    public ResponseEntity<Object> handleRequisicaoException(RequisicaoException ex, WebRequest request) {
+        String mensagemUsuario = ex.getMessage();
+        String mensagemDesenvolvedor = ExceptionUtils.getRootCauseMessage(ex);
+        List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));
+        return handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
+    }
+
+
+
 
     //@ExceptionHandler({ HttpMessageNotReadableException.class })
     @Override
@@ -87,7 +98,7 @@ public class SystemExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({CpfInvalidoException.class})
-    public ResponseEntity<Object> cpfInvalidoOuInexistenteException(RuntimeException ex, WebRequest request) {
+    public ResponseEntity<Object> handleCpfInvalidoOuInexistenteException(RuntimeException ex, WebRequest request) {
         String mensagemUsuario = messageSource.getMessage("recurso.cpf.invalido", null,
                 LocaleContextHolder.getLocale());
         String mensagemDesenvolvedor = ExceptionUtils.getRootCauseMessage(ex);
@@ -105,7 +116,7 @@ public class SystemExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({DocumentoInvalidoException.class})
-    public ResponseEntity<Object> documentoInvalidoException(DocumentoInvalidoException ex, WebRequest request) {
+    public ResponseEntity<Object> handleDocumentoInvalidoException(DocumentoInvalidoException ex, WebRequest request) {
         String mensagemUsuario = messageSource.getMessage("recurso.cliente.documento.operacao-nao-permitida", null,
                 LocaleContextHolder.getLocale());
         String mensagemDesenvolvedor = ExceptionUtils.getRootCauseMessage(ex);
@@ -114,7 +125,7 @@ public class SystemExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({LivroInvalidoOuInexistenteException.class})
-    public ResponseEntity<Object> livroInvalidoOuInexistenteException(LivroInvalidoOuInexistenteException ex,
+    public ResponseEntity<Object> handleLivroInvalidoOuInexistenteException(LivroInvalidoOuInexistenteException ex,
                                                                       WebRequest request) {
         String mensagemUsuario = messageSource.getMessage("recurso.livro.nao-encontrado", null,
                 LocaleContextHolder.getLocale());
@@ -124,7 +135,7 @@ public class SystemExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({LivroLocadoException.class})
-    public ResponseEntity<Object> livroAlugadoException(LivroLocadoException ex, WebRequest request) {
+    public ResponseEntity<Object> handleLivroAlugadoException(LivroLocadoException ex, WebRequest request) {
         String mensagemUsuario = messageSource.getMessage("recurso.livro.locado", null,
                 LocaleContextHolder.getLocale());
         String mensagemDesenvolvedor = ExceptionUtils.getRootCauseMessage(ex);
@@ -133,7 +144,7 @@ public class SystemExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({LivroReservadoException.class})
-    public ResponseEntity<Object> livroReservadoException(LivroReservadoException ex, WebRequest request) {
+    public ResponseEntity<Object> handleLivroReservadoException(LivroReservadoException ex, WebRequest request) {
         String mensagemUsuario = messageSource.getMessage("recurso.livro.reservado", null,
                 LocaleContextHolder.getLocale());
         String mensagemDesenvolvedor = ExceptionUtils.getRootCauseMessage(ex);
@@ -142,7 +153,7 @@ public class SystemExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({ReservaUpdateException.class})
-    public ResponseEntity<Object> reservaUpdateException(ReservaUpdateException ex, WebRequest request) {
+    public ResponseEntity<Object> handleReservaUpdateException(ReservaUpdateException ex, WebRequest request) {
         String mensagemUsuario = messageSource.getMessage("regra.reserva.atualizar", null,
                 LocaleContextHolder.getLocale());
         String mensagemDesenvolvedor = ExceptionUtils.getRootCauseMessage(ex);
@@ -151,7 +162,7 @@ public class SystemExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({ReservaInexistenteException.class})
-    public ResponseEntity<Object> reservaInexistenteException(ReservaInexistenteException ex, WebRequest request) {
+    public ResponseEntity<Object> handleReservaInexistenteException(ReservaInexistenteException ex, WebRequest request) {
         String mensagemUsuario = messageSource.getMessage("regra.reserva.inexistente", null,
                 LocaleContextHolder.getLocale());
         String mensagemDesenvolvedor = ExceptionUtils.getRootCauseMessage(ex);
@@ -160,7 +171,7 @@ public class SystemExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({UsuarioNaoEncontrado.class})
-    public ResponseEntity<Object> usernameNotFoundException(RuntimeException ex, WebRequest request) {
+    public ResponseEntity<Object> handleUsernameNotFoundException(RuntimeException ex, WebRequest request) {
         String mensagemUsuario = messageSource.getMessage("usuario.nao.encontrado", null,
                 LocaleContextHolder.getLocale());
         String mensagemDesenvolvedor = ExceptionUtils.getRootCauseMessage(ex);
@@ -169,7 +180,7 @@ public class SystemExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({AccountResourceException.class})
-    public ResponseEntity<Object> userNotFoundException(RuntimeException ex, WebRequest request) {
+    public ResponseEntity<Object> handleUserNotFoundException(RuntimeException ex, WebRequest request) {
         String mensagemUsuario = messageSource.getMessage("usuario.nao.encontrado.error.interno", null,
                 LocaleContextHolder.getLocale());
         String mensagemDesenvolvedor = ex.toString();
@@ -178,7 +189,7 @@ public class SystemExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({ResourceNotFoundException.class})
-    public ResponseEntity<Object> resourceNotFoundException(RuntimeException ex, WebRequest request) {
+    public ResponseEntity<Object> handleResourceNotFoundException(RuntimeException ex, WebRequest request) {
         String mensagemUsuario = messageSource.getMessage("recurso.nao-encontrado", null,
                 LocaleContextHolder.getLocale());
         String mensagemDesenvolvedor = ExceptionUtils.getRootCauseMessage(ex);
@@ -187,7 +198,7 @@ public class SystemExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({DataIntegrityViolationException.class})
-    public ResponseEntity<Object> dataIntegrityViolationException(RuntimeException ex, WebRequest request) {
+    public ResponseEntity<Object> handleDataIntegrityViolationException(RuntimeException ex, WebRequest request) {
         String mensagemUsuario = messageSource.getMessage("recurso.operacao-nao-permitida", null,
                 LocaleContextHolder.getLocale());
         String mensagemDesenvolvedor = ExceptionUtils.getRootCauseMessage(ex);
@@ -196,7 +207,7 @@ public class SystemExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({SQLIntegrityConstraintViolationException.class})
-    public ResponseEntity<Object> sqlIntegrityConstraintViolationException(RuntimeException ex, WebRequest request) {
+    public ResponseEntity<Object> handleSqlIntegrityConstraintViolationException(RuntimeException ex, WebRequest request) {
         String mensagemUsuario = mensagem_error_interno_usuario;
         String mensagemDesenvolvedor = messageSource.getMessage("error.interno.formatacao-sql", null,
                 LocaleContextHolder.getLocale());
@@ -205,7 +216,7 @@ public class SystemExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({CodigoAtivaCaoInvalidoOuInexistenteException.class})
-    public ResponseEntity<Object> codigoAtivaCaoInvalidoOuInexistenteException(RuntimeException ex, WebRequest request) {
+    public ResponseEntity<Object> handleCodigoAtivaCaoInvalidoOuInexistenteException(RuntimeException ex, WebRequest request) {
         String mensagemUsuario = messageSource.getMessage("conta.codigo.ativacao.invalido", null,
                 LocaleContextHolder.getLocale());
         //String mensagemDesenvolvedor = messageSource.getMessage("error.interno.formatacao-sql", null,
@@ -217,7 +228,7 @@ public class SystemExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({ConstraintViolationException.class})
-    public ResponseEntity<Object> constraintViolationException(RuntimeException ex, WebRequest request) {
+    public ResponseEntity<Object> handleConstraintViolationException(RuntimeException ex, WebRequest request) {
         String mensagemUsuario = mensagem_error_interno_usuario;
         String mensagemDesenvolvedor = ExceptionUtils.getRootCauseMessage(ex);
         List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));
@@ -225,7 +236,7 @@ public class SystemExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({EmailAlreadyUsedException.class})
-    public ResponseEntity<Object> emailAlreadyUsedException(RuntimeException ex, WebRequest request) {
+    public ResponseEntity<Object> handleEmailAlreadyUsedException(RuntimeException ex, WebRequest request) {
         String mensagemUsuario = messageSource.getMessage("conta.email-ja-em-uso", null,
                 LocaleContextHolder.getLocale());
         String mensagemDesenvolvedor = ExceptionUtils.getRootCauseMessage(ex);
@@ -234,7 +245,7 @@ public class SystemExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({UsernameAlreadyUsedException.class})
-    public ResponseEntity<Object> usernameAlreadyUsedException(RuntimeException ex, WebRequest request) {
+    public ResponseEntity<Object> handleUsernameAlreadyUsedException(RuntimeException ex, WebRequest request) {
         String mensagemUsuario = messageSource.getMessage("conta.username-ja-em-uso", null,
                 LocaleContextHolder.getLocale());
         String mensagemDesenvolvedor = ExceptionUtils.getRootCauseMessage(ex);
@@ -243,7 +254,7 @@ public class SystemExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({EmailInvalidoOuInexistenteException.class})
-    public ResponseEntity<Object> emailInvalidoOuInexistenteException(RuntimeException ex, WebRequest request) {
+    public ResponseEntity<Object> handleEmailInvalidoOuInexistenteException(RuntimeException ex, WebRequest request) {
         String mensagemUsuario = messageSource.getMessage("conta.email.invalido.ou.inexistente", null,
                 LocaleContextHolder.getLocale());
         String mensagemDesenvolvedor = ExceptionUtils.getRootCauseMessage(ex);
@@ -252,7 +263,7 @@ public class SystemExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({SchedulerException.class})
-    public ResponseEntity<Object> schedulerException(RuntimeException ex, WebRequest request) {
+    public ResponseEntity<Object> handleSchedulerException(RuntimeException ex, WebRequest request) {
         String mensagemUsuario = ExceptionUtils.getRootCauseMessage(ex);
         String mensagemDesenvolvedor = ExceptionUtils.getRootCauseMessage(ex);
         List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));
@@ -269,7 +280,7 @@ public class SystemExceptionHandler extends ResponseEntityExceptionHandler {
 	}*/
 
     @ExceptionHandler({UsernameNotFoundException.class})
-    public ResponseEntity<Object> usernameNotFoundException2(RuntimeException ex, WebRequest request) {
+    public ResponseEntity<Object> handleUsernameNotFoundException2(RuntimeException ex, WebRequest request) {
         String mensagemUsuario = messageSource.getMessage("conta.username.invalido.ou.inexistente", null,
                 LocaleContextHolder.getLocale());
         String mensagemDesenvolvedor = ExceptionUtils.getRootCauseMessage(ex);

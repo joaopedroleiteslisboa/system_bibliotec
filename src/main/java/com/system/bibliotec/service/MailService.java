@@ -8,6 +8,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 import com.system.bibliotec.config.ConstantsUtils;
+import com.system.bibliotec.model.enums.TipoErrorSistema;
 import com.system.bibliotec.security.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,8 +74,10 @@ public class MailService {
         } catch (MailException | MessagingException e) {
             log.warn("Não foi possivel encaminhar o email para usuario{}'", to, e);
 
-            servicoSistema.saveUserContextErrorLoginAndId(
-                    e.getCause(), Thread.currentThread().getStackTrace()[1].getMethodName(), getCurrentAuditorUser(), u.getId().toString());
+            servicoSistema.salvarErrorContextoGenerico(e, Thread.currentThread().getStackTrace()[1].getMethodName(),
+                    TipoErrorSistema.NOTIFICACAO_ASSINCRONA, this.getCurrentAuditorUser(),
+                    "ENVIO DE EMAIL PARA USUARIO");
+
 
         }
     }

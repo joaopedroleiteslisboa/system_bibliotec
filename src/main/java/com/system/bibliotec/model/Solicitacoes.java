@@ -65,7 +65,7 @@ public class Solicitacoes extends AbstractAuditingEntity {
     private String descricao;
 
     @Column(name = "rejeitado")
-    private boolean rejeitado = false;
+    private Boolean rejeitado = false;
 
     @Column(name = "statusProcessamento")
     private StatusProcessamento statusProcessamento;

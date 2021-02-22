@@ -35,7 +35,7 @@ public class ValidaUsuarioImpl implements IvalidaUsuarioTriagemInicial {
     }
 
     private void validaDebitosECondicaoDoUsuario(Usuario u) {
-        if (u.isBloqueado() || u.getMotivoBloqueio() != null && !u.getMotivoBloqueio().isEmpty()) {
+        if (u.getBloqueado() || u.getMotivoBloqueio() != null && !u.getMotivoBloqueio().isEmpty()) {
 
             throw new UsuarioBloqueadoException(
                     u.saudacoes() + "Sua Conta estar Bloqueada devido " + u.getMotivoBloqueio().toString());

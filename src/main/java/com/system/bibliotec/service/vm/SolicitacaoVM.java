@@ -37,7 +37,7 @@ public class SolicitacaoVM {
     private String descricao;
 
 
-    private boolean rejeitado;
+    private Boolean rejeitado;
 
 
     private String nomeCliente;
@@ -56,7 +56,7 @@ public class SolicitacaoVM {
 
         this.status = entity.getStatus().toString();
         this.descricao = entity.getDescricao();
-        this.rejeitado = entity.isRejeitado();
+        this.rejeitado = entity.getRejeitado();
         this.nomeCliente = entity.getUsuario().getNome();
     }
 
@@ -72,7 +72,7 @@ public class SolicitacaoVM {
         this.nomeExeplar = nomeExemplar;
         this.status = entity.getStatus().toString();
         this.descricao = entity.getDescricao();
-        this.rejeitado = entity.isRejeitado();
+        this.rejeitado = entity.getRejeitado();
         this.nomeCliente = entity.getUsuario().getNome();
     }
 

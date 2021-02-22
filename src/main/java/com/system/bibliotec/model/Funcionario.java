@@ -34,7 +34,7 @@ public class Funcionario extends AbstractAuditingEntity {
     private Cargo cargo;
 
     @Column(name = "ativo", nullable = false)
-    private boolean ativo;
+    private Boolean ativo;
 
 
 }

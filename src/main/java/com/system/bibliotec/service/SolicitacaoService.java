@@ -3,6 +3,7 @@ package com.system.bibliotec.service;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 import com.system.bibliotec.exception.OperacaoCanceladaException;
 import com.system.bibliotec.exception.RecursoNaoEncontradoException;
@@ -14,6 +15,9 @@ import com.system.bibliotec.model.enums.TipoSolicitacao;
 import com.system.bibliotec.repository.SolicitacaoRepository;
 import com.system.bibliotec.repository.filter.SolicitacaoFilter;
 import com.system.bibliotec.repository.specification.SolicitacaoSpecification;
+import com.system.bibliotec.security.AuthoritiesConstantsUltis;
+import com.system.bibliotec.security.SecurityUtils;
+import com.system.bibliotec.security.UserSystem;
 import com.system.bibliotec.service.dto.FormCancelamentoSolicitacaoLocacao;
 import com.system.bibliotec.service.dto.SolicitacaoLocacaoDTO;
 import com.system.bibliotec.service.mapper.MapeadorSolicitacao;
@@ -134,13 +138,25 @@ public class SolicitacaoService {
 
     public List<SolicitacaoVM> filterQuery(SolicitacaoFilter filter) {
 
+        Optional<UserSystem> usuarioAnonimo = Optional.empty();
+
+
+        if (!SecurityUtils.isCurrentUserInRole(AuthoritiesConstantsUltis.ROLE_ADMIN) || //caso não for ADM ou USER SYSTEM listar apenas os dados vinculado ao principal online
+                !SecurityUtils.isCurrentUserInRole(AuthoritiesConstantsUltis.ROLE_USER_SYSTEM)) {
+
+            usuarioAnonimo = SecurityUtils.getCurrentUserPrincipal();
+
+            if (usuarioAnonimo.isPresent()) {
+
+                filter.setIdUsuario(usuarioAnonimo.get().getId());
+            }
+
+        }
+
 
         Specification<Solicitacoes> query = Specification.where(SolicitacaoSpecification.porID(filter.getIdSolicitacao()))
 
-                .and(SolicitacaoSpecification.porUsuarioContexto(filter.getCreatedBy())) // valor definido no construtor de
-                // LocacaoFilter para deixar
-                // esta consulta dinamica com
-                // base no usuario
+                .and(SolicitacaoSpecification.porUsuarioContexto(filter.getCreatedBy()))
 
                 .and(SolicitacaoSpecification.porIntervaloDataSolicitacao(filter.getDataSolicitacaoInicio(),
                         filter.getDataSolicitacaoFim()))

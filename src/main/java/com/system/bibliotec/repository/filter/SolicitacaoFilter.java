@@ -21,13 +21,13 @@ import lombok.ToString;
 public class SolicitacaoFilter {
 
 
-    public SolicitacaoFilter(Long idSolicitacao, Long idExemplar, Status status,
-                             boolean rejeitado, TipoSolicitacao tipo, LocalTime horaSolicitacaoInicio, LocalTime horaSolicitacaoFim,
+    public SolicitacaoFilter(Long idSolicitacao, Long idExemplar, Status status, Long idUsuario, String createdBy,
+                             Boolean rejeitado, TipoSolicitacao tipo, LocalTime horaSolicitacaoInicio, LocalTime horaSolicitacaoFim,
                              LocalDate dataSolicitacaoInicio, LocalDate dataSolicitacaoFim) {
 
         this.idSolicitacao = idSolicitacao;
-
-
+        this.createdBy = createdBy;
+        this.idUsuario = idUsuario;
         this.idExemplar = idExemplar;
         this.status = status;
         this.rejeitado = rejeitado;
@@ -49,7 +49,7 @@ public class SolicitacaoFilter {
 
     private Status status;
 
-    private boolean rejeitado;
+    private Boolean rejeitado;
 
     private TipoSolicitacao tipo;
 

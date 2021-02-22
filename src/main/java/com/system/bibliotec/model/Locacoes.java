@@ -35,7 +35,7 @@ public class Locacoes extends AbstractAuditingEntity {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Column(name = "quantidadeDeRenovacao")
-    private int quantidadeDeRenovacao;
+    private Integer quantidadeDeRenovacao;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @JsonFormat(pattern = "kk:mm:ss")

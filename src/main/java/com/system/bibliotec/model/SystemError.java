@@ -15,18 +15,18 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Data
 @Builder
 @Entity
-@Table(name = "systemErrors")
+@Table(name = "TB_EXCECAO_SISTEMA")
 @EntityListeners(AuditingEntityListener.class)
 public class SystemError {
 
 
     private static final long serialVersionUID = 1L;
 
+
     @Id
-    @GeneratedValue(generator = "tb_excecao_sistema_seq", strategy = GenerationType.SEQUENCE)
-    @SequenceGenerator(name = "tb_excecao_sistema_seq", sequenceName = "tb_excecao_sistema_seq", initialValue = 1, allocationSize = 1)
-    @Column(name = "id_excecao")
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    protected Long id;
 
 
     @Column(name = "resolvido")

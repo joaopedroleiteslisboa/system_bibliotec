@@ -46,10 +46,10 @@ public class Usuario extends AbstractAuditingEntity {
 
     @NotNull
     @Column(name = "ativo", nullable = false)
-    private boolean ativo = false;
+    private Boolean ativo = false;
 
     @Column(name = "bloqueado", nullable = false)
-    private boolean bloqueado = false;
+    private Boolean bloqueado = false;
 
     @Column(name = "motivoBloqueio")
     private String motivoBloqueio;
@@ -179,11 +179,10 @@ public class Usuario extends AbstractAuditingEntity {
         // TODO Auto-generated constructor stub
 
         this.id = usuario.getId();
-        this.bloqueado = usuario.isBloqueado();
+        this.bloqueado = usuario.getBloqueado();
         this.motivoBloqueio = usuario.getMotivoBloqueio();
         this.userName = usuario.getUserName();
-        this.ativo = usuario.isAtivo();
-        this.bloqueado = usuario.isBloqueado();
+        this.ativo = usuario.getAtivo();
         this.chaveAtivacao = usuario.getChaveAtivacao();
         this.chaveRenovacao = usuario.getChaveRenovacao();
         this.cnpj = usuario.getCnpj();

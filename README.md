@@ -14,5 +14,5 @@ Linkedin: http://bit.ly/linkedinjoaopedroleiteslisboa
 
 ### STATUS DE ANDAMENTO DO PROJETO.
 
-	   Em desenvolvimento...
+	   Em desenvolvimento.
 

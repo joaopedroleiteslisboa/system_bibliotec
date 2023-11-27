@@ -16,8 +16,7 @@ import java.util.Optional;
  * @since 10.09.2020
  */
 @Repository
-public interface ReservaRepository
-        extends JpaRepository<Reservas, Long>, GenericRepository<Reservas, Long>, JpaSpecificationExecutor<Reservas> {
+public interface ReservaRepository  extends JpaRepository<Reservas, Long>, GenericRepository<Reservas, Long>, JpaSpecificationExecutor<Reservas> {
 
     boolean existsById(Long id);
 

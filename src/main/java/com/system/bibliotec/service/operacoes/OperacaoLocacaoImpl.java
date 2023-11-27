@@ -1,19 +1,14 @@
 package com.system.bibliotec.service.operacoes;
 
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 
-import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.mysql.cj.exceptions.OperationCancelledException;
 import com.system.bibliotec.config.ConstantsUtils;
-import com.system.bibliotec.exception.CancelamentoLocacaoException;
 import com.system.bibliotec.exception.CancelamentoOperacaoLocacaoInvalida;
 import com.system.bibliotec.exception.EncerramentoOperacaoLocacaoException;
 import com.system.bibliotec.exception.LocacaoInvalidaOuInexistenteException;

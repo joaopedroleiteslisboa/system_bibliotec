@@ -66,8 +66,8 @@ public class MapeadorEcriadorUsuario {
     @Autowired
     private CargoRepository cargoRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+//    @Autowired
+//    private PasswordEncoder passwordEncoder;
 
     public UserSystemVM userToUserSystemVM(Usuario user) {
         return new UserSystemVM(user);
@@ -103,7 +103,8 @@ public class MapeadorEcriadorUsuario {
             user.setAtivo(false);
             user.setLangKey(userDTO.getLangKey());
 
-            String senhaCriptografada = passwordEncoder.encode(userDTO.getPassword());
+//            String senhaCriptografada = passwordEncoder.encode(userDTO.getPassword());
+            String senhaCriptografada = userDTO.getPassword();
             user.setSenha(senhaCriptografada);
 
             Set<Permissao> permissoes = DEFAULT_PERMISSOES_USUARIO_ANONIMO.stream()

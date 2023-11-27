@@ -1,7 +1,7 @@
 package com.system.bibliotec.service.dto;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+
+import jakarta.validation.constraints.*;
 
 public class PasswordChangeDTO {
 

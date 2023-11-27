@@ -3,7 +3,6 @@ package com.system.bibliotec.repository.specification;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import javax.persistence.criteria.Join;
 
 import com.system.bibliotec.model.AbstractAuditingEntity_;
 import com.system.bibliotec.model.Livro_;
@@ -12,6 +11,7 @@ import com.system.bibliotec.model.Reservas_;
 import com.system.bibliotec.model.Usuario_;
 import com.system.bibliotec.model.enums.Status;
 
+import jakarta.persistence.criteria.Join;
 import org.springframework.data.jpa.domain.Specification;
 
 
@@ -30,7 +30,7 @@ public class ReservaSpecification {
         if (inicio == null || fim == null) {
             return null;
         } else {
-            return (root, query, cb) -> cb.between(root.get(Reservas_.horaReserva), inicio, fim);
+            return (root, query, cb) -> cb.between(root.get(Reservas_.HORA_RESERVA), inicio, fim);
         }
     }
 
@@ -39,7 +39,7 @@ public class ReservaSpecification {
         if (inicio == null || fim == null) {
             return null;
         } else {
-            return (root, query, cb) -> cb.between(root.get(Reservas_.dataReserva), inicio, fim);
+            return (root, query, cb) -> cb.between(root.get(Reservas_.DATA_RESERVA), inicio, fim);
         }
     }
 

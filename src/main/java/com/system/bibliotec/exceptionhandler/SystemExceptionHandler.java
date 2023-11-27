@@ -5,9 +5,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.validation.ConstraintViolationException;
-
 import com.system.bibliotec.exception.*;
+import jakarta.validation.ConstraintViolationException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +17,9 @@ import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.HttpRequestMethodNotSupportedException;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.UnsatisfiedServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -76,26 +72,26 @@ public class SystemExceptionHandler extends ResponseEntityExceptionHandler {
 
 
 
-    //@ExceptionHandler({ HttpMessageNotReadableException.class })
-    @Override
-    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
-                                                                  HttpHeaders headers, HttpStatus status, WebRequest request) {
-
-        String mensagemUsuario = messageSource.getMessage("mensagem.invalida", null, LocaleContextHolder.getLocale());
-        String mensagemDesenvolvedor = ExceptionUtils.getRootCauseMessage(ex);
-        List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));
-        return handleExceptionInternal(ex, erros, headers, HttpStatus.BAD_REQUEST, request);
-    }
-
-
-    //@ExceptionHandler({ MethodArgumentNotValidException.class })
-    @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
-                                                                  HttpHeaders headers, HttpStatus status, WebRequest request) {
-
-        List<Erro> erros = criarListaDeErros(ex.getBindingResult());
-        return handleExceptionInternal(ex, erros, headers, HttpStatus.BAD_REQUEST, request);
-    }
+//    //@ExceptionHandler({ HttpMessageNotReadableException.class })
+//    @Override
+//    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
+//                                                                  HttpHeaders headers, HttpStatus status, WebRequest request) {
+//
+//        String mensagemUsuario = messageSource.getMessage("mensagem.invalida", null, LocaleContextHolder.getLocale());
+//        String mensagemDesenvolvedor = ExceptionUtils.getRootCauseMessage(ex);
+//        List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));
+//        return handleExceptionInternal(ex, erros, headers, HttpStatus.BAD_REQUEST, request);
+//    }
+//
+//
+//    //@ExceptionHandler({ MethodArgumentNotValidException.class })
+//    @Override
+//    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+//                                                                  HttpHeaders headers, HttpStatus status, WebRequest request) {
+//
+//        List<Erro> erros = criarListaDeErros(ex.getBindingResult());
+//        return handleExceptionInternal(ex, erros, headers, HttpStatus.BAD_REQUEST, request);
+//    }
 
     @ExceptionHandler({CpfInvalidoException.class})
     public ResponseEntity<Object> handleCpfInvalidoOuInexistenteException(RuntimeException ex, WebRequest request) {
@@ -289,18 +285,18 @@ public class SystemExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
 
-    //@ExceptionHandler({ HttpRequestMethodNotSupportedException.class })
-    @Override
-    protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex,
-                                                                         HttpHeaders headers, HttpStatus status, WebRequest request) {
-        // TODO Auto-generated method stub
-        String mensagemUsuario = messageSource.getMessage("metodo_solicitado_invalido", null,
-                LocaleContextHolder.getLocale());
-        String mensagemDesenvolvedor = ExceptionUtils.getRootCauseMessage(ex);
-        List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));
-        return handleExceptionInternal(ex, erros, headers, HttpStatus.METHOD_NOT_ALLOWED, request);
-
-    }
+//    //@ExceptionHandler({ HttpRequestMethodNotSupportedException.class })
+//    @Override
+//    protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex,
+//                                                                         HttpHeaders headers, HttpStatus status, WebRequest request) {
+//        // TODO Auto-generated method stub
+//        String mensagemUsuario = messageSource.getMessage("metodo_solicitado_invalido", null,
+//                LocaleContextHolder.getLocale());
+//        String mensagemDesenvolvedor = ExceptionUtils.getRootCauseMessage(ex);
+//        List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));
+//        return handleExceptionInternal(ex, erros, headers, HttpStatus.METHOD_NOT_ALLOWED, request);
+//
+//    }
 
 
     private List<Erro> criarListaDeErros(BindingResult bindingResult) {

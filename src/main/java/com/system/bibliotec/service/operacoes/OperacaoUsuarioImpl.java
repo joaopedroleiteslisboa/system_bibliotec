@@ -44,8 +44,8 @@ public class OperacaoUsuarioImpl implements IOperacaoUsuario {
     @Autowired
     private UsuarioRepository userRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+//    @Autowired
+//    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private MapeadorEcriadorUsuario userMapperServiceAdpter;
@@ -77,7 +77,8 @@ public class OperacaoUsuarioImpl implements IOperacaoUsuario {
         }
         return userRepository.findOneByChaveRenovacao(key)
                 .filter(user -> user.getResetDate().isAfter(DEFAULT_INSTANTE_TIME)).map(user -> {
-                    user.setSenha(passwordEncoder.encode(newPassword));
+                    //user.setSenha(passwordEncoder.encode(newPassword));
+                    user.setSenha(newPassword);
                     user.setChaveRenovacao(null);
                     user.setResetDate(null);
                     userRepository.save(user);
@@ -197,11 +198,13 @@ public class OperacaoUsuarioImpl implements IOperacaoUsuario {
     public void changePassword(String passwordOld, String newPassword) {
         obterUsuarioDoContextoPeloTokenOptional().flatMap(userRepository::findOneByEmailIgnoreCase).ifPresent(user -> {
             String currentEncryptedPassword = user.getSenha();
-            if (!passwordEncoder.matches(passwordOld, currentEncryptedPassword)) {
-                throw new SenhaInvalidaException("Senha ja em uso. Informe outra senha");
-            }
-            String encryptedPassword = passwordEncoder.encode(newPassword);
-            user.setSenha(encryptedPassword);
+
+//            if (!passwordEncoder.matches(passwordOld, currentEncryptedPassword)) {
+//                throw new SenhaInvalidaException("Senha ja em uso. Informe outra senha");
+//            }
+
+//            String encryptedPassword = passwordEncoder.encode(newPassword);
+            user.setSenha(newPassword);
 
             userRepository.save(user);
 

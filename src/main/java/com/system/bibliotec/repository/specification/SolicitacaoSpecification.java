@@ -3,16 +3,14 @@ package com.system.bibliotec.repository.specification;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import javax.persistence.criteria.Join;
-
 import com.system.bibliotec.model.AbstractAuditingEntity_;
 import com.system.bibliotec.model.Solicitacoes;
 import com.system.bibliotec.model.Solicitacoes_;
-import com.system.bibliotec.model.Usuario;
 import com.system.bibliotec.model.Usuario_;
 import com.system.bibliotec.model.enums.Status;
 import com.system.bibliotec.model.enums.TipoSolicitacao;
 
+import jakarta.persistence.criteria.Join;
 import org.springframework.data.jpa.domain.Specification;
 
 //QUERYS TO SOLICITAÇÕES TABLE

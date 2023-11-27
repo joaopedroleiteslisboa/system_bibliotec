@@ -1,16 +1,34 @@
 package com.system.bibliotec.model;
 
-import javax.annotation.Generated;
-import javax.persistence.metamodel.ListAttribute;
-import javax.persistence.metamodel.SingularAttribute;
-import javax.persistence.metamodel.StaticMetamodel;
+import jakarta.annotation.Generated;
+import jakarta.persistence.metamodel.EntityType;
+import jakarta.persistence.metamodel.ListAttribute;
+import jakarta.persistence.metamodel.SingularAttribute;
+import jakarta.persistence.metamodel.StaticMetamodel;
 
-@Generated(value = "org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor")
 @StaticMetamodel(Autor.class)
+@Generated("org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor")
 public abstract class Autor_ extends com.system.bibliotec.model.AbstractAuditingEntity_ {
 
+	
+	/**
+	 * @see com.system.bibliotec.model.Autor#livros
+	 **/
 	public static volatile ListAttribute<Autor, Livro> livros;
+	
+	/**
+	 * @see com.system.bibliotec.model.Autor#nome
+	 **/
 	public static volatile SingularAttribute<Autor, String> nome;
+	
+	/**
+	 * @see com.system.bibliotec.model.Autor
+	 **/
+	public static volatile EntityType<Autor> class_;
+	
+	/**
+	 * @see com.system.bibliotec.model.Autor#descricao
+	 **/
 	public static volatile SingularAttribute<Autor, String> descricao;
 
 	public static final String LIVROS = "livros";

@@ -4,12 +4,13 @@ import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import java.util.Optional;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
+
 
 import com.system.bibliotec.config.ConstantsUtils;
 import com.system.bibliotec.model.enums.TipoErrorSistema;
 import com.system.bibliotec.security.SecurityUtils;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +23,9 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
-import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import com.system.bibliotec.model.Usuario;
+import org.thymeleaf.spring6.SpringTemplateEngine;
 
 /**
  * BibliotecMailSendImpl

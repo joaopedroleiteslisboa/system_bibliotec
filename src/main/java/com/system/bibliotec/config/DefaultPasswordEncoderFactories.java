@@ -11,6 +11,10 @@ import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
 
 public class DefaultPasswordEncoderFactories {
 
+
+
+
+
     @SuppressWarnings("deprecation")
     static PasswordEncoder createDelegatingPasswordEncoder() {
         String encodingIdDefault = "bcrypt";
@@ -20,8 +24,8 @@ public class DefaultPasswordEncoderFactories {
         encoders.put("MD4", new org.springframework.security.crypto.password.Md4PasswordEncoder());
         encoders.put("MD5", new org.springframework.security.crypto.password.MessageDigestPasswordEncoder("MD5"));
         encoders.put("noop", org.springframework.security.crypto.password.NoOpPasswordEncoder.getInstance());
-        encoders.put("pbkdf2", new Pbkdf2PasswordEncoder());
-        encoders.put("scrypt", new SCryptPasswordEncoder());
+        encoders.put("pbkdf2", new Pbkdf2PasswordEncoder("", 16, 310000, Pbkdf2PasswordEncoder.SecretKeyFactoryAlgorithm.PBKDF2WithHmacSHA256));
+        encoders.put("scrypt", new SCryptPasswordEncoder(65536, 8, 1, 32, 16));
         encoders.put("SHA-1", new org.springframework.security.crypto.password.MessageDigestPasswordEncoder("SHA-1"));
         encoders.put("SHA-256", new org.springframework.security.crypto.password.MessageDigestPasswordEncoder("SHA-256"));
         encoders.put("sha256", new org.springframework.security.crypto.password.StandardPasswordEncoder());

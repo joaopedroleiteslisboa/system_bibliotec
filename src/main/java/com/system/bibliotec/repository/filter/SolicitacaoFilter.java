@@ -6,8 +6,6 @@ import java.time.LocalTime;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.system.bibliotec.model.enums.Status;
 import com.system.bibliotec.model.enums.TipoSolicitacao;
-import com.system.bibliotec.security.AuthoritiesConstantsUltis;
-import com.system.bibliotec.security.SecurityUtils;
 
 import org.springframework.format.annotation.DateTimeFormat;
 

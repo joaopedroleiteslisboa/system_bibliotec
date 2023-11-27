@@ -3,14 +3,10 @@ package com.system.bibliotec.repository.pessoa;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -44,23 +40,23 @@ public class PessoaRepositoryQueryImpl implements PessoaRepositoryQuery {
         List<Predicate> predicates = new ArrayList<>();
 
         if (!StringUtils.isEmpty(PessoaFilter.getNome())) {
-            predicates.add(builder.like(builder.lower(root.get(Pessoa_.nome)),
+            predicates.add(builder.like(builder.lower(root.get(Pessoa_.NOME)),
                     "%" + PessoaFilter.getNome().toLowerCase() + "%"));
         }
 
         if (PessoaFilter.getDataNascimento() != null) {
             predicates
-                    .add(builder.lessThanOrEqualTo(root.get(Pessoa_.dataNascimento), PessoaFilter.getDataNascimento()));
+                    .add(builder.lessThanOrEqualTo(root.get(Pessoa_.DATA_NASCIMENTO), PessoaFilter.getDataNascimento()));
         }
 
         if (PessoaFilter.getDataNascimentoDe() != null) {
             predicates.add(
-                    builder.greaterThanOrEqualTo(root.get(Pessoa_.dataNascimento), PessoaFilter.getDataNascimentoDe()));
+                    builder.greaterThanOrEqualTo(root.get(Pessoa_.DATA_NASCIMENTO), PessoaFilter.getDataNascimentoDe()));
         }
 
         if (PessoaFilter.getDataNascimentoAte() != null) {
             predicates.add(
-                    builder.lessThanOrEqualTo(root.get(Pessoa_.dataNascimento), PessoaFilter.getDataNascimentoAte()));
+                    builder.lessThanOrEqualTo(root.get(Pessoa_.DATA_NASCIMENTO), PessoaFilter.getDataNascimentoAte()));
         }
 
         return predicates.toArray(new Predicate[predicates.size()]);

@@ -1,9 +1,8 @@
 package com.system.bibliotec.model;
 
-import javax.annotation.Generated;
-import javax.persistence.*;
 
 import com.system.bibliotec.model.enums.TipoErrorSistema;
+import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 

@@ -1,8 +1,8 @@
 package com.system.bibliotec.event;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.ApplicationEvent;
 
-import javax.servlet.http.HttpServletResponse;
 
 public class RecursoCriadorEvent extends ApplicationEvent {
 

@@ -1,12 +1,9 @@
 package com.system.bibliotec.repository.pessoa;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
-
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.*;
 import org.springframework.stereotype.Component;
 
 import com.system.bibliotec.exception.PessoaInexistenteException;
@@ -27,7 +24,7 @@ public class FindOneByCpfQueryImpl implements FindOneByCpfQuery {
         CriteriaQuery<Pessoa> criteriaQuery = builder.createQuery(Pessoa.class);
         Root<Pessoa> root = criteriaQuery.from(Pessoa.class);
         criteriaQuery.select(root);
-        criteriaQuery.where(builder.equal(root.get(Pessoa_.cpf), cpf));
+        criteriaQuery.where(builder.equal(root.get(Pessoa_.CPF), cpf));
         TypedQuery<Pessoa> typedQuery = manager.createQuery(criteriaQuery);
         Pessoa c = null;
         try {
@@ -36,7 +33,7 @@ public class FindOneByCpfQueryImpl implements FindOneByCpfQuery {
             // TODO: handle exception
             throw new PessoaInexistenteException("Pessoa invalida ou nao encontrada na Base de dados");
         }
-        return (c != null) ? c : null;
+        return c;
     }
 
 }

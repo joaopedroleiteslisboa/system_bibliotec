@@ -1,11 +1,11 @@
 package com.system.bibliotec.model;
 
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.persistence.*;
 
 @Getter
 @Setter

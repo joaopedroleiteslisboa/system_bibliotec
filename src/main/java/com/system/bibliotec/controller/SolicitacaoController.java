@@ -1,20 +1,15 @@
 package com.system.bibliotec.controller;
 
-import org.springframework.web.bind.annotation.PathVariable;
+
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
+
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-
-import javax.validation.Valid;
-
-import com.system.bibliotec.repository.SolicitacaoRepository;
 import com.system.bibliotec.repository.filter.SolicitacaoFilter;
 import com.system.bibliotec.service.SolicitacaoService;
 import com.system.bibliotec.service.dto.FormCancelamentoSolicitacaoLocacao;
@@ -46,14 +41,14 @@ public class SolicitacaoController {
     }
 
 
-    @PreAuthorize("hasAnyRole('ROLE_USER_ANONIMO','ROLE_ADMIN', 'ROLE_USER_SYSTEM') and #oauth2.hasScope('read')")
+//    @PreAuthorize("hasAnyRole('ROLE_USER_ANONIMO','ROLE_ADMIN', 'ROLE_USER_SYSTEM') and #oauth2.hasScope('read')")
     @GetMapping
     public List<SolicitacaoVM> pesquisar(SolicitacaoFilter filter) {
 
         return service.filterQuery(filter);
     }
 
-    @PostMapping("/locacao")
+//    @PostMapping("/locacao")
     @PreAuthorize("hasAnyRole('ROLE_USER_ANONIMO' ) and #oauth2.hasScope('write')")
     public ResponseEntity<SolicitacaoVM> solicitarLocacao(@RequestBody @Valid SolicitacaoLocacaoDTO dto) {
 
@@ -61,7 +56,7 @@ public class SolicitacaoController {
     }
 
 
-    @PutMapping("/cancelamento/locacao")
+//    @PutMapping("/cancelamento/locacao")
     @PreAuthorize("hasAnyRole('ROLE_USER_ANONIMO' ) and #oauth2.hasScope('write')")
     public ResponseEntity<?> cancelarSolicitacaoLocacao(@RequestBody @Valid FormCancelamentoSolicitacaoLocacao dto) {
 

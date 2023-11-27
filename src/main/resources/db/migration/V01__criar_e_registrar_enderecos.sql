@@ -1,4 +1,3 @@
-SET FOREIGN_KEY_CHECKS = 0; 
 CREATE TABLE IF NOT EXISTS enderecos(
                          id BIGINT  primary key AUTO_INCREMENT,
                          created_by VARCHAR(70) NOT NULL,

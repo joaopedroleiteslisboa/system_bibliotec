@@ -27,12 +27,15 @@ import com.system.bibliotec.repository.UsuarioRepository;
 @Service
 public class AppUserDetailsService implements UserDetailsService {
 
-    @Autowired
-    private UsuarioRepository usuarioRepository;
+
+    private final UsuarioRepository usuarioRepository;
 
     private final Logger log = LoggerFactory.getLogger(AppUserDetailsService.class);
-    // TODO Auto-generated method stub
 
+    @Autowired
+    public AppUserDetailsService(UsuarioRepository usuarioRepository) {
+        this.usuarioRepository = usuarioRepository;
+    }
 
     @Override
     public UserDetails loadUserByUsername(final String login) {

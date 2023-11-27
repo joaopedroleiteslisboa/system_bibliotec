@@ -2,8 +2,7 @@ package com.system.bibliotec.service.dto;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

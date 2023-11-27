@@ -3,8 +3,7 @@ package com.system.bibliotec.service.dto;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 
 import com.system.bibliotec.model.Livro;
 

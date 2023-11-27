@@ -2,18 +2,10 @@ package com.system.bibliotec.repository.filter;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.system.bibliotec.model.enums.Status;
-import com.system.bibliotec.security.AuthoritiesConstantsUltis;
-import com.system.bibliotec.security.SecurityUtils;
-import com.system.bibliotec.security.UserSystem;
-import com.system.bibliotec.service.UserService;
 
 import lombok.*;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -50,8 +42,6 @@ public class LocacaoFilter {
 
     private Long idUsuario;
 
-
-    @Enumerated(EnumType.STRING)
     private Status statusLocacao;
 
     @JsonFormat(pattern = "hh:mm:ss")

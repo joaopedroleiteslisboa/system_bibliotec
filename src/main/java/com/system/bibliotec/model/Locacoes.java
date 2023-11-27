@@ -3,15 +3,13 @@ package com.system.bibliotec.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.system.bibliotec.model.enums.Status;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import javax.annotation.Generated;
+
 
 @Getter
 @Setter
@@ -97,7 +95,7 @@ public class Locacoes extends AbstractAuditingEntity {
     private String observacoesDevolucao;
 
 
-    @Generated("SparkTools")
+
     private Locacoes(Builder builder) {
         this.id = builder.id;
         this.status = builder.status;
@@ -120,7 +118,7 @@ public class Locacoes extends AbstractAuditingEntity {
      *
      * @return created builder
      */
-    @Generated("SparkTools")
+
     public static Builder builder() {
         return new Builder();
     }
@@ -128,7 +126,7 @@ public class Locacoes extends AbstractAuditingEntity {
     /**
      * Builder to build {@link Locacoes}.
      */
-    @Generated("SparkTools")
+
     public static final class Builder {
         private Long id;
         private Status status;

@@ -17,7 +17,7 @@ import java.util.Optional;
 
 @NoRepositoryBean
 public interface GenericRepository<T extends AbstractAuditingEntity, ID extends Long>
-        extends PagingAndSortingRepository<T, ID> {
+        extends JpaRepository<T, ID> {
 
 
     @Query(value = "select count(*) from #{#entityName} where status='ATIVA' and idLivro=?1 and created_by =?#{principal}", nativeQuery = true)
@@ -81,7 +81,7 @@ public interface GenericRepository<T extends AbstractAuditingEntity, ID extends 
     @Query("update #{#entityName} e set e.status='CANCELADA' where e.id=?1 and e.usuario.id = ?2")
     void delete(Long id, long idUsuario);
 
-    @Override
+
     @Transactional
     @Modifying
     default void delete(T t) {

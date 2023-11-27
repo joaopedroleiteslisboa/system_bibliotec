@@ -2,14 +2,11 @@ package com.system.bibliotec.controller;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -62,7 +59,7 @@ public class LocacaoResource {
     }
 
 
-    @PreAuthorize("hasAnyRole('ROLE_USER_ANONIMO','ROLE_ADMIN', 'ROLE_USER_SYSTEM') and #oauth2.hasScope('read')")
+//    @PreAuthorize("hasAnyRole('ROLE_USER_ANONIMO','ROLE_ADMIN', 'ROLE_USER_SYSTEM') and #oauth2.hasScope('read')")
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<LocacaoVM> pesquisar(LocacaoFilter filter) {
 
@@ -70,7 +67,7 @@ public class LocacaoResource {
 
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_CADASTRAR_LOCACAO','ROLE_ADMIN', 'ROLE_USER_SYSTEM') and #oauth2.hasScope('write')")
+//    @PreAuthorize("hasAnyRole('ROLE_CADASTRAR_LOCACAO','ROLE_ADMIN', 'ROLE_USER_SYSTEM') and #oauth2.hasScope('write')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)  // atender uma solicitação de locação existente
     public ResponseEntity<LocacaoVM> create(@Valid @RequestBody AtendimentoLocacaoDTO dto, HttpServletResponse response) {
         LocacaoVM locacaoSalva = locacaoService.atenderLocacao(dto);
@@ -79,7 +76,7 @@ public class LocacaoResource {
 
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_CADASTRAR_LOCACAO','ROLE_ADMIN', 'ROLE_USER_SYSTEM') and #oauth2.hasScope('write')")
+//    @PreAuthorize("hasAnyRole('ROLE_CADASTRAR_LOCACAO','ROLE_ADMIN', 'ROLE_USER_SYSTEM') and #oauth2.hasScope('write')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, value = "/despachar")
     // atender uma solicitação de locação existente
     public ResponseEntity<LocacaoVM> despachar(@Valid @RequestBody DespachoSolicitacaoLocacaoDTO locacaoDTO, HttpServletResponse response) {
@@ -89,7 +86,7 @@ public class LocacaoResource {
 
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_PESQUISAR_LOCACAO','ROLE_ADMIN', 'ROLE_USER_SYSTEM') and #oauth2.hasScope('read')")
+//    @PreAuthorize("hasAnyRole('ROLE_PESQUISAR_LOCACAO','ROLE_ADMIN', 'ROLE_USER_SYSTEM') and #oauth2.hasScope('read')")
     @GetMapping("/{id}")
     public ResponseEntity<LocacaoVM> findById(@PathVariable Long id) {
         LocacaoVM locacao = locacaoService.findByIdLocacao(id);
@@ -97,7 +94,7 @@ public class LocacaoResource {
 
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_CADASTRAR_LOCACAO','ROLE_ADMIN', 'ROLE_USER_SYSTEM') and #oauth2.hasScope('read')")
+//    @PreAuthorize("hasAnyRole('ROLE_CADASTRAR_LOCACAO','ROLE_ADMIN', 'ROLE_USER_SYSTEM') and #oauth2.hasScope('read')")
     @DeleteMapping("/cancelar")
     @ResponseStatus(HttpStatus.OK)
     public LocacaoCancelamentoVM cancelarLocacao(CancelamentoLocacaoDTO dto) {
@@ -105,7 +102,7 @@ public class LocacaoResource {
 
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_PESQUISAR_LOCACAO','ROLE_ADMIN', 'ROLE_USER_SYSTEM', 'ROLE_USER_ANONIMO') and #oauth2.hasScope('read')")
+//    @PreAuthorize("hasAnyRole('ROLE_PESQUISAR_LOCACAO','ROLE_ADMIN', 'ROLE_USER_SYSTEM', 'ROLE_USER_ANONIMO') and #oauth2.hasScope('read')")
     @PutMapping("/encerrar")
     @ResponseStatus(HttpStatus.OK)
     public LocacaoDevolucaoVM devolucaoLivro(@RequestBody DevolucaoLocacaoDTO dto) {
@@ -113,7 +110,7 @@ public class LocacaoResource {
     }
 
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER_SYSTEM') and #oauth2.hasScope('write')")
+//    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER_SYSTEM') and #oauth2.hasScope('write')")
     @PutMapping("/{id}/status")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updatePropertyStatus(@PathVariable Long id, @RequestBody Status status) {

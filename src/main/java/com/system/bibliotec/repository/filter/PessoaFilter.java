@@ -6,8 +6,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import com.system.bibliotec.model.enums.StatusPessoa;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import java.time.LocalDate;
 
 @Getter
@@ -30,7 +28,6 @@ public class PessoaFilter {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dataNascimentoAte;
 
-    @Enumerated(EnumType.STRING)
     private StatusPessoa statusCliente;
 
 

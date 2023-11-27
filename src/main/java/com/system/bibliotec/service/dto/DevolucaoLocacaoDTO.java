@@ -1,6 +1,6 @@
 package com.system.bibliotec.service.dto;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 
 import lombok.Getter;
 import lombok.Setter;

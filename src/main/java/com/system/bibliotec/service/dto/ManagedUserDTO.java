@@ -1,10 +1,9 @@
 package com.system.bibliotec.service.dto;
 
-import java.util.List;
 
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
-import com.system.bibliotec.model.Usuario;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

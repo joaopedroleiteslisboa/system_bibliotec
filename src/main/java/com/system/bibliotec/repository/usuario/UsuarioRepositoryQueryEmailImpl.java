@@ -1,19 +1,17 @@
 package com.system.bibliotec.repository.usuario;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
-
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.*;
 import org.springframework.stereotype.Component;
 
 import com.system.bibliotec.exception.UsuarioNaoEncontrado;
 import com.system.bibliotec.model.Usuario;
 import com.system.bibliotec.model.Usuario_;
+import org.springframework.stereotype.Repository;
 
-@Component
+@Repository
 public class UsuarioRepositoryQueryEmailImpl implements UsuarioRepositoryQueryEmail {
 
     @PersistenceContext
@@ -27,7 +25,7 @@ public class UsuarioRepositoryQueryEmailImpl implements UsuarioRepositoryQueryEm
         CriteriaQuery<Usuario> criteriaQuery = builder.createQuery(Usuario.class);
         Root<Usuario> root = criteriaQuery.from(Usuario.class);
         criteriaQuery.select(root);
-        criteriaQuery.where(builder.equal(root.get(Usuario_.email), email));
+        criteriaQuery.where(builder.equal(root.get(Usuario_.EMAIL), email));
         TypedQuery<Usuario> typedQuery = manager.createQuery(criteriaQuery);
         Usuario user = null;
         try {

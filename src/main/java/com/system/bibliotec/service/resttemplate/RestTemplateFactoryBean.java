@@ -2,8 +2,8 @@ package com.system.bibliotec.service.resttemplate;
 
 import java.util.Collections;
 
-import org.apache.http.client.HttpClient;
-import org.apache.http.impl.client.HttpClients;
+import org.apache.hc.client5.http.classic.HttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.client.BufferingClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -27,10 +27,11 @@ public class RestTemplateFactoryBean {
 
         HttpClient httpClient = HttpClients.createDefault();
 
-        HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory(httpClient);
+        HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
+
+        requestFactory.setHttpClient(httpClient);
 
         requestFactory.setConnectionRequestTimeout(10 * 180000); // 30 Minutos
-        requestFactory.setReadTimeout(10 * 180000); // 30 Minutos
         requestFactory.setConnectTimeout(10 * 180000); // 30 Minutos
 
         restTemplate = new RestTemplate(new BufferingClientHttpRequestFactory(requestFactory));  // BufferingClientHttpRequestFactory Implementação dedicada para não fechar o fluxo de Stream para os logs e demais interceptadores para o Resttemplate

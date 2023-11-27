@@ -3,14 +3,10 @@ package com.system.bibliotec.repository.livro;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -46,23 +42,23 @@ public class LivroRepositoryQueryImpl implements LivroRepositoryQuery {
         List<Predicate> predicates = new ArrayList<>();
 
         if (!StringUtils.isEmpty(livroFilter.getNome())) {
-            predicates.add(builder.like(builder.lower(root.get(Livro_.nome)),
+            predicates.add(builder.like(builder.lower(root.get(Livro_.NOME)),
                     "%" + livroFilter.getNome().toLowerCase() + "%"));
         }
 
         if (!StringUtils.isEmpty(livroFilter.getIsbn())) {
-            predicates.add(builder.like(builder.lower(root.get(Livro_.isbn13)),
+            predicates.add(builder.like(builder.lower(root.get(Livro_.ISBN13)),
                     "%" + livroFilter.getIsbn().toLowerCase() + "%"));
         }
 
         if (livroFilter.getDataPublicacaoDe() != null) {
             predicates.add(
-                    builder.greaterThanOrEqualTo(root.get(Livro_.dataPublicacao), livroFilter.getDataPublicacaoDe()));
+                    builder.greaterThanOrEqualTo(root.get(Livro_.DATA_PUBLICACAO), livroFilter.getDataPublicacaoDe()));
         }
 
         if (livroFilter.getDataPublicacaoAte() != null) {
             predicates.add(
-                    builder.lessThanOrEqualTo(root.get(Livro_.dataPublicacao), livroFilter.getDataPublicacaoAte()));
+                    builder.lessThanOrEqualTo(root.get(Livro_.DATA_PUBLICACAO), livroFilter.getDataPublicacaoAte()));
         }
 
         return predicates.toArray(new Predicate[predicates.size()]);
@@ -98,9 +94,9 @@ public class LivroRepositoryQueryImpl implements LivroRepositoryQuery {
         CriteriaQuery<ResumoLivro> criteria = builder.createQuery(ResumoLivro.class);
         Root<Livro> root = criteria.from(Livro.class);
 
-        criteria.select(builder.construct(ResumoLivro.class, root.get(Livro_.id), root.get(Livro_.nome),
-                root.get(Livro_.edicao), root.get(Livro_.descricao), root.get(Livro_.isbn13),
-                root.get(Livro_.numeroPaginas), root.get(Livro_.dataPublicacao), root.get(Livro_.valorUnitario)));
+        criteria.select(builder.construct(ResumoLivro.class, root.get(Livro_.ID), root.get(Livro_.NOME),
+                root.get(Livro_.EDICAO), root.get(Livro_.DESCRICAO), root.get(Livro_.ISBN13),
+                root.get(Livro_.NUMERO_PAGINAS), root.get(Livro_.DATA_PUBLICACAO), root.get(Livro_.VALOR_UNITARIO)));
 
         Predicate[] predicates = criarRestricoes(livroFilter, builder, root);
         criteria.where(predicates);

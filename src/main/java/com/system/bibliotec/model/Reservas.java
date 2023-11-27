@@ -3,13 +3,12 @@ package com.system.bibliotec.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.system.bibliotec.model.enums.Status;
+import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import javax.annotation.Generated;
 
 @Getter
 @Setter
@@ -71,7 +70,7 @@ public class Reservas extends AbstractAuditingEntity {
     @JoinColumn(name = "idLivro")
     private Livro livro;
 
-    @Generated("SparkTools")
+
     private Reservas(Builder builder) {
         this.id = builder.id;
         this.status = builder.status;
@@ -88,7 +87,7 @@ public class Reservas extends AbstractAuditingEntity {
      *
      * @return created builder
      */
-    @Generated("SparkTools")
+
     public static Builder builder() {
         return new Builder();
     }
@@ -96,7 +95,7 @@ public class Reservas extends AbstractAuditingEntity {
     /**
      * Builder to build {@link Reservas}.
      */
-    @Generated("SparkTools")
+
     public static final class Builder {
         private Long id;
         private Status status;

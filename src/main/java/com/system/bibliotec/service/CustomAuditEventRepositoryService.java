@@ -5,13 +5,12 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.servlet.http.HttpServletRequest;
-
 import com.system.bibliotec.model.VOAcoesContextoEndPoints;
 import com.system.bibliotec.repository.AcoesContextoEndPointsRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,25 +19,22 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.audit.AuditEvent;
 import org.springframework.boot.actuate.audit.AuditEventRepository;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.system.bibliotec.config.ConstantsUtils;
 import com.system.bibliotec.model.PersistentAuditEvent;
 import com.system.bibliotec.repository.PersistenceAuditEventRepository;
 import com.system.bibliotec.service.ultis.AuditEventConverter;
-
+import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.servlet.http.HttpServletResponse;
 
-@Repository
-public class CustomAuditEventRepositoryService extends HandlerInterceptorAdapter implements AuditEventRepository {
+
+@Component
+public class CustomAuditEventRepositoryService implements AuditEventRepository, HandlerInterceptor {
 
     private static final String AUTHORIZATION_FAILURE = "AUTHORIZATION_FAILURE";
 
@@ -66,7 +62,6 @@ public class CustomAuditEventRepositoryService extends HandlerInterceptorAdapter
 
     @Autowired
     private AuditEventConverter auditEventConverter;
-
 
     @Bean
     public EntityManager entityManager() {
@@ -106,7 +101,8 @@ public class CustomAuditEventRepositoryService extends HandlerInterceptorAdapter
                     ServletUriComponentsBuilder.fromCurrentRequest().toUriString(),
                     ServletUriComponentsBuilder.fromCurrentRequestUri().toUriString());
         }
-        return super.preHandle(request, response, handler);
+
+        return true;
     }
 
     @Override
@@ -118,7 +114,6 @@ public class CustomAuditEventRepositoryService extends HandlerInterceptorAdapter
                     ServletUriComponentsBuilder.fromCurrentRequest().toUriString(),
                     ServletUriComponentsBuilder.fromCurrentRequestUri().toUriString(), modelAndView);
         }
-        super.postHandle(request, response, handler, modelAndView);
     }
 
     @Async
@@ -131,13 +126,13 @@ public class CustomAuditEventRepositoryService extends HandlerInterceptorAdapter
         requisicao.setBody(IOUtils.toString(request.getInputStream()));
         requisicao.setMethod(request.getMethod().toString());
         if (auditarHttpCompleto) {
-            requisicao.setDataHeaders(auditEventConverter.convertDataToStringsHeader(request));
-            requisicao.setDataParans(auditEventConverter.convertDataToStringsParam(request));
+            requisicao.setDataHeaders(AuditEventConverter.convertDataToStringsHeader(request));
+            requisicao.setDataParans(AuditEventConverter.convertDataToStringsParam(request));
         }
         requisicao.setRecursoSolicitado(servletCurrentRequest);
         requisicao.setAtividadeEsperada(serveletURICurrent);
 
-        requisicao.setIp(request.getRemoteAddr().toString());
+        requisicao.setIp(request.getRemoteAddr());
 
         acoesContextoEndPointsRepository.save(requisicao);
     }
@@ -152,8 +147,8 @@ public class CustomAuditEventRepositoryService extends HandlerInterceptorAdapter
         requisicao.setBody(IOUtils.toString(request.getInputStream()));
         requisicao.setMethod(request.getMethod().toString());
         if (auditarHttpCompleto) {
-            requisicao.setDataHeaders(auditEventConverter.convertDataToStringsHeader(request));
-            requisicao.setDataParans(auditEventConverter.convertDataToStringsParam(request));
+            requisicao.setDataHeaders(AuditEventConverter.convertDataToStringsHeader(request));
+            requisicao.setDataParans(AuditEventConverter.convertDataToStringsParam(request));
         }
         requisicao.setRecursoSolicitado(servletCurrentRequest);
         requisicao.setAtividadeEsperada(serveletURICurrent);

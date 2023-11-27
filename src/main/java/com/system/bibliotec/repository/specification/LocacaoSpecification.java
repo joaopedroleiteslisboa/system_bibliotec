@@ -2,17 +2,12 @@ package com.system.bibliotec.repository.specification;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-
-import javax.persistence.criteria.Join;
-
-import com.google.common.base.Strings;
 import com.system.bibliotec.model.AbstractAuditingEntity_;
 import com.system.bibliotec.model.Livro_;
 import com.system.bibliotec.model.Locacoes;
 import com.system.bibliotec.model.Locacoes_;
-import com.system.bibliotec.model.Usuario_;
 import com.system.bibliotec.model.enums.Status;
-
+import jakarta.persistence.criteria.Join;
 import org.springframework.data.jpa.domain.Specification;
 
 /**
@@ -41,7 +36,7 @@ public class LocacaoSpecification {
         if (inicio == null || fim == null) {
             return null;
         } else {
-            return (root, query, cb) -> cb.between(root.get(Locacoes_.dataLocacao), inicio, fim);
+            return (root, query, cb) -> cb.between(root.get(Locacoes_.DATA_LOCACAO), inicio, fim);
         }
     }
 
@@ -50,7 +45,7 @@ public class LocacaoSpecification {
         if (inicio == null || fim == null) {
             return null;
         } else {
-            return (root, query, cb) -> cb.between(root.get(Locacoes_.horaLocacao), inicio, fim);
+            return (root, query, cb) -> cb.between(root.get(Locacoes_.HORA_LOCACAO), inicio, fim);
         }
     }
 
@@ -59,7 +54,7 @@ public class LocacaoSpecification {
         if (inicio == null || fim == null) {
             return null;
         } else {
-            return (root, query, cb) -> cb.between(root.get(Locacoes_.dataCancelamento), inicio, fim);
+            return (root, query, cb) -> cb.between(root.get(Locacoes_.DATA_CANCELAMENTO), inicio, fim);
         }
     }
 
@@ -68,7 +63,7 @@ public class LocacaoSpecification {
         if (inicio == null || fim == null) {
             return null;
         } else {
-            return (root, query, cb) -> cb.between(root.get(Locacoes_.horaCancelamento), inicio, fim);
+            return (root, query, cb) -> cb.between(root.get(Locacoes_.HORA_CANCELAMENTO), inicio, fim);
         }
     }
 

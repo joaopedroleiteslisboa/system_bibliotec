@@ -1,17 +1,39 @@
 package com.system.bibliotec.model.embeddeds;
 
-import javax.annotation.Generated;
-import javax.persistence.metamodel.SingularAttribute;
-import javax.persistence.metamodel.StaticMetamodel;
+import jakarta.annotation.Generated;
+import jakarta.persistence.metamodel.EmbeddableType;
+import jakarta.persistence.metamodel.SingularAttribute;
+import jakarta.persistence.metamodel.StaticMetamodel;
 
-@Generated(value = "org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor")
 @StaticMetamodel(Contato.class)
+@Generated("org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor")
 public abstract class Contato_ {
 
+	
+	/**
+	 * @see com.system.bibliotec.model.embeddeds.Contato#telefoneResidencial
+	 **/
 	public static volatile SingularAttribute<Contato, String> telefoneResidencial;
+	
+	/**
+	 * @see com.system.bibliotec.model.embeddeds.Contato#email_2
+	 **/
 	public static volatile SingularAttribute<Contato, String> email_2;
+	
+	/**
+	 * @see com.system.bibliotec.model.embeddeds.Contato#email_1
+	 **/
 	public static volatile SingularAttribute<Contato, String> email_1;
+	
+	/**
+	 * @see com.system.bibliotec.model.embeddeds.Contato#celular
+	 **/
 	public static volatile SingularAttribute<Contato, String> celular;
+	
+	/**
+	 * @see com.system.bibliotec.model.embeddeds.Contato
+	 **/
+	public static volatile EmbeddableType<Contato> class_;
 
 	public static final String TELEFONE_RESIDENCIAL = "telefoneResidencial";
 	public static final String EMAIL_2 = "email_2";

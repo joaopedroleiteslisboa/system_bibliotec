@@ -1,8 +1,7 @@
 package com.system.bibliotec.controller;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
@@ -54,20 +53,20 @@ public class LivroResource {
         this.services = services;
     }
 
-    @PreAuthorize("permitAll()")
+//    @PreAuthorize("permitAll()")
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Page<Livro> pesquisar(LivroFilter livroFilter, Pageable page) {
 
         return livroRepository.filtrar(livroFilter, page);
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_PESQUISAR_LIVRO','ROLE_ADMIN', 'ROLE_USER_SYSTEM', 'ROLE_USER_ANONIMO') and #oauth2.hasScope('read')")
+//    @PreAuthorize("hasAnyRole('ROLE_PESQUISAR_LIVRO','ROLE_ADMIN', 'ROLE_USER_SYSTEM', 'ROLE_USER_ANONIMO') and #oauth2.hasScope('read')")
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE, params = "resumo")
     public Page<ResumoLivro> resumo(LivroFilter livroFilter, Pageable page) {
         return livroRepository.resumo(livroFilter, page);
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_CADASTRAR_LIVRO','ROLE_ADMIN', 'ROLE_USER_SYSTEM') and #oauth2.hasScope('write')")
+//    @PreAuthorize("hasAnyRole('ROLE_CADASTRAR_LIVRO','ROLE_ADMIN', 'ROLE_USER_SYSTEM') and #oauth2.hasScope('write')")
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<Livro> create(@Valid @RequestBody Livro livro, HttpServletResponse response) {
         Livro livroSalvo = livroService.save(livro);
@@ -75,7 +74,7 @@ public class LivroResource {
         return ResponseEntity.status(HttpStatus.CREATED).body(livroSalvo);
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_PESQUISAR_LIVRO','ROLE_ADMIN', 'ROLE_USER_SYSTEM', 'ROLE_USER_ANONIMO') and #oauth2.hasScope('read')")
+//    @PreAuthorize("hasAnyRole('ROLE_PESQUISAR_LIVRO','ROLE_ADMIN', 'ROLE_USER_SYSTEM', 'ROLE_USER_ANONIMO') and #oauth2.hasScope('read')")
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
     public ResponseEntity<Livro> findById(@PathVariable Long id) {
@@ -85,21 +84,21 @@ public class LivroResource {
 
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN') and #oauth2.hasScope('write')")
+//    @PreAuthorize("hasAnyRole('ROLE_ADMIN') and #oauth2.hasScope('write')")
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         livroService.deleteLivro(id);
     }
 
-    @PreAuthorize("hasAuthority('ROLE_CADASTRAR_LIVRO') and #oauth2.hasScope('write')")
+//    @PreAuthorize("hasAuthority('ROLE_CADASTRAR_LIVRO') and #oauth2.hasScope('write')")
     @RequestMapping(method = RequestMethod.PUT, value = "/{id}")
     public ResponseEntity<Livro> update(@PathVariable Long id, @Valid @RequestBody Livro Livro) {
         Livro livroSalvo = livroService.updateLivro(id, Livro);
         return ResponseEntity.ok(livroSalvo);
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_CADASTRAR_LIVRO','ROLE_ADMIN', 'ROLE_USER_SYSTEM') and #oauth2.hasScope('write')")
+//    @PreAuthorize("hasAnyRole('ROLE_CADASTRAR_LIVRO','ROLE_ADMIN', 'ROLE_USER_SYSTEM') and #oauth2.hasScope('write')")
     @RequestMapping(method = RequestMethod.PUT, value = "/{id}/isbn13")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updatePropertyIsbn13Livro(@PathVariable Long id, @RequestBody String isbn13) {

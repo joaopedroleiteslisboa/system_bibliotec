@@ -1,11 +1,11 @@
 package com.system.bibliotec.listener;
 
 import com.system.bibliotec.event.RecursoCriadorEvent;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.servlet.http.HttpServletResponse;
 import java.net.URI;
 
 @Component

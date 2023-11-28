@@ -1,4 +1,41 @@
-CREATE TABLE IF NOT EXISTS livros(
+CREATE TABLE IF NOT EXISTS tb_autores(
+
+        id BIGINT  primary key AUTO_INCREMENT,
+       	created_by VARCHAR(70) NOT NULL,
+        created_date DATE,
+        last_modified_by VARCHAR(70),
+        last_modified_date DATE,
+        nome VARCHAR(50) NOT NULL UNIQUE,
+        descricao MEDIUMTEXT NOT NULL
+
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1000;
+
+
+CREATE TABLE IF NOT EXISTS tb_categorias(
+
+		id BIGINT  primary key AUTO_INCREMENT,
+        created_by VARCHAR(70) NOT NULL,
+        created_date DATE,
+        last_modified_by VARCHAR(70),
+        last_modified_date DATE,
+        nome VARCHAR(40) NOT NULL UNIQUE
+
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1000;
+
+
+CREATE TABLE IF NOT EXISTS tb_editoras(
+
+        id BIGINT  primary key AUTO_INCREMENT,
+        created_by VARCHAR(70) NOT NULL,
+        created_date DATE,
+        last_modified_by VARCHAR(70),
+        last_modified_date DATE,
+        nome VARCHAR(50) NOT NULL UNIQUE,
+        descricao MEDIUMTEXT NOT NULL
+
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1000;
+
+CREATE TABLE IF NOT EXISTS tb_livros(
 
        id BIGINT  primary key AUTO_INCREMENT,
        created_by VARCHAR(70) NOT NULL,
@@ -18,69 +55,29 @@ CREATE TABLE IF NOT EXISTS livros(
         idEditora BIGINT,
         quantidade int,
   
-        FOREIGN KEY (idEditora) REFERENCES editoras(id)
+        FOREIGN KEY (idEditora) REFERENCES tb_editoras(id)
 
 
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 auto_increment=1000;
 
 
-CREATE TABLE IF NOT EXISTS autores(
-
-        id BIGINT  primary key AUTO_INCREMENT,
-       	created_by VARCHAR(70) NOT NULL,
-        created_date DATE,
-        last_modified_by VARCHAR(70),
-        last_modified_date DATE,
-        nome VARCHAR(50) NOT NULL UNIQUE,
-        descricao MEDIUMTEXT NOT NULL
-       
-)ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1000;
-
-CREATE TABLE IF NOT EXISTS livro_has_autores (
+CREATE TABLE IF NOT EXISTS tb_livro_has_autores (
 
 	id_livro BIGINT NOT NULL,
 	id_autor BIGINT NOT NULL,
 	PRIMARY KEY (id_livro, id_autor),
-	FOREIGN KEY (id_livro) REFERENCES livros(id),
-	FOREIGN KEY (id_autor) REFERENCES autores(id)
+	FOREIGN KEY (id_livro) REFERENCES tb_livros(id),
+	FOREIGN KEY (id_autor) REFERENCES tb_autores(id)
 
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-CREATE TABLE IF NOT EXISTS categorias(
-
-		id BIGINT  primary key AUTO_INCREMENT,
-        created_by VARCHAR(70) NOT NULL,
-        created_date DATE,
-        last_modified_by VARCHAR(70),
-        last_modified_date DATE,
-        nome VARCHAR(40) NOT NULL UNIQUE
-
-)ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1000;
-
-CREATE TABLE IF NOT EXISTS livro_has_categorias (
+CREATE TABLE IF NOT EXISTS tb_livro_has_categorias (
 
 	id_livro BIGINT NOT NULL,
 	id_categoria BIGINT NOT NULL,
 	PRIMARY KEY (id_livro, id_categoria),
-	FOREIGN KEY (id_livro) REFERENCES livros(id),
-	FOREIGN KEY (id_categoria) REFERENCES categorias(id)
+	FOREIGN KEY (id_livro) REFERENCES tb_livros(id),
+	FOREIGN KEY (id_categoria) REFERENCES tb_categorias(id)
 
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-CREATE TABLE IF NOT EXISTS editoras(
-
-        id BIGINT  primary key AUTO_INCREMENT,
-        created_by VARCHAR(70) NOT NULL,
-        created_date DATE,
-        last_modified_by VARCHAR(70),
-        last_modified_date DATE,
-        nome VARCHAR(50) NOT NULL UNIQUE,
-        descricao MEDIUMTEXT NOT NULL
-
-)ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1000;
-
-    
-
-

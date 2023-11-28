@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "autores")
+@Table(name = "tb_autores")
 public class Autor extends AbstractAuditingEntity {
 
 

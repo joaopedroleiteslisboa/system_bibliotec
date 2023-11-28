@@ -13,7 +13,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "enderecos")
+@Table(name = "tb_enderecos")
 public class Endereco extends AbstractAuditingEntity {
 
     @Column(name = "cep")

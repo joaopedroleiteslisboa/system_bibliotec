@@ -1,1 +1,1 @@
-ALTER TABLE solicitacoes ADD COLUMN statusProcessamento VARCHAR(50);
+ALTER TABLE tb_solicitacoes ADD COLUMN statusProcessamento VARCHAR(50);

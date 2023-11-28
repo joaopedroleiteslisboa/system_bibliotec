@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS persistent_audit_event(
+CREATE TABLE IF NOT EXISTS tb_persistent_audit_event(
     event_id BIGINT  primary key AUTO_INCREMENT,
     principal VARCHAR(1000),
     event_date date,
@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS persistent_audit_event(
 
 
 
-CREATE TABLE IF NOT EXISTS persistent_audit_evt_data(
+CREATE TABLE IF NOT EXISTS tb_persistent_audit_evt_data(
                                                      event_id BIGINT  primary key AUTO_INCREMENT,
                                                      name VARCHAR(1000),
                                                      value VARCHAR(1000)

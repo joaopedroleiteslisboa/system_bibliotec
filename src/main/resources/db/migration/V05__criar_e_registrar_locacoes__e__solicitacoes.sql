@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS locacoes(
+CREATE TABLE IF NOT EXISTS tb_locacoes(
 
       id BIGINT  primary key AUTO_INCREMENT,
       created_by VARCHAR(70) NOT NULL,
@@ -19,13 +19,13 @@ CREATE TABLE IF NOT EXISTS locacoes(
       observacoesEntrega VARCHAR(100),
       observacoesDevolucao VARCHAR(100),
             
-      FOREIGN KEY (idUsuario) REFERENCES users(id),
-      FOREIGN KEY (idLivro) REFERENCES livros(id)
+      FOREIGN KEY (idUsuario) REFERENCES tb_users(id),
+      FOREIGN KEY (idLivro) REFERENCES tb_livros(id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 auto_increment=1000;
 
 
 
-CREATE TABLE IF NOT EXISTS solicitacoes (
+CREATE TABLE IF NOT EXISTS tb_solicitacoes (
 	id BIGINT  primary key AUTO_INCREMENT,
     created_by VARCHAR(70) NOT NULL,
     created_date DATE,
@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS solicitacoes (
     rejeitado BOOLEAN,
     idUsuario BIGINT NOT NULL,	
 
-    FOREIGN KEY (idUsuario) REFERENCES users(id)
+    FOREIGN KEY (idUsuario) REFERENCES tb_users(id)
 
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 auto_increment=1000;
 

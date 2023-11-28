@@ -20,7 +20,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "livros")
+@Table(name = "tb_livros")
 public class Livro extends AbstractAuditingEntity {
 
 
@@ -42,7 +42,7 @@ public class Livro extends AbstractAuditingEntity {
 
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "livro_has_autores", joinColumns = {@JoinColumn(name = "id_livro")}, inverseJoinColumns = {
+    @JoinTable(name = "tb_livro_has_autores", joinColumns = {@JoinColumn(name = "id_livro")}, inverseJoinColumns = {
             @JoinColumn(name = "id_autor")})
     private Set<Autor> autores = new HashSet<Autor>();
 
@@ -61,7 +61,7 @@ public class Livro extends AbstractAuditingEntity {
 
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "livro_has_categorias", joinColumns = {@JoinColumn(name = "id_livro")}, inverseJoinColumns = {
+    @JoinTable(name = "tb_livro_has_categorias", joinColumns = {@JoinColumn(name = "id_livro")}, inverseJoinColumns = {
             @JoinColumn(name = "id_categoria")})
     private Set<Categoria> categorias = new HashSet<Categoria>();
 

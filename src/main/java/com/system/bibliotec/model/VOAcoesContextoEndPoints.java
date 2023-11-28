@@ -13,7 +13,7 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "acoesEndPoint")
+@Table(name = "tb_acoesEndPoint")
 public class VOAcoesContextoEndPoints extends AbstractAuditingEntity {
 
 
@@ -23,13 +23,13 @@ public class VOAcoesContextoEndPoints extends AbstractAuditingEntity {
     @ElementCollection
     @MapKeyColumn(name = "header")
     @Column(name = "value")
-    @CollectionTable(name = "acoesEndPoint_data_headers", joinColumns = @JoinColumn(name = "id"))
+    @CollectionTable(name = "tb_acoesEndPoint_data_headers", joinColumns = @JoinColumn(name = "id"))
     private Map<String, String> dataHeaders = new HashMap<>();
 
     @ElementCollection
     @MapKeyColumn(name = "param")
     @Column(name = "value")
-    @CollectionTable(name = "acoesEndPoint_data_parans", joinColumns = @JoinColumn(name = "id"))
+    @CollectionTable(name = "tb_acoesEndPoint_data_parans", joinColumns = @JoinColumn(name = "id"))
     private Map<String, String> dataParans = new HashMap<>();
 
     @Column(name = "body")

@@ -13,7 +13,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "tipoUsuarioVO")
+@Table(name = "tb_tipoUsuarioVO")
 public class TipoUsuarioVO extends AbstractAuditingEntity {
 
 

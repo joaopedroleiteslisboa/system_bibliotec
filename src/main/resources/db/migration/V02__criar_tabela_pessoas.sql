@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS pessoas(
+CREATE TABLE IF NOT EXISTS tb_pessoas(
                          id BIGINT  primary key AUTO_INCREMENT,
                          created_by VARCHAR(70) NOT NULL,
                          created_date DATE,
@@ -18,16 +18,25 @@ CREATE TABLE IF NOT EXISTS pessoas(
                          email_1  VARCHAR(60) NOT NULL UNIQUE,
                          email_2 VARCHAR(60) UNIQUE,
                          idEndereco BIGINT,
-                         FOREIGN KEY (idEndereco) REFERENCES enderecos(id)
+                         FOREIGN KEY (idEndereco) REFERENCES tb_enderecos(id)
 
-                                   
 
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 auto_increment=1000;
 
 
+CREATE TABLE IF NOT EXISTS tb_cargos (
+   						 id BIGINT  primary key AUTO_INCREMENT,
+                         created_by VARCHAR(70) NOT NULL,
+                         created_date DATE,
+                         last_modified_by VARCHAR(70),
+                         last_modified_date DATE,
+    codigo VARCHAR(20) NOT NULL UNIQUE,
+    nome VARCHAR(80) CHARACTER SET utf8 UNIQUE
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 auto_increment=1000;
 
 
-CREATE TABLE IF NOT EXISTS funcionarios(
+
+CREATE TABLE IF NOT EXISTS tb_funcionarios(
 
                          id BIGINT  primary key AUTO_INCREMENT,
                          created_by VARCHAR(70) NOT NULL,
@@ -37,19 +46,8 @@ CREATE TABLE IF NOT EXISTS funcionarios(
                          ativo BOOLEAN NOT NULL,
                          matricula VARCHAR(100) NOT NULL UNIQUE,
                          cargo BIGINT,
-                         FOREIGN KEY (cargo) REFERENCES cargos(id)
-
-                                         
+                         FOREIGN KEY (cargo) REFERENCES tb_cargos(id)
 
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 auto_increment=1000;
 
 
-CREATE TABLE IF NOT EXISTS cargos (
-   						 id BIGINT  primary key AUTO_INCREMENT,
-                         created_by VARCHAR(70) NOT NULL,
-                         created_date DATE,
-                         last_modified_by VARCHAR(70),
-                         last_modified_date DATE,
-    codigo VARCHAR(20) NOT NULL UNIQUE,
-    nome VARCHAR(80) CHARACTER SET utf8 UNIQUE
-)ENGINE=InnoDB DEFAULT CHARSET=utf8 auto_increment=1000;

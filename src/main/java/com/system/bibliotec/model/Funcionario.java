@@ -9,7 +9,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @Entity
-@Table(name = "funcionarios")
+@Table(name = "tb_funcionarios")
 public class Funcionario extends AbstractAuditingEntity {
 
 

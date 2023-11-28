@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS acoesEndPoint(
+CREATE TABLE IF NOT EXISTS tb_acoesEndPoint(
                          id BIGINT  primary key AUTO_INCREMENT,
                          created_by VARCHAR(70),
                          created_date DATE,
@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS acoesEndPoint(
 
 
 
-CREATE TABLE IF NOT EXISTS acoesEndPoint_data_headers(
+CREATE TABLE IF NOT EXISTS tb_acoesEndPoint_data_headers(
                                                      id BIGINT  primary key AUTO_INCREMENT,
                                                      header VARCHAR(255),
                                                      value VARCHAR(5000)
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS acoesEndPoint_data_headers(
 
 
 
-CREATE TABLE IF NOT EXISTS acoesEndPoint_data_parans(
+CREATE TABLE IF NOT EXISTS tb_acoesEndPoint_data_parans(
                                                      id BIGINT  primary key AUTO_INCREMENT,
                                                      param VARCHAR(1000),
                                                      value VARCHAR(5000)

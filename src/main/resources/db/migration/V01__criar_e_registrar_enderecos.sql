@@ -1,4 +1,8 @@
-CREATE TABLE IF NOT EXISTS enderecos(
+SET FOREIGN_KEY_CHECKS = 0;
+
+commit;
+
+CREATE TABLE IF NOT EXISTS tb_enderecos(
                          id BIGINT  primary key AUTO_INCREMENT,
                          created_by VARCHAR(70) NOT NULL,
                          created_date DATE,
@@ -12,9 +16,5 @@ CREATE TABLE IF NOT EXISTS enderecos(
                          cidade varchar(40) NOT NULL,
                          uf varchar(4) NOT NULL,
                          ibge varchar(100)
-                        
-                         
-                         
-                        
 
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 auto_increment=1000;

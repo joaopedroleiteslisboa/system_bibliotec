@@ -31,7 +31,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "users")
+@Table(name = "tb_users")
 public class Usuario extends AbstractAuditingEntity {
 
     /**
@@ -94,7 +94,7 @@ public class Usuario extends AbstractAuditingEntity {
     }
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "usuarios_permissao", joinColumns = @JoinColumn(name = "id_usuario"), inverseJoinColumns = @JoinColumn(name = "id_permissao"))
+    @JoinTable(name = "tb_usuarios_permissao", joinColumns = @JoinColumn(name = "id_usuario"), inverseJoinColumns = @JoinColumn(name = "id_permissao"))
     private Set<Permissao> permissoes = new HashSet<>();
 
     @Size(min = 3, max = 50)

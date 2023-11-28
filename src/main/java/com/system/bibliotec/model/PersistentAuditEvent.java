@@ -10,7 +10,7 @@ import java.util.Map;
 
 
 @Entity
-@Table(name = "persistent_audit_event")
+@Table(name = "tb_persistent_audit_event")
 public class PersistentAuditEvent implements Serializable, IGetId {
 
     /**
@@ -36,7 +36,7 @@ public class PersistentAuditEvent implements Serializable, IGetId {
     @ElementCollection
     @MapKeyColumn(name = "name")
     @Column(name = "value")
-    @CollectionTable(name = "persistent_audit_evt_data", joinColumns = @JoinColumn(name = "event_id"))
+    @CollectionTable(name = "tb_persistent_audit_evt_data", joinColumns = @JoinColumn(name = "event_id"))
     private Map<String, String> data = new HashMap<>();
 
     public Long getId() {

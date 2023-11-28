@@ -1,2 +1,2 @@
-ALTER TABLE users add column userName varchar(50) unique;
+ALTER TABLE tb_users add column userName varchar(50) unique;
  

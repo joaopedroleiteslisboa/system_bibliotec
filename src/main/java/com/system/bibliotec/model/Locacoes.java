@@ -17,7 +17,7 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "locacoes")
+@Table(name = "tb_locacoes")
 public class Locacoes extends AbstractAuditingEntity {
 
 

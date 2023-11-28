@@ -11,7 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "permissao")
+@Table(name = "tb_permissao")
 public class Permissao extends AbstractAuditingEntity {
 
 

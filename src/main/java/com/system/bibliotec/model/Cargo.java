@@ -17,7 +17,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "cargos")
+@Table(name = "tb_cargos")
 public class Cargo extends AbstractAuditingEntity {
 
 
